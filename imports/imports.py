@@ -1,3 +1,4 @@
+import time
 from imports import Edition
 from imports.constants import (ArticleSap,
                                Categorie,
@@ -24,6 +25,7 @@ from imports.variables import (Acces,
                                User,
                                Partenaire)
 from imports.construits import (Numero,
+                                Resultat,
                                 Granted,
                                 UserLabo,
                                 Version,
@@ -32,7 +34,6 @@ from core import (Interface,
                   Chemin,
                   Format,
                   ErreurConsistance,
-                  DossierSource,
                   DossierDestination)
 
 
@@ -51,74 +52,30 @@ class Imports(object):
 
         self.edition = Edition(dossier_source)
 
-        # création de l'arobrescence
-
-        chemin_fixe_enregistrement = Chemin.chemin([self.edition.chemin, self.edition.plateforme, self.edition.annee,
-                                                    Format.mois_string(self.edition.mois)])
-        self.version = 0
-        dossier_fixe = dossier_source
-        self.chemin_logo = dossier_source.chemin
-        chemin_grille = dossier_source.chemin
-        chemin_fixe_version = Chemin.chemin([chemin_fixe_enregistrement, "V0"])
-        if Chemin.existe(chemin_fixe_enregistrement, False):
-            while True:
-                if Chemin.existe(chemin_fixe_version, False):
-                    self.version = self.version + 1
-                    chemin_fixe_version = Chemin.chemin([chemin_fixe_enregistrement, "V"+str(self.version)])
-                else:
-                    break
-
-        if self.edition.filigrane != "":
-            self.chemin_enregistrement = Chemin.chemin([self.edition.chemin_filigrane, self.edition.plateforme,
-                                                        self.edition.annee, Format.mois_string(self.edition.mois)])
-            self.chemin_version = Chemin.chemin([self.chemin_enregistrement, "V" + str(self.version)])
-            if Chemin.existe(self.chemin_version, False):
-                Interface.fatal(ErreurConsistance(), "la facturation proforma V" + str(self.version) + " existe déjà !")
-        else:
-            self.chemin_enregistrement = chemin_fixe_enregistrement
-            self.chemin_version = chemin_fixe_version
-
-        self.chemin_in = Chemin.chemin([self.chemin_enregistrement, "IN"])
-        self.chemin_prix = Chemin.chemin([self.chemin_enregistrement, "Prix"])
-        if self.version > 0:
-            self.chemin_in = Chemin.chemin([chemin_fixe_enregistrement, "IN"])
-            self.chemin_prix = Chemin.chemin([chemin_fixe_enregistrement, "Prix"])
-            if not Chemin.existe(self.chemin_in, False):
-                Interface.fatal(ErreurConsistance(), "le dossier " + self.chemin_in + " se doit d'être présent !")
-            if not Chemin.existe(self.chemin_prix, False):
-                Interface.fatal(ErreurConsistance(), "le dossier " + self.chemin_prix + " est censé exister !")
-            dossier_fixe = DossierSource(self.chemin_in)
-            self.chemin_logo = self.chemin_in
-            chemin_grille = chemin_fixe_enregistrement
-
-        self.chemin_out = Chemin.chemin([self.chemin_version, "OUT"])
-        self.chemin_bilans = Chemin.chemin([self.chemin_version, "Bilans_Stats"])
-        self.chemin_cannexes = Chemin.chemin([self.chemin_version, "Annexes_CSV"])
-        self.chemin_pannexes = Chemin.chemin([self.chemin_enregistrement, "Annexes_PDF"])
-
         # importation et vérification des données d'entrée
 
-        self.paramtexte = Paramtexte(dossier_fixe)
-        self.facturation = Facturation(dossier_fixe)
-        self.classes = ClasseClient(dossier_fixe)
+        self.paramtexte = Paramtexte(dossier_source)
+        self.facturation = Facturation(dossier_source)
+        self.classes = ClasseClient(dossier_source)
         self.clients = Client(dossier_source, self.facturation, self.classes)
-        self.plateformes = Plateforme(dossier_fixe, self.clients, self.edition, chemin_grille)
+        self.plateformes = Plateforme(dossier_source, self.clients, self.edition)
         self.partenaires = Partenaire(dossier_source, self.clients, self.plateformes, self.classes)
-        self.artsap = ArticleSap(dossier_fixe)
-        self.overheads = Overhead(dossier_fixe, self.artsap)
-        self.classprests = ClassePrestation(dossier_fixe, self.artsap, self.overheads)
-        self.categories = Categorie(dossier_fixe, self.classprests, self.plateformes)
-        self.groupes = Groupe(dossier_fixe, self.categories)
-        self.machines = Machine(dossier_fixe, self.groupes, self.edition)
+        self.artsap = ArticleSap(dossier_source)
+        self.overheads = Overhead(dossier_source, self.artsap)
+        self.classprests = ClassePrestation(dossier_source, self.artsap, self.overheads)
+        self.resultats = Resultat(dossier_source, self.paramtexte, self.plateformes)
+        self.categories = Categorie(dossier_source, self.classprests, self.plateformes)
+        self.groupes = Groupe(dossier_source, self.categories)
+        self.machines = Machine(dossier_source, self.groupes, self.edition)
         self.subsides = Subside(dossier_source)
         self.plafonds = PlafSubside(dossier_source, self.subsides, self.classprests, self.plateformes)
         self.cles = CleSubside(dossier_source, self.clients, self.machines, self.classes, self.subsides)
         self.comptes = Compte(dossier_source, self.clients, self.subsides)
         self.users = User(dossier_source)
-        self.categprix = CategPrix(dossier_fixe, self.classes, self.categories)
-        self.coefprests = CoefPrest(dossier_fixe, self.classes, self.classprests)
-        self.prestations = Prestation(dossier_fixe, self.classprests, self.coefprests, self.plateformes, self.machines,
-                                      self.edition)
+        self.categprix = CategPrix(dossier_source, self.classes, self.categories)
+        self.coefprests = CoefPrest(dossier_source, self.classes, self.classprests)
+        self.prestations = Prestation(dossier_source, self.classprests, self.coefprests, self.plateformes,
+                                      self.machines, self.edition)
 
         self.plateforme = self.plateformes.donnees[self.edition.plateforme]
 
@@ -126,65 +83,67 @@ class Imports(object):
         self.noshows = NoShow(dossier_source, self.comptes, self.machines, self.users)
         self.livraisons = Livraison(dossier_source, self.comptes, self.prestations, self.users)
         self.services = Service(dossier_source, self.comptes, self.categories, self.users)
-        self.data = None
 
-        # importation des données du mois précédent
+        # vérification des données fondamentales
 
-        if self.edition.mois > 1:
-            annee_p = self.edition.annee
-            mois_p = Format.mois_string(self.edition.mois-1)
-        else:
-            annee_p = self.edition.annee-1
-            mois_p = 12
-
-        old_ver = 0
-        chemin_old = Chemin.chemin([self.edition.chemin, self.edition.plateforme, annee_p, mois_p])
-        if not Chemin.existe(chemin_old, False):
-            Interface.fatal(ErreurConsistance(), "le dossier " + chemin_old + " se doit d'être présent !")
-        while True:
-            chemin_old_ver = Chemin.chemin([chemin_old, "V"+str(old_ver)])
-            if Chemin.existe(chemin_old_ver, False):
-                old_ver = old_ver + 1
+        if self.edition.plateforme != self.resultats.plateforme:
+            Interface.fatal(ErreurConsistance(), "la plateforme de facturation : " + self.edition.plateforme +
+                            ", doit être la même que la plateforme des résultats : " + self.resultats.plateforme)
+        if self.edition.mois == self.resultats.mois:
+            if self.edition.annee != self.resultats.annee:
+                Interface.fatal(ErreurConsistance(), "pour un mois identique l'année de facturation : " +
+                                str(self.edition.annee) + ", doit être la même que l'année des résultats : " +
+                                str(self.resultats.annee))
             else:
-                old_ver = old_ver - 1
-                break
+                self.version = self.resultats.vfact + 1
+        if self.edition.mois > (self.resultats.mois+1):
+            Interface.fatal(ErreurConsistance(), "le mois de facturation : " + str(self.edition.mois) +
+                            ", ne peut être de plus d'un mois de plus que le mois des résultats : " +
+                            str(self.resultats.mois))
+        if self.edition.mois == (self.resultats.mois+1):
+            if self.edition.annee != self.resultats.annee:
+                Interface.fatal(ErreurConsistance(), "pour un mois de plus,  l'année de facturation : " +
+                                str(self.edition.annee) + ", doit être la même que l'année des résultats : " +
+                                str(self.resultats.annee))
+            else:
+                self.version = 0
+        if self.edition.mois < self.resultats.mois:
+            if self.edition.mois == 1 and self.resultats.mois == 12 and self.edition.annee == (self.resultats.annee+1):
+                self.version = 0
+            else:
+                Interface.fatal(ErreurConsistance(), "le mois de facturation : " + str(self.edition.mois) +
+                                ", ne peut être plus petit que le mois des résultats : " + str(self.resultats.mois))
 
-        self.chemin_precedent = Chemin.chemin([chemin_old, "V"+str(old_ver), "OUT"])
-        if not Chemin.existe(self.chemin_precedent, False):
-            Interface.fatal(ErreurConsistance(), "le dossier " + self.chemin_precedent + " se doit d'être présent !")
-
-        self.grants = Granted(DossierSource(self.chemin_precedent), self.edition, self.comptes, self.classprests,
-                              self.plateformes)
-        self.userlabs = UserLabo(DossierSource(self.chemin_precedent), self.edition, self.plateformes, self.clients,
-                                 self.users)
+        self.grants = Granted(dossier_source, self.edition, self.comptes, self.classprests, self.plateformes)
+        self.userlabs = UserLabo(dossier_source, self.edition, self.plateformes, self.clients, self.users)
 
         self.logo = ""
         extensions = [".pdf", ".eps", ".png", ".jpg"]
         for ext in extensions:
-            chemin = Chemin.chemin([self.chemin_logo, "logo" + ext])
+            chemin = Chemin.chemin([dossier_source.chemin, "logo" + ext])
             if Chemin.existe(chemin, False):
                 self.logo = "logo" + ext
                 break
 
         # importation des données de la version précédente
         if self.version > 0:
-            vprec = self.version-1
-            self.chemin_vprec = Chemin.chemin([chemin_fixe_enregistrement, "V"+str(vprec), "OUT"])
-            if not Chemin.existe(self.chemin_vprec, False):
-                Interface.fatal(ErreurConsistance(), "le dossier " + self.chemin_vprec + " se doit d'être présent !")
-            self.numeros = Numero(DossierSource(self.chemin_vprec), self.edition, self.comptes, self.clients, vprec)
-            self.versions = Version(DossierSource(self.chemin_vprec), self.edition.annee, self.edition.mois, vprec)
-            self.chemin_bilprec = Chemin.chemin([chemin_fixe_enregistrement, "V"+str(vprec), "Bilans_Stats"])
-            if not Chemin.existe(self.chemin_bilprec, False):
-                Interface.fatal(ErreurConsistance(), "le dossier " + self.chemin_bilprec + " se doit d'être présent !")
-            self.transactions_2 = Transactions2(DossierSource(self.chemin_bilprec), self.edition.annee,
-                                                self.edition.mois, self.plateforme, vprec)
+            self.numeros = Numero(dossier_source, self.edition, self.comptes, self.clients, self.resultats.vfact)
+            self.versions = Version(dossier_source, self.edition, self.resultats.vfact)
+            self.transactions_2 = Transactions2(dossier_source, self.edition, self.plateforme, self.resultats.vfact)
 
         # vérification terminée, création des dossiers de sauvegarde
 
-        if self.version == 0:
-            Chemin.existe(self.chemin_in, True)
-            Chemin.existe(self.chemin_prix, True)
+        self.chemin_enregistrement = Chemin.chemin([self.edition.chemin, self.edition.plateforme, self.edition.annee,
+                                                    Format.mois_string(self.edition.mois), self.version, time.time()])
+        self.chemin_in = Chemin.chemin([self.chemin_enregistrement, "IN"])
+        self.chemin_prix = Chemin.chemin([self.chemin_enregistrement, "Prix"])
+        self.chemin_cannexes = Chemin.chemin([self.chemin_enregistrement, "Annexes_CSV"])
+        self.chemin_pannexes = Chemin.chemin([self.chemin_enregistrement, "Annexes_PDF"])
+        self.chemin_out = Chemin.chemin([self.chemin_enregistrement, "OUT"])
+        self.chemin_bilans = Chemin.chemin([self.chemin_enregistrement, "Bilans_Stats"])
+
+        Chemin.existe(self.chemin_in, True)
+        Chemin.existe(self.chemin_prix, True)
         Chemin.existe(self.chemin_bilans, True)
         Chemin.existe(self.chemin_out, True)
         Chemin.existe(self.chemin_cannexes, True)
@@ -192,34 +151,26 @@ class Imports(object):
 
         # sauvegarde des bruts
 
-        if self.version == 0:
-            dossier_destination = DossierDestination(self.chemin_in)
-            for fichier in [self.paramtexte, self.facturation, self.classes, self.plateformes, self.artsap,
-                            self.categories, self.groupes, self.machines, self.categprix, self.coefprests,
-                            self.prestations, self.classprests, self.overheads]:
-                dossier_destination.ecrire(fichier.nom_fichier, self.dossier_source.lire(fichier.nom_fichier))
-            if self.logo != "":
-                dossier_destination.ecrire(self.logo, dossier_source.lire(self.logo))
-            dossier_precedent = DossierSource(self.chemin_precedent)
-            for fichier in [self.grants, self.userlabs]:
-                dossier_destination.ecrire(fichier.nom_fichier, dossier_precedent.lire(fichier.nom_fichier))
-            if self.plateforme['grille'] != "":
-                grille = self.plateforme['grille'] + '.pdf'
-                DossierDestination(self.chemin_enregistrement).ecrire(grille, dossier_source.lire(grille))
+        destination_in = DossierDestination(self.chemin_in)
+        destination_out = DossierDestination(self.chemin_out)
+        for fichier in [self.paramtexte, self.facturation, self.classes, self.plateformes, self.artsap,
+                        self.categories, self.groupes, self.machines, self.categprix, self.coefprests,
+                        self.prestations, self.classprests, self.overheads, self.clients, self.subsides,
+                        self.plafonds, self.cles, self.comptes, self.users, self.acces, self.noshows, self.livraisons,
+                        self.services, self.partenaires, self.resultats, self.grants, self.userlabs]:
+            destination_in.ecrire(fichier.nom_fichier, self.dossier_source.lire(fichier.nom_fichier))
+            destination_out.ecrire(fichier.nom_fichier, self.dossier_source.lire(fichier.nom_fichier))
+        if self.logo != "":
+            destination_in.ecrire(self.logo, dossier_source.lire(self.logo))
+            destination_out.ecrire(self.logo, dossier_source.lire(self.logo))
+        if self.plateforme['grille'] != "":
+            grille = self.plateforme['grille'] + '.pdf'
+            destination_in.ecrire(grille, dossier_source.lire(grille))
+            destination_out.ecrire(grille, dossier_source.lire(grille))
+        Chemin.copier_dossier("./reveal.js/", "js", self.chemin_enregistrement)
+        Chemin.copier_dossier("./reveal.js/", "css", self.chemin_enregistrement)
 
-        if self.version == 0 or self.edition.filigrane != "":
-            Chemin.copier_dossier("./reveal.js/", "js", self.chemin_enregistrement)
-            Chemin.copier_dossier("./reveal.js/", "css", self.chemin_enregistrement)
-
-        chemin_vin = Chemin.chemin([self.chemin_version, "IN"])
-        Chemin.existe(chemin_vin, True)
-        dossier_destination = DossierDestination(chemin_vin)
-        for fichier in [self.clients, self.subsides, self.plafonds, self.cles, self.comptes, self.users,
-                        self.acces, self.noshows, self.livraisons, self.services, self.partenaires]:
-            dossier_destination.ecrire(fichier.nom_fichier, self.dossier_source.lire(fichier.nom_fichier))
         if self.version > 0:
-            for fichier in [self.numeros, self.versions]:
-                dossier_destination.ecrire(fichier.nom_fichier,
-                                           DossierSource(self.chemin_vprec).lire(fichier.nom_fichier))
-            dossier_destination.ecrire(self.transactions_2.nom_fichier,
-                                       DossierSource(self.chemin_bilprec).lire(self.transactions_2.nom_fichier))
+            for fichier in [self.numeros, self.versions, self.transactions_2]:
+                destination_in.ecrire(fichier.nom_fichier, self.dossier_source.lire(fichier.nom_fichier))
+                destination_out.ecrire(fichier.nom_fichier, self.dossier_source.lire(fichier.nom_fichier))

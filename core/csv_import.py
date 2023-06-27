@@ -49,7 +49,7 @@ class CsvImport(object):
         return donnees_ligne
 
     @staticmethod
-    def _test_id_coherence(donnee, nom, ligne, corpus, zero=False):
+    def test_id_coherence(donnee, nom, ligne, corpus, zero=False):
         msg = ""
         if donnee == "":
             msg += nom + " de la ligne " + str(ligne) + " ne peut être vide\n"

@@ -285,7 +285,7 @@ class Pdfs(object):
              '''
 
         dico = {'pied1': self.echappe('annex-compte-pied-page-g1'), 'pied2': self.echappe('annex-compte-pied-page-g2'),
-                'logo': self.imports.chemin_logo,
+                'logo': self.imports.chemin_in,
                 'filigrane': Latex.echappe_caracteres(self.imports.edition.filigrane[:15])}
         if intype != "GLOB":
             document += r'''\fancyfoot[L]{\changefont %(pied1)s \\ %(pied2)s}''' % dico
@@ -318,5 +318,4 @@ class Pdfs(object):
         document += r'''
             \end{document}
             '''
-
         return document

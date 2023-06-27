@@ -14,14 +14,12 @@ class Plateforme(CsvImport):
     cles = ['id_plateforme', 'code_p', 'centre', 'fonds', 'abrev_plat', 'int_plat', 'grille']
     libelle = "Plateformes"
 
-    def __init__(self, dossier_source, clients, edition, chemin_grille, module_a=False):
+    def __init__(self, dossier_source, clients, edition):
         """
         initialisation et importation des données
         :param dossier_source: Une instance de la classe dossier.DossierSource
         :param clients: clients importés
         :param edition: paramètres d'édition
-        :param chemin_grille: dossier devant contenir la grille tarifaire
-        :param module_a: si on ne traite que le module A
         """
         super().__init__(dossier_source)
 
@@ -33,12 +31,8 @@ class Plateforme(CsvImport):
 
         del self.donnees[0]
         for donnee in self.donnees:
-            if module_a:
-                donnee['id_plateforme'], info = Format.est_un_entier(donnee['id_plateforme'], "l'id plateforme", ligne,
-                                                                     0)
-            else:
-                donnee['id_plateforme'], info = Format.est_un_alphanumerique(donnee['id_plateforme'], "l'id plateforme",
-                                                                             ligne)
+            donnee['id_plateforme'], info = Format.est_un_alphanumerique(donnee['id_plateforme'], "l'id plateforme",
+                                                                         ligne)
             msg += info
             if donnee['id_plateforme'] == "":
                 msg += "l'id plateforme " + str(ligne) + " ne peut être vide\n"
@@ -66,7 +60,7 @@ class Plateforme(CsvImport):
             donnee['grille'], info = Format.est_un_document(donnee['grille'], "la grille tarifaire", ligne, True)
             msg += info
             if donnee['id_plateforme'] == edition.plateforme and donnee['grille'] != "":
-                if not Chemin.existe(Chemin.chemin([chemin_grille, donnee['grille'] + '.pdf'])):
+                if not Chemin.existe(Chemin.chemin([dossier_source.chemin, donnee['grille'] + '.pdf'])):
                     msg += "la grille de la ligne " + str(ligne) + " n'existe pas dans le dossier d'entrée \n"
 
             donnees_dict[donnee['id_plateforme']] = donnee

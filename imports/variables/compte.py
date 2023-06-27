@@ -29,7 +29,7 @@ class Compte(CsvImport):
         ids = []
 
         for donnee in self.donnees:
-            msg += self._test_id_coherence(donnee['code_client'], "le code client", ligne, clients)
+            msg += self.test_id_coherence(donnee['code_client'], "le code client", ligne, clients)
 
             donnee['numero'], info = Format.est_un_alphanumerique(donnee['numero'], "le numéro de compte", ligne)
             msg += info
@@ -46,7 +46,7 @@ class Compte(CsvImport):
             if donnee['exploitation'] != 'TRUE' and donnee['exploitation'] != 'FALSE':
                 msg += "l'exploitation de la ligne " + str(ligne) + " doit être 'TRUE' ou 'FALSE'\n"
 
-            msg += self._test_id_coherence(donnee['type_subside'], "le type subside", ligne, subsides, True)
+            msg += self.test_id_coherence(donnee['type_subside'], "le type subside", ligne, subsides, True)
 
             donnee['numero'] = donnee['numero'][0:16]
             donnee['intitule'] = donnee['intitule'][0:120]

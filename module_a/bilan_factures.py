@@ -7,7 +7,7 @@ class BilanFactures(CsvList):
     Classe pour la création du bilan des factures
     """
 
-    cles = ['invoice-year', 'invoice-month', 'invoice-version', 'invoice-id', 'invoice-ref', 'platf-name',
+    cles = ['invoice-year', 'invoice-month', 'version-last', 'invoice-id', 'invoice-ref', 'platf-name',
             'client-code', 'client-sap', 'client-name', 'client-idclass', 'client-class', 'client-labelclass',
             'total-fact']
 

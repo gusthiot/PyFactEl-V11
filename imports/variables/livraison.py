@@ -36,19 +36,19 @@ class Livraison(CsvImport):
             donnee['annee'], info = Format.est_un_entier(donnee['annee'], "l'annee ", ligne, 2000, 2099)
             msg += info
 
-            info = self._test_id_coherence(donnee['id_compte'], "l'id compte", ligne, comptes)
+            info = self.test_id_coherence(donnee['id_compte'], "l'id compte", ligne, comptes)
             if info == "" and donnee['id_compte'] not in coms:
                 coms.append(donnee['id_compte'])
             else:
                 msg += info
 
-            msg += self._test_id_coherence(donnee['id_prestation'], "l'id prestation", ligne, prestations)
+            msg += self.test_id_coherence(donnee['id_prestation'], "l'id prestation", ligne, prestations)
 
-            msg += self._test_id_coherence(donnee['id_user'], "l'id user", ligne, users)
+            msg += self.test_id_coherence(donnee['id_user'], "l'id user", ligne, users)
 
-            msg += self._test_id_coherence(donnee['id_operateur'], "l'id opérateur", ligne, users)
+            msg += self.test_id_coherence(donnee['id_operateur'], "l'id opérateur", ligne, users)
 
-            msg += self._test_id_coherence(donnee['id_staff'], "l'id staff", ligne, users, True)
+            msg += self.test_id_coherence(donnee['id_staff'], "l'id staff", ligne, users, True)
 
             donnee['quantite'], info = Format.est_un_nombre(donnee['quantite'], "la quantité", ligne, 1, 0)
             msg += info

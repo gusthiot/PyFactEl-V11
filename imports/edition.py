@@ -10,7 +10,7 @@ class Edition(object):
 
     nom_fichier = "paramedit.csv"
     libelle = "Paramètres d'Edition"
-    cles = ['chemin', 'Id-Plateforme', 'année', 'mois', 'filigrane', 'chemin_filigrane']
+    cles = ['chemin', 'Id-Plateforme', 'année', 'mois', 'filigrane']
 
     def __init__(self, dossier_source, module_a=False):
         """
@@ -49,8 +49,6 @@ class Edition(object):
         msg += err
 
         self.chemin, err = Format.est_un_chemin(donnees_csv['chemin'], "le chemin")
-        msg += err
-        self.chemin_filigrane, err = Format.est_un_chemin(donnees_csv['chemin_filigrane'], "le chemin filigrane")
         msg += err
 
         jours = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]

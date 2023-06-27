@@ -43,7 +43,7 @@ class Groupe(CsvImport):
             for ii in range(0, len(cats)):
                 cat = cats[ii]
                 nom = noms[ii]
-                msg += self._test_id_coherence(donnee[cat], "l'id catégorie " + nom, ligne, categories, True)
+                msg += self.test_id_coherence(donnee[cat], "l'id catégorie " + nom, ligne, categories, True)
 
             donnees_dict[donnee['id_groupe']] = donnee
             ligne += 1

@@ -48,9 +48,9 @@ class ClassePrestation(CsvImport):
             if donnee['eligible'] != 'OUI' and donnee['eligible'] != 'NON':
                 msg += "l'éligible de la ligne " + str(ligne) + " doit être OUI ou NON\n"
 
-            msg += self._test_id_coherence(donnee['id_article'], "l'id article SAP", ligne, artsap)
+            msg += self.test_id_coherence(donnee['id_article'], "l'id article SAP", ligne, artsap)
 
-            msg += self._test_id_coherence(donnee['id_overhead'], "l'id overhead", ligne, overheads, True)
+            msg += self.test_id_coherence(donnee['id_overhead'], "l'id overhead", ligne, overheads, True)
 
             donnees_dict[donnee['id_classe_prest']] = donnee
             ligne += 1

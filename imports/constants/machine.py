@@ -45,7 +45,7 @@ class Machine(CsvImport):
                     msg += "l'id machine '" + donnee['id_machine'] + "' de la ligne " + str(ligne) +\
                            " n'est pas unique\n"
 
-            msg += self._test_id_coherence(donnee['id_groupe'], "l'id groupe", ligne, groupes)
+            msg += self.test_id_coherence(donnee['id_groupe'], "l'id groupe", ligne, groupes)
 
             donnee['tx_rabais_hc'], info = Format.est_un_nombre(donnee['tx_rabais_hc'], "le rabais heures creuses",
                                                                 ligne, mini=0, maxi=100)

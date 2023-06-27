@@ -62,7 +62,7 @@ class Prestation(CsvImport):
             donnee['unite_prest'], info = Format.est_un_texte(donnee['unite_prest'], "l'unité prestation", ligne, True)
             msg += info
 
-            msg += self._test_id_coherence(donnee['id_classe_prest'], "l'id classe prestation", ligne, classprests)
+            msg += self.test_id_coherence(donnee['id_classe_prest'], "l'id classe prestation", ligne, classprests)
             if classprests.donnees[donnee['id_classe_prest']]['flag_coef'] == "NON":
                 msg += "le flag coef_prest de l'id classe prestation '" + donnee['id_classe_prest'] + \
                        "' de la ligne " + str(ligne) + "est à NON et devrait être à OUI\n"
@@ -71,9 +71,9 @@ class Prestation(CsvImport):
                 msg += "l'id classe prestation '" + donnee['id_classe_prest'] + "' de la ligne " + str(ligne) +\
                        " n'est pas référencée dans les coefficients\n"
 
-            msg += self._test_id_coherence(donnee['id_plateforme'], "l'id plateforme", ligne, plateformes)
+            msg += self.test_id_coherence(donnee['id_plateforme'], "l'id plateforme", ligne, plateformes)
 
-            msg += self._test_id_coherence(donnee['id_machine'], "l'id machine", ligne, machines, True)
+            msg += self.test_id_coherence(donnee['id_machine'], "l'id machine", ligne, machines, True)
 
             donnee['prix_unit'], info = Format.est_un_nombre(donnee['prix_unit'], "le prix unitaire", ligne, 2, 0)
             msg += info

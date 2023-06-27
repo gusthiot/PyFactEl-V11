@@ -42,7 +42,8 @@ class Paramtexte(object):
             'fact-S', 'fact-T', 'fact-U', 'fact-V', 'fact-W', 'fact-X', 'fact-Y', 'fact-Z', 'fact-AA', 'fact-AB',
             'fact-AC', 'fact-AD', 'fact-AE', 'fact-AF', 'fact-AG', 'fact-AH', 'fact-AI', 'fact-AJ', 'fact-AK',
             'fact-AL', 'fact-AM', 'fact-AN', 'fact-AO', 'fact-AP', 'fact-AQ', 'fact-AR', 'fact-AS', 'fact-AT',
-            'fact-AU', 'fact-AV', 'fact-AW', 'fact-AX', 'fact-AY']
+            'fact-AU', 'fact-AV', 'fact-AW', 'fact-AX', 'fact-AY', 'res-factel', 'res-time', 'res-pltf', 'res-year',
+            'res-month', 'res-version', 'res-folder', 'res-proforma']
 
     nom_fichier = "paramtext.csv"
     libelle = "Paramètres de Texte"

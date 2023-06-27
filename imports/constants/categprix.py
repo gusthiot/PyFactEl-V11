@@ -31,13 +31,13 @@ class CategPrix(CsvImport):
         ids = []
 
         for donnee in self.donnees:
-            info = self._test_id_coherence(donnee['id_classe'], "l'id classe client", ligne, classes)
+            info = self.test_id_coherence(donnee['id_classe'], "l'id classe client", ligne, classes)
             if info == "" and donnee['id_classe'] not in clas:
                 clas.append(donnee['id_classe'])
             else:
                 msg += info
 
-            info = self._test_id_coherence(donnee['id_categorie'], "l'id catégorie", ligne, categories)
+            info = self.test_id_coherence(donnee['id_categorie'], "l'id catégorie", ligne, categories)
             if info == "" and donnee['id_categorie'] not in ids:
                 ids.append(donnee['id_categorie'])
             else:

@@ -16,6 +16,7 @@ class Granted(CsvImport):
         """
         initialisation et importation des données
         :param dossier_source: Une instance de la classe dossier.DossierSource
+        :param edition: paramètres d'édition
         :param comptes: comptes importés
         :param classprests: classes prestations importées
         :param plateformes: plateformes importées
@@ -33,11 +34,11 @@ class Granted(CsvImport):
         triplets = []
 
         for donnee in self.donnees:
-            msg += self._test_id_coherence(donnee['proj-id'], "l'id compte", ligne, comptes)
+            msg += self.test_id_coherence(donnee['proj-id'], "l'id compte", ligne, comptes)
 
-            msg += self._test_id_coherence(donnee['item-idclass'], "l'id classe prestation", ligne, classprests)
+            msg += self.test_id_coherence(donnee['item-idclass'], "l'id classe prestation", ligne, classprests)
 
-            msg += self._test_id_coherence(donnee['platf-code'], "l'id plateforme", ligne, plateformes)
+            msg += self.test_id_coherence(donnee['platf-code'], "l'id plateforme", ligne, plateformes)
 
             triplet = [donnee['proj-id'], donnee['platf-code'], donnee['item-idclass']]
             if triplet not in triplets:

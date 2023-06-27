@@ -38,12 +38,12 @@ class Categorie(CsvImport):
                     msg += "l'id catégorie '" + donnee['id_categorie'] + "' de la ligne " + str(ligne) +\
                            " n'est pas unique\n"
 
-            msg += self._test_id_coherence(donnee['id_classe_prest'], "l'id classe prestation", ligne, classprests)
+            msg += self.test_id_coherence(donnee['id_classe_prest'], "l'id classe prestation", ligne, classprests)
             if classprests.donnees[donnee['id_classe_prest']]['flag_coef'] == "OUI":
                 msg += "le flag coef_prest de l'id classe prestation '" + donnee['id_classe_prest'] + \
                        "' de la ligne " + str(ligne) + "est à OUI et devrait être à NON\n"
 
-            msg += self._test_id_coherence(donnee['id_plateforme'], "l'id plateforme", ligne, plateformes)
+            msg += self.test_id_coherence(donnee['id_plateforme'], "l'id plateforme", ligne, plateformes)
 
             donnee['no_categorie'], info = Format.est_un_alphanumerique(donnee['no_categorie'], "le no catégorie",
                                                                         ligne)

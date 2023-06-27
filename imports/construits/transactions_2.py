@@ -16,18 +16,16 @@ class Transactions2(CsvImport):
             'item-name', 'transac-quantity', 'item-unit', 'valuation-price', 'sum-deduct', 'total-fact']
     libelle = "Transactions 2"
 
-    def __init__(self, dossier_source, annee, mois, plateforme, version, module_a=False):
+    def __init__(self, dossier_source, edition, plateforme, version):
         """
         initialisation et importation des données
         :param dossier_source: Une instance de la classe dossier.DossierSource
-        :param annee: année du fichier ciblé
-        :param mois: mois du fichier ciblé
+        :param edition: paramètres d'édition
         :param plateforme: plateforme traitée
         :param version: version de facturation ciblée
-        :param module_a: si on ne traite que le module A
         """
-        self.nom_fichier = "Transaction2_" + plateforme['abrev_plat'] + "_" + str(annee) + "_" + \
-                           Format.mois_string(mois) + "_" + str(version) + ".csv"
+        self.nom_fichier = "Transaction2_" + plateforme['abrev_plat'] + "_" + str(edition.annee) + "_" + \
+                           Format.mois_string(edition.mois) + "_" + str(version) + ".csv"
         super().__init__(dossier_source)
 
         del self.donnees[0]
@@ -45,11 +43,7 @@ class Transactions2(CsvImport):
             msg += info
             donnee['invoice-id'], info = Format.est_un_entier(donnee['invoice-id'], "l'id facture", ligne, 1001)
             msg += info
-            if module_a:
-                donnee['client-code'], info = Format.est_un_entier(donnee['client-code'], "le code client", ligne, 0)
-            else:
-                donnee['client-code'], info = Format.est_un_alphanumerique(donnee['client-code'], "le code client",
-                                                                           ligne)
+            donnee['client-code'], info = Format.est_un_alphanumerique(donnee['client-code'], "le code client", ligne)
             msg += info
             donnee['proj-id'], info = Format.est_un_alphanumerique(donnee['proj-id'], "l'id projet", ligne)
             msg += info
@@ -84,9 +78,9 @@ class Transactions2(CsvImport):
                            " ne peut concerner 2 clients : " + ids[donnee['invoice-id']] + " et " + \
                            donnee['client-code'] + "\n"
 
-            if donnee['invoice-year'] != annee:
+            if donnee['invoice-year'] != edition.annee:
                 msg += " mauvaise année à la ligne " + str(ligne)
-            if donnee['invoice-month'] != mois:
+            if donnee['invoice-month'] != edition.mois:
                 msg += " mauvais mois à la ligne " + str(ligne)
             if donnee['invoice-version'] != version:
                 msg += " mauvaise version à la ligne " + str(ligne)

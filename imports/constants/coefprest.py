@@ -31,12 +31,12 @@ class CoefPrest(CsvImport):
         clas = []
 
         for donnee in self.donnees:
-            info = self._test_id_coherence(donnee['id_classe'], "l'id classe client", ligne, classes)
+            info = self.test_id_coherence(donnee['id_classe'], "l'id classe client", ligne, classes)
             if info == "" and donnee['id_classe'] not in clas:
                 clas.append(donnee['id_classe'])
             else:
                 msg += info
-            info += self._test_id_coherence(donnee['id_classe_prest'], "l'id classe prestation", ligne, classprests)
+            info += self.test_id_coherence(donnee['id_classe_prest'], "l'id classe prestation", ligne, classprests)
             if info == "" and donnee['id_classe_prest'] not in prests:
                 prests.append(donnee['id_classe_prest'])
             else:

@@ -36,7 +36,7 @@ class Overhead(CsvImport):
                     msg += "l'id overhead '" + donnee['id_overhead'] + "' de la ligne " + str(ligne) + \
                            " n'est pas unique\n"
 
-            msg += self._test_id_coherence(donnee['id_article'], "l'id article SAP", ligne, artsap)
+            msg += self.test_id_coherence(donnee['id_article'], "l'id article SAP", ligne, artsap)
 
             donnees_dict[donnee['id_overhead']] = donnee
             ligne += 1

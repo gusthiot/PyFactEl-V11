@@ -30,9 +30,9 @@ class Numero(CsvImport):
         donnees_dict = {}
 
         for donnee in self.donnees:
-            msg += self._test_id_coherence(donnee['invoice-project'], "l'invoice-project", ligne, comptes, True)
+            msg += self.test_id_coherence(donnee['invoice-project'], "l'invoice-project", ligne, comptes, True)
 
-            msg += self._test_id_coherence(donnee['client-code'], "le code client", ligne, clients)
+            msg += self.test_id_coherence(donnee['client-code'], "le code client", ligne, clients)
 
             donnee['invoice-id'], info = Format.est_un_entier(donnee['invoice-id'], "l'id facture", ligne, 1001)
             msg += info

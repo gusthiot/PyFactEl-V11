@@ -26,6 +26,7 @@ class VersionNew(CsvDict):
         self.transactions_new = transactions_2_new.valeurs
 
         self.corrections = []
+        self.clients = []
 
         if imports.version == 0:
             for fact_id in sommes_2.par_fact.keys():
@@ -40,6 +41,8 @@ class VersionNew(CsvDict):
                         self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
                                               self.imports.version, 'CANCELED', donnee['version-new-amount'], 0],
                                              fact_id)
+                        if donnee['client-code'] not in self.clients:
+                            self.clients.append(donnee['client-code'])
                     else:
                         self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
                                               donnee['version-last'], 'IDEM', donnee['version-new-amount'],
@@ -71,6 +74,8 @@ class VersionNew(CsvDict):
                         self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
                                               self.imports.version, 'CORRECTED', donnee['version-new-amount'],
                                               round(sommes_2.par_fact[fact_id]['total'], 2)], fact_id)
+                        if donnee['client-code'] not in self.clients:
+                            self.clients.append(donnee['client-code'])
 
             for fact_id in sommes_2.par_fact.keys():
                 if fact_id not in imports.versions.donnees.keys():
@@ -85,6 +90,8 @@ class VersionNew(CsvDict):
         base = self.transactions_new[somme_fact['base']]
         self._ajouter_valeur([fact_id, base['client-code'], base['invoice-type'], self.imports.version, 'NEW', 0,
                               round(somme_fact['total'], 2)], fact_id)
+        if base['client-code'] not in self.clients:
+            self.clients.append(base['client-code'])
 
     def __ajout_correction(self, par_user, sens):
         """

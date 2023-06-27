@@ -10,3 +10,6 @@ from .pdfs import Pdfs
 from .facture import Facture
 from .ticket import Ticket
 from .total import Total
+from .resultat_new import ResultatNew
+from .details import Details
+from .annexe_subsides import AnnexeSubsides

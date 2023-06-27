@@ -7,7 +7,7 @@ class Transactions1(CsvDict):
     Classe pour la création des transactions de niveau 1
     """
 
-    cles = ['invoice-year', 'invoice-month', 'invoice-version', 'invoice-id', 'invoice-ref', 'invoice-type',
+    cles = ['invoice-year', 'invoice-month', 'version-last', 'invoice-id', 'invoice-ref', 'invoice-type',
             'platf-name', 'client-code', 'client-sap', 'client-name', 'client-idclass', 'client-class',
             'client-labelclass', 'proj-id', 'proj-nbr', 'proj-name', 'item-idsap', 'item-codeD', 'item-order',
             'item-labelcode', 'total-fact']
@@ -45,6 +45,8 @@ class Transactions1(CsvDict):
                                 ligne.append(ref)
                             elif cle == 'total-fact':
                                 ligne.append(round(2*total, 1)/2)
+                            elif cle == 'version-last':
+                                ligne.append(version)
                             else:
                                 ligne.append(base[cle])
                         self._ajouter_valeur(ligne, i)

@@ -30,13 +30,13 @@ class CleSubside(CsvImport):
         quadruplets = []
 
         for donnee in self.donnees:
-            msg += self._test_id_coherence(donnee['type'], "le type", ligne, subsides)
+            msg += self.test_id_coherence(donnee['type'], "le type", ligne, subsides)
 
-            msg += self._test_id_coherence(donnee['id_classe'], "l'id classe client", ligne, classes, True)
+            msg += self.test_id_coherence(donnee['id_classe'], "l'id classe client", ligne, classes, True)
 
-            msg += self._test_id_coherence(donnee['code_client'], "le code client", ligne, clients, True)
+            msg += self.test_id_coherence(donnee['code_client'], "le code client", ligne, clients, True)
 
-            msg += self._test_id_coherence(donnee['id_machine'], "l'id machine", ligne, machines, True)
+            msg += self.test_id_coherence(donnee['id_machine'], "l'id machine", ligne, machines, True)
 
             quadruplet = donnee['type'] + donnee['id_classe'] + donnee['code_client'] + donnee['id_machine']
 
