@@ -10,13 +10,12 @@ class Resultat(object):
 
     nom_fichier = "result.csv"
     libelle = "Résultats précédents"
-    cles = ['FactEl', 'Time', 'Platform', 'Year', 'Month', 'Version', 'Folder', 'Proforma']
+    cles = ['FactEl', 'Platform', 'Year', 'Month', 'Version', 'Folder', 'Type']
 
-    def __init__(self, dossier_source, paramtexte, plateformes):
+    def __init__(self, dossier_source, plateformes):
         """
         initialisation et importation des données
         :param dossier_source: Une instance de la classe dossier.DossierSource
-        :param paramtexte: paramètres de texte importés
         :param plateformes: plateformes importées
         """
         donnees_csv = {}
@@ -38,8 +37,6 @@ class Resultat(object):
 
         self.vlog, err = Format.est_un_nombre(donnees_csv['FactEl'][1], "la version logicielle")
         msg += err
-        self.date, err = Format.est_une_date(donnees_csv['Time'][1], "la date")
-        msg += err
         self.plateforme, err = Format.est_un_alphanumerique(donnees_csv['Platform'][1], "l'id plateforme")
         msg += err
         msg += plateformes.test_id_coherence(donnees_csv['Platform'][1], "l'id plateforme", 3, plateformes)
@@ -51,10 +48,10 @@ class Resultat(object):
         msg += err
         self.repertoire, err = Format.est_un_alphanumerique(donnees_csv['Folder'][1], "le répertoire")
         msg += err
-        if donnees_csv['Proforma'][1] != 'OUI' and donnees_csv['Proforma'][1] != 'NON':
-            msg += "le proforma doit être OUI ou NON\n"
+        if donnees_csv['Type'][1] != 'SAP' and donnees_csv['Type'][1] != 'PROFORMA' and donnees_csv['Type'][1] != 'SIMU':
+            msg += "le type doit être SAP, PROFORMA ou SIMU\n"
         else:
-            self.proforma = donnees_csv['Proforma'][1]
+            self.type = donnees_csv['Type']
 
         if msg != "":
             Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)

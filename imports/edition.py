@@ -10,7 +10,7 @@ class Edition(object):
 
     nom_fichier = "paramedit.csv"
     libelle = "Paramètres d'Edition"
-    cles = ['chemin', 'Id-Plateforme', 'année', 'mois', 'filigrane']
+    cles = ['Platform', 'Year', 'Month', 'Type', 'Watermark']
 
     def __init__(self, dossier_source, module_a=False):
         """
@@ -33,23 +33,25 @@ class Edition(object):
             if cle not in donnees_csv:
                 msg += "\nClé manquante dans %s: %s" % (self.nom_fichier, cle)
 
-        self.annee, err = Format.est_un_entier(donnees_csv['année'], "l'année", mini=2000, maxi=2099)
+        self.annee, err = Format.est_un_entier(donnees_csv['Year'], "l'année", mini=2000, maxi=2099)
         msg += err
 
-        self.mois, err = Format.est_un_entier(donnees_csv['mois'], "le mois", mini=1, maxi=12)
+        self.mois, err = Format.est_un_entier(donnees_csv['Month'], "le mois", mini=1, maxi=12)
         msg += err
 
         if module_a:
-            self.plateforme, err = Format.est_un_entier(donnees_csv['Id-Plateforme'], "l'id plateforme", mini=0)
+            self.plateforme, err = Format.est_un_entier(donnees_csv['Platform'], "l'id plateforme", mini=0)
         else:
-            self.plateforme, err = Format.est_un_alphanumerique(donnees_csv['Id-Plateforme'], "l'id plateforme")
+            self.plateforme, err = Format.est_un_alphanumerique(donnees_csv['Platform'], "l'id plateforme")
         msg += err
 
-        self.filigrane, err = Format.est_un_texte(donnees_csv['filigrane'], "le filigrane", vide=True)
+        self.filigrane, err = Format.est_un_texte(donnees_csv['Watermark'], "le filigrane", vide=True)
         msg += err
 
-        self.chemin, err = Format.est_un_chemin(donnees_csv['chemin'], "le chemin")
-        msg += err
+        if donnees_csv['Type'] != 'SAP' and donnees_csv['Type'] != 'PROFORMA' and donnees_csv['Type'] != 'SIMU':
+            msg += "le type doit être SAP, PROFORMA ou SIMU\n"
+        else:
+            self.type = donnees_csv['Type']
 
         jours = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
         if self.mois != 2:

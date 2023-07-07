@@ -10,7 +10,7 @@ class Facturation(object):
 
     nom_fichier = "paramfact.csv"
     libelle = "Paramètres Généraux"
-    cles = ['origine', 'code_int', 'code_ext', 'commerciale', 'canal', 'secteur', 'devise', 'lien', 'modes']
+    cles = ['origine', 'code_int', 'code_ext', 'commerciale', 'canal', 'secteur', 'devise', 'modes']
 
     def __init__(self, dossier_source):
         """
@@ -47,8 +47,6 @@ class Facturation(object):
         self.secteur, err = Format.est_un_alphanumerique(donnees_csv['secteur'][1], "le secteur")
         msg += err
         self.devise, err = Format.est_un_alphanumerique(donnees_csv['devise'][1], "la devise")
-        msg += err
-        self.lien, err = Format.est_un_chemin(donnees_csv['lien'][1], "le lien")
         msg += err
 
         self.modes = []

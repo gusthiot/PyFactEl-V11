@@ -1,9 +1,9 @@
-from imports.construits import Resultat
+from datetime import datetime
 
 
-class ResultatNew(object):
+class Info(object):
     """
-    Classe pour la création de la table des résultats
+    Classe pour la création du fichier d'information
     """
 
     def __init__(self, imports):
@@ -12,8 +12,8 @@ class ResultatNew(object):
         :param imports: données importées
         """
         self.lignes = []
-        self.nom = "result.csv"
-        self.cles = Resultat.cles
+        self.nom = "info.csv"
+        self.cles = ['FactEl', 'Platform', 'Year', 'Month', 'Version', 'Folder', 'Type']
         pt = imports.paramtexte.donnees
 
         self.lignes.append(['FactEl', pt['res-factel'], 11])
@@ -23,6 +23,9 @@ class ResultatNew(object):
         self.lignes.append(['Version', pt['res-version'], imports.version])
         self.lignes.append(['Folder', pt['res-folder'], imports.chemin_enregistrement])
         self.lignes.append(['Type', pt['res-type'], imports.edition.type])
+        self.lignes.append(['Created', pt['info-created'], datetime.now().strftime('%Y-%m-%d %H:%M:%S')])
+        self.lignes.append(['Sent', pt['info-sent'], ""])
+        self.lignes.append(['Closed', pt['info-closed'], ""])
 
     def csv(self, dossier_destination):
         """

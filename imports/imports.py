@@ -63,7 +63,7 @@ class Imports(object):
         self.artsap = ArticleSap(dossier_source)
         self.overheads = Overhead(dossier_source, self.artsap)
         self.classprests = ClassePrestation(dossier_source, self.artsap, self.overheads)
-        self.resultats = Resultat(dossier_source, self.paramtexte, self.plateformes)
+        self.resultats = Resultat(dossier_source, self.plateformes)
         self.categories = Categorie(dossier_source, self.classprests, self.plateformes)
         self.groupes = Groupe(dossier_source, self.categories)
         self.machines = Machine(dossier_source, self.groupes, self.edition)
@@ -133,7 +133,7 @@ class Imports(object):
 
         # vérification terminée, création des dossiers de sauvegarde
 
-        self.chemin_enregistrement = Chemin.chemin([self.edition.chemin, self.edition.plateforme, self.edition.annee,
+        self.chemin_enregistrement = Chemin.chemin(["./", self.edition.plateforme, self.edition.annee,
                                                     Format.mois_string(self.edition.mois), self.version, time.time()])
         self.chemin_in = Chemin.chemin([self.chemin_enregistrement, "IN"])
         self.chemin_prix = Chemin.chemin([self.chemin_enregistrement, "Prix"])

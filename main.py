@@ -52,6 +52,8 @@ from module_a import (VersionNew,
                       Facture,
                       Total,
                       Ticket,
+                      Sap,
+                      Info,
                       ResultatNew)
 from imports import (Edition,
                      Imports)
@@ -138,8 +140,11 @@ try:
         tickets = Ticket(imports, factures, sommes_1, new_versions)
         tickets.creer_html(DossierDestination(imports.chemin_enregistrement))
         resultats = ResultatNew(imports)
-        resultats.csv(DossierDestination(imports.chemin_enregistrement))
         resultats.csv(DossierDestination(imports.chemin_out))
+        sap = Sap(imports, new_versions, sommes_1)
+        sap.csv(DossierDestination(imports.chemin_enregistrement))
+        info = Info(imports)
+        info.csv(DossierDestination(imports.chemin_enregistrement))
 
         Interface.affiche_message("OK !!! (" +
                                   str(datetime.timedelta(seconds=(time.time() - start_time))).split(".")[0] + ")")
