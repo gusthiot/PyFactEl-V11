@@ -1,4 +1,3 @@
-import time
 from imports import Edition
 from imports.constants import (ArticleSap,
                                Categorie,
@@ -42,10 +41,11 @@ class Imports(object):
     Classe pour l'importation et la structuration des données
     """
 
-    def __init__(self, dossier_source):
+    def __init__(self, dossier_source, destination, unique):
         """
         initialisation et importation des données
         :param dossier_source: Une instance de la classe dossier.DossierSource
+        :param destination: dossier de destination de sauvegarde
         """
 
         self.dossier_source = dossier_source
@@ -133,8 +133,8 @@ class Imports(object):
 
         # vérification terminée, création des dossiers de sauvegarde
 
-        self.chemin_enregistrement = Chemin.chemin(["./", self.edition.plateforme, self.edition.annee,
-                                                    Format.mois_string(self.edition.mois), self.version, time.time()])
+        self.chemin_enregistrement = Chemin.chemin([destination, self.edition.plateforme, self.edition.annee,
+                                                    Format.mois_string(self.edition.mois), self.version, unique])
         self.chemin_in = Chemin.chemin([self.chemin_enregistrement, "IN"])
         self.chemin_prix = Chemin.chemin([self.chemin_enregistrement, "Prix"])
         self.chemin_cannexes = Chemin.chemin([self.chemin_enregistrement, "Annexes_CSV"])

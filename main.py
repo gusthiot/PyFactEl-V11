@@ -3,19 +3,11 @@
 """
 Fichier principal à lancer pour faire tourner le logiciel
 
-Usage:
-  main.py [options]
-
-Options:
-
-  -h   --help              Affiche le présent message
-  --entrees <chemin>       Chemin des fichiers d'entrée
-  --sansgraphiques         Pas d'interface graphique
 """
 import datetime
 import time
 import traceback
-from docopt import docopt
+import argparse
 from core import (Interface,
                   Chemin,
                   DossierSource,
@@ -58,21 +50,37 @@ from module_a import (VersionNew,
 from imports import (Edition,
                      Imports)
 
-arguments = docopt(__doc__)
+parser = argparse.ArgumentParser()
+parser.add_argument("-s", "--sansgraphiques", help="Pas d'interface graphique", action="store_true")
+parser.add_argument("-e", "--entrees", help="Chemin des fichiers d'entrée")
+parser.add_argument("-d", "--destination", help="Racine des sauvegardes")
+parser.add_argument("-u", "--unique", help="Nom unique du dossier de sauvegarde")
+args = parser.parse_args()
 
-if arguments["--sansgraphiques"]:
+if args.sansgraphiques > 0:
     Interface.interface_graphique(False)
 
-if arguments["--entrees"]:
-    dossier_data = arguments["--entrees"]
+if args.entrees:
+    dossier_data = args.entrees
 else:
     dossier_data = Interface.choisir_dossier()
 dossier_source = DossierSource(dossier_data)
+
+if args.destination:
+    destination = args.destination
+else:
+    destination = "./"
+
+if args.unique:
+    unique = args.unique
+else:
+    unique = int(time.time())
+
 try:
     if Chemin.existe(Chemin.chemin([dossier_data, Edition.nom_fichier])):
         start_time = time.time()
 
-        imports = Imports(dossier_source)
+        imports = Imports(dossier_source, destination, unique)
 
         # Module D
         articles = Articles(imports)
@@ -146,7 +154,7 @@ try:
         info = Info(imports)
         info.csv(DossierDestination(imports.chemin_enregistrement))
 
-        Interface.affiche_message("OK !!! (" +
+        Interface.affiche_message("OK " + str(unique) + " !!! (" +
                                   str(datetime.timedelta(seconds=(time.time() - start_time))).split(".")[0] + ")")
     else:
         Interface.affiche_message("Carnet d'ordre introuvable")
