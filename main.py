@@ -51,10 +51,11 @@ from imports import (Edition,
                      Imports)
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-s", "--sansgraphiques", help="Pas d'interface graphique", action="store_true")
+parser.add_argument("-g", "--sansgraphiques", help="Pas d'interface graphique", action="store_true")
 parser.add_argument("-e", "--entrees", help="Chemin des fichiers d'entrée")
 parser.add_argument("-d", "--destination", help="Racine des sauvegardes")
 parser.add_argument("-u", "--unique", help="Nom unique du dossier de sauvegarde")
+parser.add_argument("-s", "--sciper", help="Sciper de la personne lançant la facturation")
 args = parser.parse_args()
 
 if args.sansgraphiques > 0:
@@ -75,6 +76,11 @@ if args.unique:
     unique = args.unique
 else:
     unique = int(time.time())
+
+if args.sciper:
+    sciper = args.sciper
+else:
+    sciper = "000000"
 
 try:
     if Chemin.existe(Chemin.chemin([dossier_data, Edition.nom_fichier])):
@@ -142,9 +148,9 @@ try:
         Chemin.csv_files_in_zip(total.csv_fichiers, imports.chemin_cannexes)
         if Latex.possibles():
             pdfs = Pdfs(imports, new_transactions_2, sommes_2, new_versions)
-        factures = Facture(imports, new_versions, sommes_1)
+        factures = Facture(imports, new_versions, sommes_1, sciper)
         if imports.edition.filigrane == "":
-            factures.csv(DossierDestination(imports.chemin_enregistrement))
+            factures.json(imports.chemin_enregistrement)
         tickets = Ticket(imports, factures, sommes_1, new_versions)
         tickets.creer_html(DossierDestination(imports.chemin_enregistrement))
         resultats = ResultatNew(imports)

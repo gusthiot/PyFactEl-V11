@@ -10,7 +10,7 @@ class Facturation(object):
 
     nom_fichier = "paramfact.csv"
     libelle = "Paramètres Généraux"
-    cles = ['origine', 'code_int', 'code_ext', 'commerciale', 'canal', 'secteur', 'devise', 'modes']
+    cles = ['code_int', 'code_ext', 'devise', 'modes']
 
     def __init__(self, dossier_source):
         """
@@ -34,17 +34,9 @@ class Facturation(object):
             if cle not in donnees_csv:
                 msg += "\nClé manquante dans %s: %s" % (self.nom_fichier, cle)
 
-        self.origine, err = Format.est_un_alphanumerique(donnees_csv['origine'][1], "l'origine")
-        msg += err
         self.code_int, err = Format.est_un_alphanumerique(donnees_csv['code_int'][1], "le code INT")
         msg += err
         self.code_ext, err = Format.est_un_alphanumerique(donnees_csv['code_ext'][1], "le code EXT")
-        msg += err
-        self.commerciale, err = Format.est_un_alphanumerique(donnees_csv['commerciale'][1], "le com.")
-        msg += err
-        self.canal, err = Format.est_un_alphanumerique(donnees_csv['canal'][1], "le canal")
-        msg += err
-        self.secteur, err = Format.est_un_alphanumerique(donnees_csv['secteur'][1], "le secteur")
         msg += err
         self.devise, err = Format.est_un_alphanumerique(donnees_csv['devise'][1], "la devise")
         msg += err
