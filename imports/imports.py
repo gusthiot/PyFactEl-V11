@@ -139,6 +139,7 @@ class Imports(object):
         self.chemin_prix = Chemin.chemin([self.chemin_enregistrement, "Prix"])
         self.chemin_cannexes = Chemin.chemin([self.chemin_enregistrement, "Annexes_CSV"])
         self.chemin_pannexes = Chemin.chemin([self.chemin_enregistrement, "Annexes_PDF"])
+        self.chemin_factures = Chemin.chemin([self.chemin_enregistrement, "Factures_JSON"])
         self.chemin_out = Chemin.chemin([self.chemin_enregistrement, "OUT"])
         self.chemin_bilans = Chemin.chemin([self.chemin_enregistrement, "Bilans_Stats"])
 
@@ -148,6 +149,7 @@ class Imports(object):
         Chemin.existe(self.chemin_out, True)
         Chemin.existe(self.chemin_cannexes, True)
         Chemin.existe(self.chemin_pannexes, True)
+        Chemin.existe(self.chemin_factures, True)
 
         # sauvegarde des bruts
 

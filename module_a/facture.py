@@ -7,22 +7,19 @@ class Facture(object):
     Classe contenant les méthodes nécessaires à la génération du JSON des factures
     """
 
-    def __init__(self, imports, versions, sommes_1, sciper):
+    def __init__(self, imports, versions, sommes_1, sciper, chemin_destination):
         """
         génère la facture sous forme de csv
         :param imports: données importées
         :param versions: versions des factures générées
         :param sommes_1: sommes des transactions 1
         :param sciper: sciper de la personne lançant la facturation
+        :param chemin_destination: le dossier de sauvegarde du fichier
         """
-
-        self.nom = "facture.json"
 
         self.par_client = {}
 
         textes = imports.paramtexte.donnees
-
-        self.dict_fact = {}
 
         for id_fact, donnee in versions.valeurs.items():
             if donnee['version-change'] != 'CANCELED' and donnee['version-new-amount'] > 0:
@@ -37,9 +34,7 @@ class Facture(object):
                 code_sap = client['code_sap']
 
                 if donnee['version-change'] == 'NEW' or donnee['version-change'] == 'CORRECTED':
-                    self.dict_fact[id_fact] = {}
-                    sdf = self.dict_fact[id_fact]
-                    sdf['execmode'] = "SIMU"
+                    dict_fact = {'execmode': "SIMU"}
 
                     if classe['ref_fact'] == "INT":
                         genre = imports.facturation.code_int
@@ -54,9 +49,10 @@ class Facture(object):
                     ref = classe['ref_fact'] + "_" + str(imports.edition.annee) + "_" + \
                         Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" + str(id_fact)
 
-                    sdf['header'] = {'ordertype': genre, 'ordernr': ref, 'currency': imports.facturation.devise,
-                                     'clientnr': code_sap, 'distribution': client['mode'], 'description': your_ref}
-                    sdf['shipper'] = {'sciper': sciper, 'fund': imports.plateforme['fonds']}
+                    dict_fact['header'] = {'ordertype': genre, 'ordernr': ref, 'currency': imports.facturation.devise,
+                                           'clientnr': code_sap, 'distribution': client['mode'],
+                                           'description': your_ref}
+                    dict_fact['shipper'] = {'sciper': sciper, 'fund': imports.plateforme['fonds']}
 
                     if classe['grille'] == "OUI":
                         grille = imports.plateforme['grille'] + '.pdf'
@@ -67,12 +63,12 @@ class Facture(object):
                             Format.mois_string(imports.edition.mois) + "_" + str(donnee['version-last']) + "_" +
                             str(id_fact) + ".pdf")
 
-                    sdf['attachment'] = [{'filename': lien}, {'filename': grille}]
+                    dict_fact['attachment'] = [{'filename': lien}, {'filename': grille}]
 
-                    sdf['partner'] = {'clientnr': code_sap, 'name2': client['nom2'], 'name3': client['nom3'],
-                                      'email': client['email']}
+                    dict_fact['partner'] = {'clientnr': code_sap, 'name2': client['nom2'], 'name3': client['nom3'],
+                                            'email': client['email']}
 
-                    sdf['items'] = []
+                    dict_fact['items'] = []
 
                 inc = 1
                 # date_dernier = str(imports.edition.annee) + Format.mois_string(imports.edition.mois) + \
@@ -87,9 +83,11 @@ class Facture(object):
                             Format.mois_string(imports.edition.mois) + article['code_d']
 
                         if donnee['version-change'] == 'NEW' or donnee['version-change'] == 'CORRECTED':
-                            sdf['items'].append({'number': article['code_sap'], 'qty': article['quantite'],
-                                                 'price': net, 'unit': article['unite'], 'text': article['texte_sap'],
-                                                 'shipper_imputation': {'opcode': code_op}, 'internalconsoname': nom})
+                            dict_fact['items'].append({'number': article['code_sap'], 'qty': article['quantite'],
+                                                       'price': net, 'unit': article['unite'],
+                                                       'text': article['texte_sap'],
+                                                       'shipper_imputation': {'opcode': code_op},
+                                                       'internalconsoname': nom})
 
                         description = article['code_d'] + " : " + str(article['code_sap'])
                         self.par_client[code][id_fact]['factures'].append({'poste': poste, 'nom': nom,
@@ -100,11 +98,7 @@ class Facture(object):
                         poste += 1
                     inc += 1
 
-    def json(self, chemin_destination):
-        """
-        création du fichier json à partir d'un dictionnaire de valeurs
-        :param chemin_destination: le dossier de sauvegarde du fichier
-        """
-
-        with open(Chemin.chemin([chemin_destination, self.nom]), 'w') as outfile:
-            json.dump(self.dict_fact, outfile, indent=4)
+                if donnee['version-change'] == 'NEW' or donnee['version-change'] == 'CORRECTED':
+                    if imports.edition.filigrane == "":
+                        with open(Chemin.chemin([chemin_destination, "facture_"+str(id_fact)+".json"]), 'w') as outfile:
+                            json.dump(dict_fact, outfile, indent=4)

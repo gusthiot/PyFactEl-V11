@@ -148,9 +148,7 @@ try:
         Chemin.csv_files_in_zip(total.csv_fichiers, imports.chemin_cannexes)
         if Latex.possibles():
             pdfs = Pdfs(imports, new_transactions_2, sommes_2, new_versions)
-        factures = Facture(imports, new_versions, sommes_1, sciper)
-        if imports.edition.filigrane == "":
-            factures.json(imports.chemin_enregistrement)
+        factures = Facture(imports, new_versions, sommes_1, sciper, imports.chemin_factures)
         tickets = Ticket(imports, factures, sommes_1, new_versions)
         tickets.creer_html(DossierDestination(imports.chemin_enregistrement))
         resultats = ResultatNew(imports)
