@@ -158,7 +158,7 @@ try:
         info = Info(imports)
         info.csv(DossierDestination(imports.chemin_enregistrement))
 
-        Interface.affiche_message("OK " + str(unique) + " !!! (" +
+        Interface.affiche_message("OK " + str(imports.version) + " !!! (" +
                                   str(datetime.timedelta(seconds=(time.time() - start_time))).split(".")[0] + ")")
     else:
         Interface.affiche_message("Carnet d'ordre introuvable")

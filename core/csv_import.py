@@ -41,7 +41,7 @@ class CsvImport(object):
         num = len(self.cles)
         if len(ligne) != num:
             Interface.fatal(ErreurConsistance(),
-                         self.libelle + ": nombre de lignes incorrect : " +
+                         self.libelle + ": nombre de colonnes incorrect : " +
                          str(len(ligne)) + ", attendu : " + str(num))
         donnees_ligne = {}
         for xx in range(0, num):

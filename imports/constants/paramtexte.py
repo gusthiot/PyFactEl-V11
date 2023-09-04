@@ -37,14 +37,9 @@ class Paramtexte(object):
             'annex-compte-proj-no', 'annex-compte-user', 'annex-compte-start', 'annex-compte-end',
             'annex-compte-prestation', 'annex-compte-quantity', 'annex-compte-unit', 'annex-compte-unit-price',
             'annex-compte-total-CHF', 'annex-compte-subtotal', 'annex-compte-total', 'annex-compte-pied-page-g1',
-            'annex-compte-pied-page-g2', 'fact-A', 'fact-B', 'fact-C', 'fact-D', 'fact-E', 'fact-F', 'fact-G', 'fact-H',
-            'fact-I', 'fact-J', 'fact-K', 'fact-L', 'fact-M', 'fact-N', 'fact-O', 'fact-P', 'fact-Q', 'fact-R',
-            'fact-S', 'fact-T', 'fact-U', 'fact-V', 'fact-W', 'fact-X', 'fact-Y', 'fact-Z', 'fact-AA', 'fact-AB',
-            'fact-AC', 'fact-AD', 'fact-AE', 'fact-AF', 'fact-AG', 'fact-AH', 'fact-AI', 'fact-AJ', 'fact-AK',
-            'fact-AL', 'fact-AM', 'fact-AN', 'fact-AO', 'fact-AP', 'fact-AQ', 'fact-AR', 'fact-AS', 'fact-AT',
-            'fact-AU', 'fact-AV', 'fact-AW', 'fact-AX', 'fact-AY', 'res-factel', 'res-pltf', 'res-year', 'res-month',
-            'res-version', 'res-folder', 'res-type', 'filigr-prof', 'track-status', 'track-doc-nr', 'track-err-msg',
-            'info-created', 'info-sent', 'info-closed']
+            'annex-compte-pied-page-g2', 'res-factel', 'res-pltf', 'res-year', 'res-month', 'res-version', 'res-folder',
+            'res-type', 'filigr-prof', 'track-status', 'track-doc-nr', 'track-err-msg', 'info-created', 'info-sent',
+            'info-closed']
 
     nom_fichier = "paramtext.csv"
     libelle = "Paramètres de Texte"
