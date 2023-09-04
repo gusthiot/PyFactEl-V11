@@ -59,17 +59,19 @@ class Facture(object):
                             Format.mois_string(imports.edition.mois) + "_" + str(donnee['version-last']) + "_" +
                             str(id_fact) + ".pdf")
 
-                    with open(Chemin.chemin([imports.chemin_pannexes, lien]), "rb") as pdf:
-                        annexe_base64 = base64.b64encode(pdf.read())
+                    # with open(Chemin.chemin([imports.chemin_pannexes, lien]), "rb") as pdf:
+                    #     annexe_base64 = base64.b64encode(pdf.read())
 
-                    dict_fact['attachment'] = [{'filename': lien, 'filecontent': annexe_base64.decode('utf-8')}]
+                    dict_fact['attachment'] = [{'filename': lien}]
+                    # dict_fact['attachment'] = [{'filename': lien, 'filecontent': annexe_base64.decode('utf-8')}]
 
                     if classe['grille'] == "OUI":
                         grille = imports.plateforme['grille'] + '.pdf'
-                        with open(Chemin.chemin([imports.dossier_source.chemin, grille]), "rb") as pdf:
-                            grille_base64 = base64.b64encode(pdf.read())
-                        dict_fact['attachment'].append({'filename': grille,
-                                                        'filecontent': grille_base64.decode('utf-8')})
+                        # with open(Chemin.chemin([imports.dossier_source.chemin, grille]), "rb") as pdf:
+                        #     grille_base64 = base64.b64encode(pdf.read())
+                        # dict_fact['attachment'].append({'filename': grille,
+                        #                                'filecontent': grille_base64.decode('utf-8')})
+                        dict_fact['attachment'].append({'filename': grille})
 
                     dict_fact['partner'] = {'clientnr': code_sap, 'name2': client['nom2'], 'name3': client['nom3'],
                                             'email': client['email']}
