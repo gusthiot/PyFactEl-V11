@@ -22,7 +22,10 @@ class Sap(CsvList):
         for donnee in versions.valeurs.values():
             if donnee['version-change'] == 'NEW' or donnee['version-change'] == 'CORRECTED':
                 client = imports.clients.donnees[donnee['client-code']]
-                total = sommes_1.par_fact[donnee['invoice-id']]['transactions']['total']
+                if donnee['invoice-id'] in sommes_1.par_fact:
+                    total = sommes_1.par_fact[donnee['invoice-id']]['transactions']['total']
+                else:
+                    total = 0
 
                 ligne = [client['abrev_labo'], donnee['invoice-id'], total, "READY", "", ""]
                 self.lignes.append(ligne)

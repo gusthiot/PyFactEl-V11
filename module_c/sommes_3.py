@@ -1,5 +1,3 @@
-import datetime
-
 
 class Sommes3(object):
     """
