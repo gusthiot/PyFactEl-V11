@@ -9,17 +9,17 @@ class Service(CsvImport):
     Classe pour l'importation des données de Services
     """
 
-    cles = ['annee', 'mois', 'id_compte', 'id_user', 'id_categorie', 'date', 'quantite', 'id_op', 'remarque_staff',
-            'validation', 'id_staff']
+    cles = ['annee', 'mois', 'id_compte', 'id_user', 'id_groupe', 'date', 'duree_machine', 'duree_mo', 'id_op',
+            'id_service', 'intitule', 'remarque_staff', 'validation', 'id_staff']
     nom_fichier = "srv.csv"
     libelle = "Services"
 
-    def __init__(self, dossier_source, comptes, categories, users):
+    def __init__(self, dossier_source, comptes, groupes, users):
         """
         initialisation et importation des données
         :param dossier_source: Une instance de la classe dossier.DossierSource
         :param comptes: comptes importés
-        :param categories: catégories importées
+        :param groupes: groupes importés
         :param users: users importés
         """
         super().__init__(dossier_source)
@@ -42,7 +42,7 @@ class Service(CsvImport):
             else:
                 msg += info
 
-            msg += self.test_id_coherence(donnee['id_categorie'], "l'id catégorie", ligne, categories)
+            msg += self.test_id_coherence(donnee['id_groupe'], "l'id groupe", ligne, groupes)
 
             msg += self.test_id_coherence(donnee['id_user'], "l'id user", ligne, users)
 
@@ -50,12 +50,17 @@ class Service(CsvImport):
 
             msg += self.test_id_coherence(donnee['id_staff'], "l'id staff", ligne, users, True)
 
-            donnee['quantite'], info = Format.est_un_nombre(donnee['quantite'], "la quantité", ligne, 3, 0)
-            msg += info
-
             donnee['date'], info = Format.est_une_date(donnee['date'], "la date", ligne)
             msg += info
 
+            donnee['duree_machine'], info = Format.est_un_nombre(donnee['duree_machine'], "la durée machine", ligne, 3,
+                                                                 0)
+            msg += info
+            donnee['duree_mo'], info = Format.est_un_nombre(donnee['duree_mo'], "la durée main d'oeuvre", ligne, 3, 0)
+            msg += info
+            donnee['id_service'], info = Format.est_un_alphanumerique(donnee['id_service'], "l'id service", ligne)
+            msg += info
+            donnee['intitule'], info = Format.est_un_texte(donnee['intitule'], "l'intitulé service", ligne)
             donnee['remarque_staff'], info = Format.est_un_texte(donnee['remarque_staff'], "la remarque staff", ligne,
                                                                  True)
             msg += info

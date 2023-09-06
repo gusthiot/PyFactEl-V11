@@ -82,7 +82,7 @@ class Imports(object):
         self.acces = Acces(dossier_source, self.comptes, self.machines, self.users)
         self.noshows = NoShow(dossier_source, self.comptes, self.machines, self.users)
         self.livraisons = Livraison(dossier_source, self.comptes, self.prestations, self.users)
-        self.services = Service(dossier_source, self.comptes, self.categories, self.users)
+        self.services = Service(dossier_source, self.comptes, self.groupes, self.users)
 
         # vérification des données fondamentales
 

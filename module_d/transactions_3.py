@@ -57,12 +57,12 @@ class Transactions3(CsvDict):
 
             if duree_hp > 0 or duree_hc > 0:
                 # K3 CAE-run #
-                id_groupe = groupe['id_cat_plat']
-                if id_groupe != '0' and duree_op == 0:
-                    article = articles.valeurs[id_groupe]
+                id_categorie = groupe['id_cat_plat']
+                if id_categorie != '0' and duree_op == 0:
+                    article = articles.valeurs[id_categorie]
                     if imports.edition.plateforme == article['platf-code']:
                         ref_client = self.__ref_client(rc_map, article, entree['date_login'])
-                        tarif = tarifs.valeurs[id_classe + id_groupe]
+                        tarif = tarifs.valeurs[id_classe + id_categorie]
                         art = self.__art_plate(article, "K3", pt['item-K3'], pt['item-K3a'])
                         if article['platf-code'] == compte['code_client']:
                             usage = 0
@@ -83,12 +83,12 @@ class Transactions3(CsvDict):
                         self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
 
                 # K7 CAE-runf #
-                id_groupe = groupe['id_cat_fixe']
-                if id_groupe != '0':
-                    article = articles.valeurs[id_groupe]
+                id_categorie = groupe['id_cat_fixe']
+                if id_categorie != '0':
+                    article = articles.valeurs[id_categorie]
                     if imports.edition.plateforme == article['platf-code']:
                         ref_client = self.__ref_client(rc_map, article, entree['date_login'])
-                        tarif = tarifs.valeurs[id_classe + id_groupe]
+                        tarif = tarifs.valeurs[id_classe + id_categorie]
                         art = self.__art_plate(article, "K7", pt['item-K7'], pt['item-K7a'])
                         if ((article['platf-code'] == compte['code_client'] and compte['exploitation'] == "TRUE")
                                 or entree['validation'] == "2"):
@@ -106,14 +106,14 @@ class Transactions3(CsvDict):
                         self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
 
                 # K4 CAE-Extra #
-                id_groupe = groupe['id_cat_cher']
-                if id_groupe != '0':
-                    prix_extra = imports.categprix.donnees[id_classe + id_groupe]['prix_unit']
+                id_categorie = groupe['id_cat_cher']
+                if id_categorie != '0':
+                    prix_extra = imports.categprix.donnees[id_classe + id_categorie]['prix_unit']
                     if prix_extra > 0:
-                        article = articles.valeurs[id_groupe]
+                        article = articles.valeurs[id_categorie]
                         if imports.edition.plateforme == article['platf-code']:
                             ref_client = self.__ref_client(rc_map, article, entree['date_login'])
-                            tarif = tarifs.valeurs[id_classe + id_groupe]
+                            tarif = tarifs.valeurs[id_classe + id_categorie]
                             duree = duree_hp + duree_hc
                             if ((article['platf-code'] == compte['code_client'] and compte['exploitation'] == "TRUE")
                                     or entree['validation'] == "2"):
@@ -133,12 +133,12 @@ class Transactions3(CsvDict):
                             self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
 
             # K1 ...
-            id_groupe = groupe['id_cat_mach']
-            if id_groupe != '0':
-                article = articles.valeurs[id_groupe]
+            id_categorie = groupe['id_cat_mach']
+            if id_categorie != '0':
+                article = articles.valeurs[id_categorie]
                 if imports.edition.plateforme == article['platf-code']:
                     ref_client = self.__ref_client(rc_map, article, entree['date_login'])
-                    tarif = tarifs.valeurs[id_classe + id_groupe]
+                    tarif = tarifs.valeurs[id_classe + id_categorie]
 
                     # K1 CAE-HP #
                     if duree_hp > 0:
@@ -190,12 +190,12 @@ class Transactions3(CsvDict):
                         self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
 
             # K2 CAE-MO #
-            id_groupe = groupe['id_cat_mo']
-            if id_groupe != '0' and duree_op > 0:
-                article = articles.valeurs[id_groupe]
+            id_categorie = groupe['id_cat_mo']
+            if id_categorie != '0' and duree_op > 0:
+                article = articles.valeurs[id_categorie]
                 if imports.edition.plateforme == article['platf-code']:
                     ref_client = self.__ref_client(rc_map, article, entree['date_login'])
-                    tarif = tarifs.valeurs[id_classe + id_groupe]
+                    tarif = tarifs.valeurs[id_classe + id_categorie]
                     art = self.__art_plate(article, "K2", pt['item-K2'], pt['item-K2a'])
                     if article['platf-code'] == compte['code_client']:
                         usage = 0
@@ -233,22 +233,22 @@ class Transactions3(CsvDict):
                       'client': client, 'compte': compte}
             if entree['type'] == 'HP':
                 # K5 NoShow-HP #
-                id_groupe = groupe['id_cat_hp']
+                id_categorie = groupe['id_cat_hp']
                 code = "K5"
                 texte = pt['item-K5']
                 texte2 = pt['item-K5a']
             else:
                 # K6 NoShow-HC #
-                id_groupe = groupe['id_cat_hc']
+                id_categorie = groupe['id_cat_hc']
                 code = "K6"
                 texte = pt['item-K6']
                 texte2 = pt['item-K6a']
 
-            if id_groupe != '0':
-                article = articles.valeurs[id_groupe]
+            if id_categorie != '0':
+                article = articles.valeurs[id_categorie]
                 if imports.edition.plateforme == article['platf-code']:
                     ref_client = self.__ref_client(rc_map, article, entree['date_debut'])
-                    tarif = tarifs.valeurs[id_classe + id_groupe]
+                    tarif = tarifs.valeurs[id_classe + id_categorie]
                     ope = ["", "", "", "", id_machine, machine['nom'], ""]
                     util_proj = self.__util_proj(entree['id_user'], compte, pt['flow-noshow'])
                     art = self.__art_plate(article, code, texte, texte2)
@@ -307,28 +307,36 @@ class Transactions3(CsvDict):
             compte = imports.comptes.donnees[entree['id_compte']]
             client = imports.clients.donnees[compte['code_client']]
             id_classe = self.__id_classe(client)
-            id_categorie = entree['id_categorie']
+            groupe = imports.groupes.donnees[entree['id_groupe']]
             operateur = imports.users.donnees[entree['id_op']]
             rc_map = {'annee': entree['annee'], 'mois': entree['mois'], 'classe': imports.classes.donnees[id_classe],
                       'client': client, 'compte': compte}
-            article = articles.valeurs[id_categorie]
-            if imports.edition.plateforme == article['platf-code']:
-                ref_client = self.__ref_client(rc_map, article, entree['date'])
-                tarif = tarifs.valeurs[id_classe + id_categorie]
-                ope = [entree['id_op'], operateur['prenom'] + " " + operateur['nom'], "", entree['remarque_staff'],
-                       "", "", ""]
-                util_proj = self.__util_proj(entree['id_user'], compte, pt['flow-srv'])
-                art = self.__art_plate(article, "", "", "")
-                if ((article['platf-code'] == compte['code_client'] and compte['exploitation'] == "TRUE")
-                        or entree['validation'] == "2"):
-                    usage = 0
-                else:
-                    usage = entree['quantite']
-                trans = [entree['date'], entree['quantite']] + self.__staff(entree, entree['quantite']) + \
-                        [usage, "", ""]
-                prix = round(entree['quantite'] * tarif['valuation-price'], 2)
-                val = [tarif['valuation-price'], prix, "", 0, prix]
-                self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
+            util_proj = self.__util_proj(entree['id_user'], compte, pt['flow-srv'])
+            ope = [entree['id_op'], operateur['prenom'] + " " + operateur['nom'], entree['intitule'],
+                   entree['remarque_staff'], "", "", ""]
+
+            # SRV-EQ K1 | SRV-MO K2 | SRV-Extra K4 | SRV-runf K7 #
+            categories = [groupe['id_cat_mach'], groupe['id_cat_mo'], groupe['id_cat_cher'], groupe['id_cat_fixe']]
+            raws = [entree['duree_machine'], entree['duree_mo'], entree['duree_machine'], 1]
+            codes_k = ["K1", "K2", "K4", "K7"]
+            items_k = [pt['item-K1'], pt['item-K2'], pt['item-K4'], pt['item-K7']]
+            for i in range(0, len(codes_k)):
+                if categories[i] != '0':
+                    article = articles.valeurs[categories[i]]
+                    if imports.edition.plateforme == article['platf-code']:
+                        ref_client = self.__ref_client(rc_map, article, entree['date'])
+                        art = self.__art_plate(article, codes_k[i], items_k[i], entree['id_service'])
+                        if ((article['platf-code'] == compte['code_client'] and compte['exploitation'] == "TRUE")
+                                or entree['validation'] == "2" or groupe['cae'] == 'OUI'):
+                            usage = 0
+                        else:
+                            usage = raws[i]
+                        trans = [entree['date'], raws[i]] + self.__staff(entree, raws[i]) + [usage, "", ""]
+                        tarif = tarifs.valeurs[id_classe + categories[i]]
+
+                        prix = round(raws[i] * tarif['valuation-price'], 2)
+                        val = [tarif['valuation-price'], prix, "", 0, prix]
+                        self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
 
         # subsides et montants
         i = 0

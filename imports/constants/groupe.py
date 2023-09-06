@@ -10,7 +10,7 @@ class Groupe(CsvImport):
     """
 
     # K1, K2, K3, K4, K5, K5, K6
-    cles = ['id_groupe', 'id_cat_mach', 'id_cat_mo', 'id_cat_plat', 'id_cat_cher', 'id_cat_hp', 'id_cat_hc',
+    cles = ['id_groupe', 'cae', 'id_cat_mach', 'id_cat_mo', 'id_cat_plat', 'id_cat_cher', 'id_cat_hp', 'id_cat_hc',
             'id_cat_fixe']
     nom_fichier = "groupe.csv"
     libelle = "Groupes de machines"
@@ -37,6 +37,9 @@ class Groupe(CsvImport):
                     ids.append(donnee['id_groupe'])
                 else:
                     msg += "l'id groupe '" + donnee['id_groupe'] + "' de la ligne " + str(ligne) + " n'est pas unique\n"
+
+            if donnee['cae'] != 'OUI' and donnee['cae'] != 'NON':
+                msg += "le cae de la ligne " + str(ligne) + " doit être OUI ou NON\n"
 
             cats = ['id_cat_mach', 'id_cat_mo', 'id_cat_plat', 'id_cat_cher', 'id_cat_hp', 'id_cat_hc', 'id_cat_fixe']
             noms = ['machine', 'opérateur', 'plateforme', 'onéreux', 'hp', 'hc', 'fixe']
