@@ -20,12 +20,9 @@ class Sap(CsvList):
         self.nom = "sap.csv"
 
         for donnee in versions.valeurs.values():
-            if donnee['version-change'] == 'NEW' or donnee['version-change'] == 'CORRECTED':
-                client = imports.clients.donnees[donnee['client-code']]
-                if donnee['invoice-id'] in sommes_1.par_fact:
+            if donnee['version-change'] != 'CANCELED' and donnee['version-new-amount'] > 0:
+                if donnee['version-change'] == 'NEW' or donnee['version-change'] == 'CORRECTED':
+                    client = imports.clients.donnees[donnee['client-code']]
                     total = sommes_1.par_fact[donnee['invoice-id']]['transactions']['total']
-                else:
-                    total = 0
-
-                ligne = [client['abrev_labo'], donnee['invoice-id'], total, "READY", "", ""]
-                self.lignes.append(ligne)
+                    ligne = [client['abrev_labo'], donnee['invoice-id'], total, "READY", "", ""]
+                    self.lignes.append(ligne)
