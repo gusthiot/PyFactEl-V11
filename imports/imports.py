@@ -169,8 +169,6 @@ class Imports(object):
             grille = self.plateforme['grille'] + '.pdf'
             destination_in.ecrire(grille, dossier_source.lire(grille))
             destination_out.ecrire(grille, dossier_source.lire(grille))
-        Chemin.copier_dossier("./reveal.js/", "js", self.chemin_enregistrement)
-        Chemin.copier_dossier("./reveal.js/", "css", self.chemin_enregistrement)
 
         if self.version > 0:
             for fichier in [self.numeros, self.versions, self.transactions_2]:

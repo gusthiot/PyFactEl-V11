@@ -101,8 +101,7 @@ class Facture(object):
                         self.par_client[code][id_fact]['factures'].append({'poste': poste, 'nom': nom,
                                                                            'descr': description,
                                                                            'texte': article['texte_sap'],
-                                                                           'net': "%.2f" % net, 'total': net,
-                                                                           'compte': par_compte['numero']})
+                                                                           'net': "%.2f" % net, 'total': net})
                         poste += 1
                     inc += 1
 
