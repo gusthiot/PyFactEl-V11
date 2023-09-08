@@ -6,7 +6,7 @@ class ResultatNew(object):
     Classe pour la création de la table des résultats
     """
 
-    def __init__(self, imports):
+    def __init__(self, imports, unique):
         """
         initialisation des données
         :param imports: données importées
@@ -21,7 +21,7 @@ class ResultatNew(object):
         self.lignes.append(['Year', pt['res-year'], imports.edition.annee])
         self.lignes.append(['Month', pt['res-month'], imports.edition.mois])
         self.lignes.append(['Version', pt['res-version'], imports.version])
-        self.lignes.append(['Folder', pt['res-folder'], imports.chemin_enregistrement])
+        self.lignes.append(['Folder', pt['res-folder'], unique])
         self.lignes.append(['Type', pt['res-type'], imports.edition.type])
 
     def csv(self, dossier_destination):

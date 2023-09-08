@@ -156,7 +156,7 @@ try:
             pdfs = Pdfs(imports, new_transactions_2, sommes_2, new_versions)
         factures = Facture(imports, new_versions, sommes_1, sciper, imports.chemin_factures)
         tickets = Ticket(imports, factures, sommes_1, new_versions, imports.chemin_enregistrement)
-        resultats = ResultatNew(imports)
+        resultats = ResultatNew(imports, unique)
         resultats.csv(DossierDestination(imports.chemin_out))
         sap = Sap(imports, new_versions, sommes_1)
         sap.csv(DossierDestination(imports.chemin_enregistrement))
