@@ -46,6 +46,7 @@ class Imports(object):
         initialisation et importation des données
         :param dossier_source: Une instance de la classe dossier.DossierSource
         :param destination: dossier de destination de sauvegarde
+        :param unique: nom unique de répértoire
         """
 
         self.dossier_source = dossier_source

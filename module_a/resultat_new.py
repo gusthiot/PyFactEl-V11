@@ -10,6 +10,7 @@ class ResultatNew(object):
         """
         initialisation des données
         :param imports: données importées
+        :param unique: nom unique de répértoire
         """
         self.lignes = []
         self.nom = "result.csv"

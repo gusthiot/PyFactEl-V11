@@ -6,10 +6,11 @@ class Info(object):
     Classe pour la création du fichier d'information
     """
 
-    def __init__(self, imports):
+    def __init__(self, imports, unique):
         """
         initialisation des données
         :param imports: données importées
+        :param unique: nom unique de répértoire
         """
         self.lignes = []
         self.nom = "info.csv"
@@ -21,7 +22,7 @@ class Info(object):
         self.lignes.append(['Year', pt['res-year'], imports.edition.annee])
         self.lignes.append(['Month', pt['res-month'], imports.edition.mois])
         self.lignes.append(['Version', pt['res-version'], imports.version])
-        self.lignes.append(['Folder', pt['res-folder'], imports.chemin_enregistrement])
+        self.lignes.append(['Folder', pt['res-folder'], unique])
         self.lignes.append(['Type', pt['res-type'], imports.edition.type])
         self.lignes.append(['Created', pt['info-created'], datetime.now().strftime('%Y-%m-%d %H:%M:%S')])
         self.lignes.append(['Sent', pt['info-sent'], ""])

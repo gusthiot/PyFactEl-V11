@@ -160,7 +160,7 @@ try:
         resultats.csv(DossierDestination(imports.chemin_out))
         sap = Sap(imports, new_versions, sommes_1)
         sap.csv(DossierDestination(imports.chemin_enregistrement))
-        info = Info(imports)
+        info = Info(imports, unique)
         info.csv(DossierDestination(imports.chemin_enregistrement))
 
         Interface.affiche_message("OK " + str(imports.version) + " !!! (" +
