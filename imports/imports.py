@@ -156,13 +156,17 @@ class Imports(object):
 
         destination_in = DossierDestination(self.chemin_in)
         destination_out = DossierDestination(self.chemin_out)
-        for fichier in [self.paramtexte, self.facturation, self.classes, self.plateformes, self.artsap,
-                        self.categories, self.groupes, self.machines, self.categprix, self.coefprests,
-                        self.prestations, self.classprests, self.overheads, self.clients, self.subsides,
-                        self.plafonds, self.cles, self.comptes, self.users, self.acces, self.noshows, self.livraisons,
-                        self.services, self.partenaires, self.resultats, self.grants, self.userlabs]:
-            destination_in.ecrire(fichier.nom_fichier, self.dossier_source.lire(fichier.nom_fichier))
-            destination_out.ecrire(fichier.nom_fichier, self.dossier_source.lire(fichier.nom_fichier))
+        for fichier_in in [self.paramtexte, self.facturation, self.classes, self.plateformes, self.artsap,
+                           self.categories, self.groupes, self.machines, self.categprix, self.coefprests,
+                           self.prestations, self.classprests, self.overheads, self.clients, self.subsides,
+                           self.plafonds, self.cles, self.comptes, self.users, self.acces, self.noshows,
+                           self.livraisons, self.services, self.partenaires, self.resultats, self.grants, self.userlabs,
+                           self.edition]:
+            destination_in.ecrire(fichier_in.nom_fichier, self.dossier_source.lire(fichier_in.nom_fichier))
+        for fichier_out in [self.paramtexte, self.facturation, self.classes, self.plateformes, self.artsap,
+                            self.categories, self.groupes, self.categprix, self.coefprests, self.classprests,
+                            self.overheads, self.partenaires, self.resultats, self.grants, self.userlabs]:
+            destination_out.ecrire(fichier_out.nom_fichier, self.dossier_source.lire(fichier_out.nom_fichier))
         if self.logo != "":
             destination_in.ecrire(self.logo, dossier_source.lire(self.logo))
             destination_out.ecrire(self.logo, dossier_source.lire(self.logo))
@@ -170,8 +174,3 @@ class Imports(object):
             grille = self.plateforme['grille'] + '.pdf'
             destination_in.ecrire(grille, dossier_source.lire(grille))
             destination_out.ecrire(grille, dossier_source.lire(grille))
-
-        if self.version > 0:
-            for fichier in [self.numeros, self.versions, self.transactions_2]:
-                destination_in.ecrire(fichier.nom_fichier, self.dossier_source.lire(fichier.nom_fichier))
-                destination_out.ecrire(fichier.nom_fichier, self.dossier_source.lire(fichier.nom_fichier))

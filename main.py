@@ -141,7 +141,7 @@ try:
         modifications.csv(DossierDestination(imports.chemin_enregistrement))
         if imports.version > 0:
             journal = Journal(imports, new_versions, new_transactions_2)
-            journal.csv(DossierDestination(imports.chemin_bilans))
+            journal.csv(DossierDestination(imports.chemin_enregistrement))
         details = Details(imports, transactions_3, sommes_3.par_client, new_numeros, new_versions)
         ann_subs = AnnexeSubsides(imports, sommes_3.par_client, details.csv_fichiers, new_versions)
         annexes = Annexe(imports, new_transactions_2, sommes_2, ann_subs.csv_fichiers, new_versions)

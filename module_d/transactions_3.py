@@ -197,18 +197,19 @@ class Transactions3(CsvDict):
                     ref_client = self.__ref_client(rc_map, article, entree['date_login'])
                     tarif = tarifs.valeurs[id_classe + id_categorie]
                     art = self.__art_plate(article, "K2", pt['item-K2'], pt['item-K2a'])
-                    if article['platf-code'] == compte['code_client']:
+                    if entree['validation'] == "2":
                         usage = 0
+                        runcae = ""
+                    elif article['platf-code'] == compte['code_client']:
                         if compte['exploitation'] == "TRUE":
+                            usage = 0
                             runcae = ""
                         else:
+                            usage = duree_op
                             if counted:
                                 runcae = ""
                             else:
                                 runcae = 1
-                    elif entree['validation'] == "2":
-                        usage = 0
-                        runcae = ""
                     else:
                         usage = duree_op
                         if counted:
