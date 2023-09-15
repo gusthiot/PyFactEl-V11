@@ -174,3 +174,7 @@ class Imports(object):
             grille = self.plateforme['grille'] + '.pdf'
             destination_in.ecrire(grille, dossier_source.lire(grille))
             destination_out.ecrire(grille, dossier_source.lire(grille))
+
+        if self.version > 0:
+            for fichier in [self.numeros, self.versions, self.transactions_2]:
+                destination_in.ecrire(fichier.nom_fichier, self.dossier_source.lire(fichier.nom_fichier))

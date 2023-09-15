@@ -14,7 +14,6 @@ class ResultatNew(object):
         """
         self.lignes = []
         self.nom = "result.csv"
-        self.cles = Resultat.cles
         pt = imports.paramtexte.donnees
 
         self.lignes.append(['FactEl', pt['res-factel'], 11])

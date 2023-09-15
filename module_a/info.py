@@ -6,27 +6,27 @@ class Info(object):
     Classe pour la création du fichier d'information
     """
 
-    def __init__(self, imports, unique):
+    def __init__(self, imports, unique, login):
         """
         initialisation des données
         :param imports: données importées
         :param unique: nom unique de répértoire
+        :param login: login de la personne lançant la facturation
         """
         self.lignes = []
         self.nom = "info.csv"
-        self.cles = ['FactEl', 'Platform', 'Year', 'Month', 'Version', 'Folder', 'Type']
         pt = imports.paramtexte.donnees
 
-        self.lignes.append(['FactEl', pt['res-factel'], 11])
-        self.lignes.append(['Platform', pt['res-pltf'], imports.edition.plateforme])
-        self.lignes.append(['Year', pt['res-year'], imports.edition.annee])
-        self.lignes.append(['Month', pt['res-month'], imports.edition.mois])
-        self.lignes.append(['Version', pt['res-version'], imports.version])
-        self.lignes.append(['Folder', pt['res-folder'], unique])
-        self.lignes.append(['Type', pt['res-type'], imports.edition.type])
-        self.lignes.append(['Created', pt['info-created'], datetime.now().strftime('%Y-%m-%d %H:%M:%S')])
-        self.lignes.append(['Sent', pt['info-sent'], ""])
-        self.lignes.append(['Closed', pt['info-closed'], ""])
+        self.lignes.append(['FactEl', pt['res-factel'], 11, ""])
+        self.lignes.append(['Platform', pt['res-pltf'], imports.edition.plateforme, ""])
+        self.lignes.append(['Year', pt['res-year'], imports.edition.annee, ""])
+        self.lignes.append(['Month', pt['res-month'], imports.edition.mois, ""])
+        self.lignes.append(['Version', pt['res-version'], imports.version, ""])
+        self.lignes.append(['Folder', pt['res-folder'], unique, ""])
+        self.lignes.append(['Type', pt['res-type'], imports.edition.type, ""])
+        self.lignes.append(['Created', pt['info-created'], datetime.now().strftime('%Y-%m-%d %H:%M:%S'), login])
+        self.lignes.append(['Sent', pt['info-sent'], "", ""])
+        self.lignes.append(['Closed', pt['info-closed'], "", ""])
 
     def csv(self, dossier_destination):
         """

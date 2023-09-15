@@ -57,6 +57,7 @@ parser.add_argument("-d", "--destination", help="Racine des sauvegardes")
 parser.add_argument("-u", "--unique", help="Nom unique du dossier de sauvegarde")
 parser.add_argument("-s", "--sciper", help="Sciper de la personne lançant la facturation")
 parser.add_argument("-n", "--nopdf", help="Sans produire les pdfs", action="store_true")
+parser.add_argument("-l", "--login", help="Login de la personne lançant la facturation")
 args = parser.parse_args()
 
 if args.sansgraphiques > 0:
@@ -87,6 +88,11 @@ if args.sciper:
     sciper = args.sciper
 else:
     sciper = "000000"
+
+if args.login:
+    login = args.login
+else:
+    login = ""
 
 try:
     if Chemin.existe(Chemin.chemin([dossier_data, Edition.nom_fichier])):
@@ -160,7 +166,7 @@ try:
         resultats.csv(DossierDestination(imports.chemin_out))
         sap = Sap(imports, new_versions, sommes_1)
         sap.csv(DossierDestination(imports.chemin_enregistrement))
-        info = Info(imports, unique)
+        info = Info(imports, unique, login)
         info.csv(DossierDestination(imports.chemin_enregistrement))
 
         Interface.affiche_message("OK " + str(imports.version) + " !!! (" +
