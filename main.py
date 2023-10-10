@@ -158,8 +158,12 @@ try:
         bil_facts.csv(DossierDestination(imports.chemin_bilans))
         total = Total(imports, transactions_1, sommes_1, annexes.csv_fichiers, new_versions)
         Chemin.csv_files_in_zip(total.csv_fichiers, imports.chemin_cannexes)
-        if with_pdf and Latex.possibles():
-            pdfs = Pdfs(imports, new_transactions_2, sommes_2, new_versions)
+        if with_pdf:
+            if Latex.possibles():
+                pdfs = Pdfs(imports, new_transactions_2, sommes_2, new_versions)
+            else:
+                Interface.affiche_message("pdflatex n'est probablement pas installé")
+
         factures = Facture(imports, new_versions, sommes_1, sciper, imports.chemin_factures)
         tickets = Ticket(imports, factures, sommes_1, new_versions, imports.chemin_enregistrement)
         resultats = ResultatNew(imports, unique)
