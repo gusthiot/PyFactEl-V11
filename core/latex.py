@@ -41,12 +41,12 @@ class Latex(object):
         with open(nom_fichier + ".tex", 'w') as f:
             f.write(contenu)
 
-        proc = subprocess.Popen(['pdflatex', nom_fichier + ".tex"])#, stdout=subprocess.DEVNULL)
+        proc = subprocess.Popen(['pdflatex', nom_fichier + ".tex"], stdout=subprocess.DEVNULL)
         proc.communicate()
 
         # 2 fois pour que les longtable soient réguliers (courant de relancer latex)
 
-        proc = subprocess.Popen(['pdflatex', nom_fichier + ".tex"])#, stdout=subprocess.DEVNULL)
+        proc = subprocess.Popen(['pdflatex', nom_fichier + ".tex"], stdout=subprocess.DEVNULL)
         proc.communicate()
 
         try:
