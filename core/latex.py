@@ -55,7 +55,7 @@ class Latex(object):
             os.unlink(nom_fichier + '.aux')
 
         except IOError as err:
-            Interface.affiche_message("IOError: {0}".format(err))
+            Interface.affiche_message("IOError in creating : {0}".format(err))
 
     @staticmethod
     def finaliser_pdf(nom_fichier, chemin_dossier=""):
@@ -70,7 +70,7 @@ class Latex(object):
                 shutil.copy(fichier, chemin_dossier)
                 os.unlink(fichier)
         except IOError as err:
-            Interface.affiche_message("IOError: {0}".format(err))
+            Interface.affiche_message("IOError in finalization: {0}".format(err))
 
     @staticmethod
     def entete():
