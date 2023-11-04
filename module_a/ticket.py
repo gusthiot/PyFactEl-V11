@@ -8,12 +8,12 @@ class Ticket(object):
     Classe créant le JSON nécessaire à la génération des tickets
     """
 
-    def __init__(self, imports, factures, sommes_1, versions, chemin_destination):
+    def __init__(self, imports, factures, par_client, versions, chemin_destination):
         """
         génère les tickets sous forme de sections html
         :param imports: données importées
         :param factures: factures générées
-        :param sommes_1: sommes des transactions 1
+        :param par_client: tri des transactions 1
         :param versions: versions des factures générées
         :param chemin_destination: le dossier de sauvegarde du fichier
         """
@@ -26,7 +26,7 @@ class Ticket(object):
 
         textes = imports.paramtexte.donnees
 
-        for code, par_client in sommes_1.par_client.items():
+        for code, par_client in par_client.items():
             if code in versions.clients:
                 client = imports.clients.donnees[code]
                 classe = imports.classes.donnees[client['id_classe']]

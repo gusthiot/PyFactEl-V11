@@ -32,11 +32,13 @@ from module_b import (GrantedNew,
                       Transactions2New)
 from module_a import (VersionNew,
                       Details,
+                      DetailsAll,
                       AnnexeSubsides,
                       Sommes2,
                       Sommes1,
                       Modifications,
                       Annexe,
+                      AnnexeAll,
                       Transactions1,
                       BilanFactures,
                       Pdfs,
@@ -149,26 +151,28 @@ try:
             journal = Journal(imports, new_versions, new_transactions_2)
             journal.csv(DossierDestination(imports.chemin_enregistrement))
         details = Details(imports, transactions_3, sommes_3.par_client, new_numeros, new_versions)
-        ann_subs = AnnexeSubsides(imports, sommes_3.par_client, details.csv_fichiers, new_versions)
-        annexes = Annexe(imports, new_transactions_2, sommes_2, ann_subs.csv_fichiers, new_versions)
-        transactions_1 = Transactions1(imports, new_transactions_2, sommes_2, new_versions)
+        details_all = DetailsAll(imports, transactions_3, sommes_3.par_client, details.csv_fichiers, new_versions)
+        ann_subs = AnnexeSubsides(imports, sommes_3.par_client, details_all.csv_fichiers, new_versions)
+        annexes = Annexe(imports, new_transactions_2, sommes_2.par_fact, ann_subs.csv_fichiers, new_versions)
+        annexes_all = AnnexeAll(imports, new_transactions_2, sommes_2.par_client, annexes.csv_fichiers, new_versions)
+        transactions_1 = Transactions1(imports, new_transactions_2, sommes_2.par_fact, new_versions)
         transactions_1.csv(DossierDestination(imports.chemin_bilans))
         sommes_1 = Sommes1(transactions_1)
-        bil_facts = BilanFactures(imports, transactions_1, sommes_1)
+        bil_facts = BilanFactures(imports, transactions_1, sommes_1.par_fact)
         bil_facts.csv(DossierDestination(imports.chemin_bilans))
-        total = Total(imports, transactions_1, sommes_1, annexes.csv_fichiers, new_versions)
+        total = Total(imports, transactions_1, sommes_1.par_client, annexes_all.csv_fichiers, new_versions)
         Chemin.csv_files_in_zip(total.csv_fichiers, imports.chemin_cannexes)
         if with_pdf:
             if Latex.possibles():
-                pdfs = Pdfs(imports, new_transactions_2, sommes_2, new_versions)
+                pdfs = Pdfs(imports, new_transactions_2, sommes_2.par_fact, new_versions)
             else:
                 Interface.affiche_message("pdflatex n'est probablement pas installé")
 
-        factures = Facture(imports, new_versions, sommes_1, sciper, imports.chemin_factures)
-        tickets = Ticket(imports, factures, sommes_1, new_versions, imports.chemin_enregistrement)
+        factures = Facture(imports, new_versions, sommes_1.par_fact, sciper, imports.chemin_factures)
+        tickets = Ticket(imports, factures, sommes_1.par_client, new_versions, imports.chemin_enregistrement)
         resultats = ResultatNew(imports, unique)
         resultats.csv(DossierDestination(imports.chemin_out))
-        sap = Sap(imports, new_versions, sommes_1)
+        sap = Sap(imports, new_versions, sommes_1.par_fact)
         sap.csv(DossierDestination(imports.chemin_enregistrement))
         info = Info(imports, unique, login)
         info.csv(DossierDestination(imports.chemin_enregistrement))

@@ -8,17 +8,17 @@ class Pdfs(object):
     Classe pour la création des annexes PDF
     """
 
-    def __init__(self, imports, transactions_2, sommes_2, versions):
+    def __init__(self, imports, transactions_2, par_fact, versions):
         """
         initialisation des données
         :param imports: données importées
         :param transactions_2: transactions 2 générées
-        :param sommes_2: sommes des transactions 2
+        :param par_fact: tri des transactions
         :param versions: versions des factures générées
         """
         self.imports = imports
         self.transactions = transactions_2
-        self.sommes = sommes_2
+        self.par_fact = par_fact
 
         self.prefixe = "Annexe_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" + \
                        Format.mois_string(imports.edition.mois) + "_" + str(imports.version)
@@ -34,7 +34,7 @@ class Pdfs(object):
         :param donnee: données de la facture
         """
         if donnee['version-change'] == 'NEW' or donnee['version-change'] == 'CORRECTED':
-            par_fact = self.sommes.par_fact[id_fact]
+            par_fact = self.par_fact[id_fact]
             intype = donnee['invoice-type']
             parties = {}
             for id_compte, par_compte in par_fact['projets'].items():

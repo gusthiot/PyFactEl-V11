@@ -11,6 +11,7 @@ class Sommes2(object):
         :param transactions_2: transactions 2 générées
         """
         self.par_fact = {}
+        self.par_client = {}
         for key, trans in transactions_2.valeurs.items():
             if trans['invoice-id'] not in self.par_fact:
                 self.par_fact[trans['invoice-id']] = {'base': key, 'total': 0, 'projets': {}, 'comptes': {}}
@@ -36,6 +37,11 @@ class Sommes2(object):
 
             projets[trans['proj-id']]['transactions'].append(key)
             # => annexes
+
+            if trans['client-code'] not in self.par_client.keys():
+                self.par_client[trans['client-code']] = {'transactions': []}
+            self.par_client[trans['client-code']]['transactions'].append(key)
+            # => annexes all
 
     @staticmethod
     def sommes_old(transactions):

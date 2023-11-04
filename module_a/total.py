@@ -9,12 +9,12 @@ class Total(object):
 
     cles = ['invoice-id', 'proj-nbr-0', 'proj-name-0', 'total-fact']
 
-    def __init__(self, imports, transactions_1, sommes_1, csv_fichiers, versions):
+    def __init__(self, imports, transactions_1, par_client, csv_fichiers, versions):
         """
         initialisation des données
         :param imports: données importées
         :param transactions_1: transactions 1 générées
-        :param sommes_1: sommes des transactions 1
+        :param par_client: tri des transactions
         :param csv_fichiers: fichiers csv et nom du fichier zip par client
         :param versions: versions des factures générées
         """
@@ -24,7 +24,7 @@ class Total(object):
         self.nom = "Total_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + \
                    "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv"
 
-        for code, par_client in sommes_1.par_client.items():
+        for code, par_client in par_client.items():
             if code in versions.clients:
                 client = imports.clients.donnees[code]
                 nom_zip = "Annexes_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" + \

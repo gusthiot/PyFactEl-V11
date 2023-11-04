@@ -8,8 +8,9 @@ class Details(object):
     """
 
     cles = ['transac-date', 'user-name-f', 'proj-nbr', 'proj-name', 'oper-name', 'oper-note', 'staff-note', 'mach-name',
-            'item-name', 'item-unit', 'transac-quantity', 'valuation-price', 'valuation-brut', 'discount-type',
-            'discount-CHF', 'valuation-net', 'subsid-ok', 'subsid-CHF', 'total-fact', 'discount-bonus', 'subsid-bonus']
+            'item-grp', 'item-name', 'item-unit', 'transac-quantity', 'valuation-price', 'valuation-brut',
+            'discount-type', 'discount-CHF', 'valuation-net', 'subsid-ok', 'subsid-CHF', 'total-fact', 'discount-bonus',
+            'subsid-bonus']
 
     def __init__(self, imports, transactions_3, par_client, numeros, versions):
         """

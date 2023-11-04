@@ -1,6 +1,5 @@
 from core import (Format, Chemin)
 import json
-import base64
 
 
 class Facture(object):
@@ -8,12 +7,12 @@ class Facture(object):
     Classe contenant les méthodes nécessaires à la génération du JSON des factures
     """
 
-    def __init__(self, imports, versions, sommes_1, sciper, chemin_destination):
+    def __init__(self, imports, versions, par_fact, sciper, chemin_destination):
         """
         génère la facture sous forme de csv
         :param imports: données importées
         :param versions: versions des factures générées
-        :param sommes_1: sommes des transactions 1
+        :param par_fact: tri des transactions 1
         :param sciper: sciper de la personne lançant la facturation
         :param chemin_destination: le dossier de sauvegarde du fichier
         """
@@ -81,7 +80,7 @@ class Facture(object):
                 inc = 1
                 # date_dernier = str(imports.edition.annee) + Format.mois_string(imports.edition.mois) + \
                 #     str(imports.edition.dernier_jour)
-                for id_compte, par_compte in sommes_1.par_fact[id_fact]['projets'].items():
+                for id_compte, par_compte in par_fact[id_fact]['projets'].items():
                     nom = par_compte['numero']
                     poste = inc*10
                     for ordre, par_article in sorted(par_compte['items'].items()):

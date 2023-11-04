@@ -10,14 +10,14 @@ class Transactions3(CsvDict):
             'invoice-project', 'client-code', 'client-sap', 'client-name', 'client-idclass', 'client-class',
             'client-labelclass', 'oper-id', 'oper-name', 'oper-note', 'staff-note', 'mach-id', 'mach-name',
             'mach-extra', 'user-id', 'user-sciper', 'user-name', 'user-first', 'proj-id', 'proj-nbr', 'proj-name',
-            'proj-expl', 'flow-type', 'item-id', 'item-codeK', 'item-textK', 'item-text2K', 'item-nbr', 'item-name',
-            'item-unit', 'item-idclass', 'item-codeD', 'item-flag-usage', 'item-flag-conso', 'item-eligible',
-            'item-order', 'item-labelcode', 'item-extra', 'platf-code', 'platf-op', 'platf-name', 'transac-date',
-            'transac-raw', 'transac-valid', 'transac-id-staff', 'transac-staff', 'transac-quantity', 'transac-usage',
-            'transac-runtime', 'transac-runcae', 'valuation-price', 'valuation-brut', 'discount-type', 'discount-CHF',
-            'valuation-net', 'subsid-code', 'subsid-name', 'subsid-start', 'subsid-end', 'subsid-ok', 'subsid-pourcent',
-            'subsid-maxproj', 'subsid-maxmois', 'subsid-reste', 'subsid-CHF', 'deduct-CHF', 'subsid-deduct',
-            'total-fact', 'discount-bonus', 'subsid-bonus']
+            'proj-expl', 'flow-type', 'item-grp', 'item-id', 'item-codeK', 'item-textK', 'item-text2K', 'item-nbr',
+            'item-name', 'item-unit', 'item-idclass', 'item-codeD', 'item-flag-usage', 'item-flag-conso',
+            'item-eligible', 'item-order', 'item-labelcode', 'item-extra', 'platf-code', 'platf-op', 'platf-name',
+            'transac-date', 'transac-raw', 'transac-valid', 'transac-id-staff', 'transac-staff', 'transac-quantity',
+            'transac-usage', 'transac-runtime', 'transac-runcae', 'valuation-price', 'valuation-brut', 'discount-type',
+            'discount-CHF', 'valuation-net', 'subsid-code', 'subsid-name', 'subsid-start', 'subsid-end', 'subsid-ok',
+            'subsid-pourcent', 'subsid-maxproj', 'subsid-maxmois', 'subsid-reste', 'subsid-CHF', 'deduct-CHF',
+            'subsid-deduct', 'total-fact', 'discount-bonus', 'subsid-bonus']
 
     def __init__(self, imports, articles, tarifs):
         """
@@ -43,7 +43,8 @@ class Transactions3(CsvDict):
             id_classe = self.__id_classe(client)
             id_machine = entree['id_machine']
             machine = imports.machines.donnees[id_machine]
-            groupe = imports.groupes.donnees[machine['id_groupe']]
+            id_groupe = machine['id_groupe']
+            groupe = imports.groupes.donnees[id_groupe]
             operateur = imports.users.donnees[entree['id_op']]
             ope = [entree['id_op'], operateur['prenom'] + " " + operateur['nom'], entree['remarque_op'],
                    entree['remarque_staff'], id_machine, machine['nom'], ""]
@@ -63,7 +64,7 @@ class Transactions3(CsvDict):
                     if imports.edition.plateforme == article['platf-code']:
                         ref_client = self.__ref_client(rc_map, article, entree['date_login'])
                         tarif = tarifs.valeurs[id_classe + id_categorie]
-                        art = self.__art_plate(article, "K3", pt['item-K3'], pt['item-K3a'])
+                        art = self.__art_plate(article, "K3", pt['item-K3'], pt['item-K3a'], id_groupe)
                         if article['platf-code'] == compte['code_client']:
                             usage = 0
                             if compte['exploitation'] == "TRUE":
@@ -89,7 +90,7 @@ class Transactions3(CsvDict):
                     if imports.edition.plateforme == article['platf-code']:
                         ref_client = self.__ref_client(rc_map, article, entree['date_login'])
                         tarif = tarifs.valeurs[id_classe + id_categorie]
-                        art = self.__art_plate(article, "K7", pt['item-K7'], pt['item-K7a'])
+                        art = self.__art_plate(article, "K7", pt['item-K7'], pt['item-K7a'], id_groupe)
                         if ((article['platf-code'] == compte['code_client'] and compte['exploitation'] == "TRUE")
                                 or entree['validation'] == "2"):
                             usage = 0
@@ -127,7 +128,7 @@ class Transactions3(CsvDict):
                                     runcae = 1
                                     counted = True
                             trans = [entree['date_login'], duree] + self.__staff(entree, duree) + [usage, "", runcae]
-                            art = self.__art_plate(article, "K4", pt['item-K4'], pt['item-K4a'])
+                            art = self.__art_plate(article, "K4", pt['item-K4'], pt['item-K4a'], id_groupe)
                             prix = round(duree * tarif['valuation-price'], 2)
                             val = [tarif['valuation-price'], prix, "", 0, prix]
                             self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
@@ -155,7 +156,7 @@ class Transactions3(CsvDict):
                             else:
                                 runcae = 1
                                 counted = True
-                        art = self.__art_plate(article, "K1", pt['item-K1'], pt['item-K1a'])
+                        art = self.__art_plate(article, "K1", pt['item-K1'], pt['item-K1a'], id_groupe)
                         trans = [entree['date_login'], duree_hp] + self.__staff(entree, duree_hp) + [usage, runtime,
                                                                                                      runcae]
                         prix = round(duree_hp * tarif['valuation-price'], 2)
@@ -180,7 +181,7 @@ class Transactions3(CsvDict):
                             else:
                                 runcae = 1
                                 counted = True
-                        art = self.__art_plate(article, "K1", pt['item-K1'], pt['item-K1b'])
+                        art = self.__art_plate(article, "K1", pt['item-K1'], pt['item-K1b'], id_groupe)
                         trans = [entree['date_login'], duree_hc] + self.__staff(entree, duree_hc) + [usage, runtime,
                                                                                                      runcae]
                         prix = round(duree_hc * tarif['valuation-price'], 2)
@@ -196,7 +197,7 @@ class Transactions3(CsvDict):
                 if imports.edition.plateforme == article['platf-code']:
                     ref_client = self.__ref_client(rc_map, article, entree['date_login'])
                     tarif = tarifs.valeurs[id_classe + id_categorie]
-                    art = self.__art_plate(article, "K2", pt['item-K2'], pt['item-K2a'])
+                    art = self.__art_plate(article, "K2", pt['item-K2'], pt['item-K2a'], id_groupe)
                     if entree['validation'] == "2":
                         usage = 0
                         runcae = ""
@@ -252,7 +253,7 @@ class Transactions3(CsvDict):
                     tarif = tarifs.valeurs[id_classe + id_categorie]
                     ope = ["", "", "", "", id_machine, machine['nom'], ""]
                     util_proj = self.__util_proj(entree['id_user'], compte, pt['flow-noshow'])
-                    art = self.__art_plate(article, code, texte, texte2)
+                    art = self.__art_plate(article, code, texte, texte2, machine['id_groupe'])
                     trans = [entree['date_debut'], entree['penalite']] + self.__staff(entree, entree['penalite']) + \
                             [0, "", ""]
                     prix = round(entree['penalite'] * tarif['valuation-price'], 2)
@@ -287,7 +288,7 @@ class Transactions3(CsvDict):
                     groupe = imports.groupes.donnees[machine['id_groupe']]
                     nm = machine['nom']
                     extra = groupe['id_cat_mach']
-                art = self.__art_plate(article, "", "", "")
+                art = self.__art_plate(article, "", "", "", "")
                 ope = [entree['id_operateur'], operateur['prenom'] + " " + operateur['nom'],
                        pt['oper-PO'] + " " + str(entree['date_commande']), entree['remarque'], idm, nm, extra]
                 util_proj = self.__util_proj(entree['id_user'], compte, pt['flow-lvr'])
@@ -308,7 +309,8 @@ class Transactions3(CsvDict):
             compte = imports.comptes.donnees[entree['id_compte']]
             client = imports.clients.donnees[compte['code_client']]
             id_classe = self.__id_classe(client)
-            groupe = imports.groupes.donnees[entree['id_groupe']]
+            id_groupe = entree['id_groupe']
+            groupe = imports.groupes.donnees[id_groupe]
             operateur = imports.users.donnees[entree['id_op']]
             rc_map = {'annee': entree['annee'], 'mois': entree['mois'], 'classe': imports.classes.donnees[id_classe],
                       'client': client, 'compte': compte}
@@ -326,7 +328,7 @@ class Transactions3(CsvDict):
                     article = articles.valeurs[categories[i]]
                     if imports.edition.plateforme == article['platf-code']:
                         ref_client = self.__ref_client(rc_map, article, entree['date'])
-                        art = self.__art_plate(article, codes_k[i], items_k[i], entree['id_service'])
+                        art = self.__art_plate(article, codes_k[i], items_k[i], entree['id_service'], id_groupe)
                         if ((article['platf-code'] == compte['code_client'] and compte['exploitation'] == "TRUE")
                                 or entree['validation'] == "2" or groupe['cae'] == 'OUI'):
                             usage = 0
@@ -345,7 +347,7 @@ class Transactions3(CsvDict):
             for trt in sorted(transacts[trf].keys()):
                 tarray = transacts[trf][trt]
                 for transact in tarray:
-                    article = articles.valeurs[transact['art'][0]]
+                    article = articles.valeurs[transact['art'][1]]
                     id_compte = transact['up'][4]
                     compte = imports.comptes.donnees[id_compte]
                     subs = self.__subsides(transact, article)
@@ -426,17 +428,18 @@ class Transactions3(CsvDict):
         return [user['id_user'], user['sciper'], user['nom'], user['prenom'], compte['id_compte'], compte['numero'],
                 compte['intitule'], compte['exploitation'], flux]
 
-    def __art_plate(self, article, code_k, texte_k, texte2_k):
+    def __art_plate(self, article, code_k, texte_k, texte2_k, id_groupe):
         """
         ajout des valeurs issues de l'article et de la plateforme
         :param article: article de la transaction
         :param code_k: code catégorie
         :param texte_k: texte catégorie
         :param texte2_k: texte 2 catégorie
+        :param id_groupe: id de groupe machine
         :return tableau contenant les valeurs de l'article et de la plateforme
         """
         plateforme = self.imports.plateforme
-        return [article['item-id'], code_k, texte_k, texte2_k, article['item-nbr'], article['item-name'],
+        return [id_groupe, article['item-id'], code_k, texte_k, texte2_k, article['item-nbr'], article['item-name'],
                 article['item-unit'], article['item-idclass'], article['item-codeD'], article['item-flag-usage'],
                 article['item-flag-conso'], article['item-eligible'], article['item-order'], article['item-labelcode'],
                 article['item-extra'], article['platf-code'], plateforme['code_p'], plateforme['abrev_plat']]

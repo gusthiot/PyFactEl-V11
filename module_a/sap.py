@@ -8,12 +8,12 @@ class Sap(CsvList):
 
     cles = ['client-name', 'invoice-id', 'total-fact', 'track-status', 'track-doc-nr', 'track-err-msg']
 
-    def __init__(self, imports, versions, sommes_1):
+    def __init__(self, imports, versions, par_fact):
         """
         initialisation des données
         :param imports: données importées
         :param versions: versions nouvellement générées
-        :param sommes_1: sommes des transactions 1
+        :param par_fact: tri des transactions 1
         """
         super().__init__(imports)
 
@@ -23,6 +23,6 @@ class Sap(CsvList):
             if donnee['version-change'] != 'CANCELED' and donnee['version-new-amount'] > 0:
                 if donnee['version-change'] == 'NEW' or donnee['version-change'] == 'CORRECTED':
                     client = imports.clients.donnees[donnee['client-code']]
-                    total = sommes_1.par_fact[donnee['invoice-id']]['transactions']['total']
+                    total = par_fact[donnee['invoice-id']]['transactions']['total']
                     ligne = [client['abrev_labo'], donnee['invoice-id'], total, "READY", "", ""]
                     self.lignes.append(ligne)
