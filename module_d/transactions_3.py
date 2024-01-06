@@ -15,9 +15,9 @@ class Transactions3(CsvDict):
             'item-eligible', 'item-order', 'item-labelcode', 'item-extra', 'platf-code', 'platf-op', 'platf-name',
             'transac-date', 'transac-raw', 'transac-valid', 'transac-id-staff', 'transac-staff', 'transac-quantity',
             'transac-usage', 'transac-runtime', 'transac-runcae', 'valuation-price', 'valuation-brut', 'discount-type',
-            'discount-CHF', 'valuation-net', 'subsid-code', 'subsid-name', 'subsid-start', 'subsid-end', 'subsid-ok',
-            'subsid-pourcent', 'subsid-maxproj', 'subsid-maxmois', 'subsid-reste', 'subsid-CHF', 'deduct-CHF',
-            'subsid-deduct', 'total-fact', 'discount-bonus', 'subsid-bonus']
+            'discount-CHF', 'valuation-net', 'subsid-code', 'subsid-name', 'subsid-type', 'subsid-start', 'subsid-end',
+            'subsid-ok', 'subsid-pourcent', 'subsid-maxproj', 'subsid-maxmois', 'subsid-reste', 'subsid-CHF',
+            'deduct-CHF', 'subsid-deduct', 'total-fact', 'discount-bonus', 'subsid-bonus']
 
     def __init__(self, imports, articles, tarifs):
         """
@@ -359,10 +359,10 @@ class Transactions3(CsvDict):
                     if article['platf-code'] != compte['code_client'] and transact['trans'][2] == "1":
                         if self.imports.classes.donnees[transact['rc'][9]]['subsides'] == "BONUS":
                             ded_bon = transact['val'][3]
-                            sub_bon = subs[9]
+                            sub_bon = subs[10]
                         else:
                             ded_rab = transact['val'][3]
-                            sub_rab = subs[9]
+                            sub_rab = subs[10]
                         tot = transact['val'][1] - ded_rab - sub_rab
                     mont = [ded_rab, sub_rab, tot, ded_bon, sub_bon]
                     donnee = [imports.edition.annee, imports.edition.mois] + transact['rc'] + transact['ope'] + \
@@ -404,11 +404,17 @@ class Transactions3(CsvDict):
         :return tableau contenant la référence et les valeurs du client
         """
         id_classprest = article['item-idclass']
+        type_s = data['compte']['type_subside']
         classprest = self.imports.classprests.donnees[id_classprest]
         plateforme = self.imports.plateforme
+        if type_s in self.imports.subsides.donnees.keys():
+            subside = self.imports.subsides.donnees[type_s]
+            subs = (subside['type'] == 'MONO')
+        else:
+            subs = True
         if (data['classe']['ref_fact'] == 'INT' and data['classe']['avantage_HC'] == 'BONUS' and
-                classprest['eligible'] == 'OUI' and data['compte']['type_subside'] == "0" and
-                plateforme['grille'] != "" and data['classe']['grille'] == 'OUI'):
+                classprest['eligible'] == 'OUI' and subs and plateforme['grille'] != "" and
+                data['classe']['grille'] == 'OUI'):
             icf = data['compte']['id_compte']
         else:
             icf = "0"
@@ -459,29 +465,30 @@ class Transactions3(CsvDict):
         date = transact['trans'][0]
         validation = transact['trans'][2]
         type_s = compte['type_subside']
-        result = ["", "", "", "", "", 0, 0, 0, 0, 0]
+        result = ["", "", "", "", "", "", 0, 0, 0, 0, 0]
         if type_s != "0":
             if self.imports.edition.annee == transact['rc'][2] and self.imports.edition.mois == transact['rc'][3]:
                 if type_s in self.imports.subsides.donnees.keys():
                     subside = self.imports.subsides.donnees[type_s]
-                    result[0] = subside['type']
+                    result[0] = subside['id_subside']
                     result[1] = subside['intitule']
-                    result[2] = subside['debut']
-                    result[3] = subside['fin']
-                    result[4] = "NO"
+                    result[2] = subside['type']
+                    result[3] = subside['debut']
+                    result[4] = subside['fin']
+                    result[5] = "NO"
                     if validation == "1":
                         plaf = type_s + article['platf-code'] + article['item-idclass']
                         if plaf in self.imports.plafonds.donnees.keys():
                             plafond = self.imports.plafonds.donnees[plaf]
-                            result[5] = plafond['pourcentage']
-                            result[6] = plafond['max_compte']
-                            result[7] = plafond['max_mois']
+                            result[6] = plafond['pourcentage']
+                            result[7] = plafond['max_compte']
+                            result[8] = plafond['max_mois']
                             if subside['debut'] == "NULL" or subside['debut'] <= date:
                                 if subside['fin'] == "NULL" or subside['fin'] >= date:
                                     if type_s in self.imports.cles.donnees.keys():
                                         dict_s = self.imports.cles.donnees[type_s]
                                         if self.__check_id_classe(dict_s, id_classe, compte['code_client'], id_machine):
-                                            result[4] = "YES"
+                                            result[5] = "YES"
                                             cg_id = compte['id_compte']+article['platf-code']+article['item-idclass']
                                             if cg_id in self.imports.grants.donnees.keys():
                                                 grant = self.imports.grants.donnees[cg_id]['subsid-alrdygrant']
@@ -504,10 +511,10 @@ class Transactions3(CsvDict):
                                             else:
                                                 self.comptabilises[cg_id]['subsid-alrdygrant'] = \
                                                     self.comptabilises[cg_id]['subsid-alrdygrant'] + mo
-                                            result[8] = res
-                                            result[9] = mo
+                                            result[9] = res
+                                            result[10] = mo
             else:
-                result[4] = "N/A"
+                result[5] = "N/A"
         return result
 
     @staticmethod

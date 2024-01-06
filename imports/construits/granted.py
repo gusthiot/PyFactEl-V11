@@ -44,7 +44,7 @@ class Granted(CsvImport):
             if triplet not in triplets:
                 triplets.append(triplet)
             else:
-                msg += "Triplet type '" + donnee['type'] + "' id plateforme '" + donnee['platf-code'] + \
+                msg += "Triplet type '" + donnee['proj-id'] + "' id plateforme '" + donnee['platf-code'] + \
                        "' et id classe prestation '" + donnee['item-idclass'] + "' de la ligne " + str(ligne) + \
                        " pas unique\n"
 

@@ -9,7 +9,7 @@ class CleSubside(CsvImport):
     """
 
     nom_fichier = "clesubside.csv"
-    cles = ['type', 'id_classe', 'code_client', 'id_machine']
+    cles = ['id_subside', 'id_classe', 'code_client', 'id_machine']
     libelle = "Clés Subsides"
 
     def __init__(self, dossier_source, clients, machines, classes, subsides):
@@ -30,7 +30,7 @@ class CleSubside(CsvImport):
         quadruplets = []
 
         for donnee in self.donnees:
-            msg += self.test_id_coherence(donnee['type'], "le type", ligne, subsides)
+            msg += self.test_id_coherence(donnee['id_subside'], "l'id subside", ligne, subsides)
 
             msg += self.test_id_coherence(donnee['id_classe'], "l'id classe client", ligne, classes, True)
 
@@ -38,7 +38,7 @@ class CleSubside(CsvImport):
 
             msg += self.test_id_coherence(donnee['id_machine'], "l'id machine", ligne, machines, True)
 
-            quadruplet = donnee['type'] + donnee['id_classe'] + donnee['code_client'] + donnee['id_machine']
+            quadruplet = donnee['id_subside'] + donnee['id_classe'] + donnee['code_client'] + donnee['id_machine']
 
             if quadruplet not in quadruplets:
                 quadruplets.append(quadruplet)
@@ -46,9 +46,9 @@ class CleSubside(CsvImport):
                 msg += "le quadruplet de la ligne " + str(ligne) + \
                        " n'est pas unique\n"
 
-            if donnee['type'] not in donnees_dict:
-                donnees_dict[donnee['type']] = {}
-            dict_p = donnees_dict[donnee['type']]
+            if donnee['id_subside'] not in donnees_dict:
+                donnees_dict[donnee['id_subside']] = {}
+            dict_p = donnees_dict[donnee['id_subside']]
             if donnee['id_classe'] not in dict_p:
                 dict_p[donnee['id_classe']] = {}
             dict_n = dict_p[donnee['id_classe']]

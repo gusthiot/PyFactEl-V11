@@ -10,7 +10,7 @@ class Subside(CsvImport):
     """
 
     nom_fichier = "subside.csv"
-    cles = ['type', 'intitule', 'debut', 'fin']
+    cles = ['id_subside', 'intitule', 'type', 'debut', 'fin']
     libelle = "Subsides"
 
     def __init__(self, dossier_source):
@@ -24,19 +24,21 @@ class Subside(CsvImport):
         msg = ""
         ligne = 1
         donnees_dict = {}
-        types = []
+        ids = []
 
         for donnee in self.donnees:
-            donnee['type'], info = Format.est_un_alphanumerique(donnee['type'], "le type subside", ligne)
+            donnee['id_subside'], info = Format.est_un_alphanumerique(donnee['id_subside'], "le id subside", ligne)
             msg += info
             if info == "":
-                if donnee['type'] not in types:
-                    types.append(donnee['type'])
+                if donnee['id_subside'] not in ids:
+                    ids.append(donnee['id_subside'])
                 else:
-                    msg += "le type de la ligne " + str(ligne) + " n'est pas unique\n"
+                    msg += "l'id de la ligne " + str(ligne) + " n'est pas unique\n"
             donnee['intitule'], info = Format.est_un_texte(donnee['intitule'], "l'intitulé", ligne)
             msg += info
 
+            if donnee['type'] != 'MONO' and donnee['type'] != 'MULTI':
+                msg += "le type de la ligne " + str(ligne) + " doit être MONO ou MULTI\n"
             if donnee['debut'] != 'NULL':
                 donnee['debut'], info = Format.est_une_date(donnee['debut'], "la date de début", ligne)
                 msg += info
@@ -47,7 +49,7 @@ class Subside(CsvImport):
                 if donnee['debut'] > donnee['fin']:
                     msg += "la date de fin de la ligne " + str(ligne) + " doit être postérieure à la date de début"
 
-            donnees_dict[donnee['type']] = donnee
+            donnees_dict[donnee['id_subside']] = donnee
 
             ligne += 1
 
