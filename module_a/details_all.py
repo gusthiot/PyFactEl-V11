@@ -31,7 +31,7 @@ class DetailsAll(object):
                 nom_zip = ("Annexes_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
                            Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" + code + "_" +
                            client['abrev_labo'] + ".zip")
-                nom_csv = ("Details_all" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
+                nom_csv = ("Details_all_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
                            Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" +
                            client['abrev_labo'] + ".csv")
                 if code not in self.csv_fichiers:
