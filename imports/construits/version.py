@@ -44,9 +44,10 @@ class Version(CsvImport):
             donnee['version-last'], info = Format.est_un_entier(donnee['version-last'], "la version", ligne, 0)
             msg += info
 
-            if (donnee['version-change'] != 'NEW' and donnee['version-change'] != 'CANCELED' and
-                    donnee['version-change'] != 'CORRECTED' and donnee['version-change'] != 'IDEM'):
-                msg += "le version-change de la ligne " + str(ligne) + " doit être NEW, CANCELED, CORRECTED ou IDEM\n"
+            options = ['NEW', 'CANCELED', 'CORRECTED', 'IDEM', 'CLIENT']
+            if donnee['version-change'] not in options:
+                msg += ("le version-change de la ligne " + str(ligne) +
+                        " doit être NEW, CANCELED, CORRECTED, IDEM ou CLIENT\n")
 
             donnee['version-old-amount'], info = Format.est_un_nombre(donnee['version-old-amount'], "l'ancien montant",
                                                                       ligne, 2, 0)
@@ -54,6 +55,15 @@ class Version(CsvImport):
             donnee['version-new-amount'], info = Format.est_un_nombre(donnee['version-new-amount'],
                                                                       "le nouveau montant", ligne, 2, 0)
             msg += info
+
+            if donnee['version-change'] == 'NEW' and donnee['version-old-amount'] != 0:
+                msg += "pour un NEW, l'ancien montant doit être à 0 à la ligne " + str(ligne)
+            if donnee['version-change'] == 'CANCELED' and donnee['version-new-amount'] != 0:
+                msg += "pour un CANCELED, le nouveau montant doit être à 0 à la ligne " + str(ligne)
+            if donnee['version-change'] == 'IDEM' and donnee['version-new-amount'] != donnee['version-old-amount']:
+                msg += "pour un IDEM, le nouveau montant doit être égal à l'ancien à la ligne " + str(ligne)
+            if donnee['version-change'] == 'CLIENT' and donnee['version-new-amount'] != donnee['version-old-amount']:
+                msg += "pour un CLIENT, le nouveau montant doit être égal à l'ancien à la ligne " + str(ligne)
 
             donnees_dict[donnee['invoice-id']] = donnee
             ligne += 1

@@ -18,8 +18,8 @@ class Ticket(object):
         :param chemin_destination: le dossier de sauvegarde du fichier
         """
 
-        self.nom = "Ticket_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" + \
-                   Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".html"
+        self.nom = ("Ticket_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
+                    Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".html")
 
         self.sections = {}
         dict_ticket = {}
@@ -50,9 +50,9 @@ class Ticket(object):
 
                 dict_ticket[title].update({'total': "%.2f" % total})
 
-                nom_zip = "Annexes_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" + \
-                          Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" + str(code) + \
-                          "_" + client['abrev_labo'] + ".zip"
+                nom_zip = ("Annexes_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
+                           Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" + str(code) +
+                           "_" + client['abrev_labo'] + ".zip")
                 chemin_zip = imports.chemin_cannexes + "/" + nom_zip
 
                 if os.path.isfile(chemin_zip):
@@ -60,8 +60,9 @@ class Ticket(object):
 
                 if code in factures.par_client:
                     for id_fact, par_fact in factures.par_client[code].items():
-                        reference = classe['ref_fact'] + "_" + str(imports.edition.annee) + "_" + \
-                            Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" + str(id_fact)
+                        reference = (classe['ref_fact'] + "_" + str(imports.edition.annee) + "_" +
+                                     Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" +
+                                     str(id_fact))
                         dict_ticket[title]['factures'][id_fact] = {'ref': reference, 'postes': []}
 
                         total = 0
@@ -71,11 +72,11 @@ class Ticket(object):
 
                         dict_ticket[title]['factures'][id_fact].update({'total': "%.2f" % total})
 
-                        if versions.valeurs[id_fact]['version-change'] == 'NEW' or \
-                                versions.valeurs[id_fact]['version-change'] == 'CORRECTED':
-                            prefixe_pdf = "Annexe_" + imports.plateforme['abrev_plat'] + "_" + \
-                                          str(imports.edition.annee) + "_" + Format.mois_string(imports.edition.mois) \
-                                          + "_" + str(par_fact['version'])
+                        if (versions.valeurs[id_fact]['version-change'] != 'IDEM' and
+                                versions.valeurs[id_fact]['version-change'] != 'CANCELED'):
+                            prefixe_pdf = ("Annexe_" + imports.plateforme['abrev_plat'] + "_" +
+                                           str(imports.edition.annee) + "_" + Format.mois_string(imports.edition.mois)
+                                           + "_" + str(par_fact['version']))
                             nom_pdf = prefixe_pdf + "_" + str(id_fact) + ".pdf"
                             chemin_pdf = imports.chemin_pannexes + "/" + nom_pdf
 

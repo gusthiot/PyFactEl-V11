@@ -33,7 +33,7 @@ class Facture(object):
 
                 code_sap = client['code_sap']
 
-                if donnee['version-change'] == 'NEW' or donnee['version-change'] == 'CORRECTED':
+                if donnee['version-change'] != 'IDEM':
                     dict_fact = {'execmode': "SIMU"}
 
                     if classe['ref_fact'] == "INT":
@@ -89,7 +89,7 @@ class Facture(object):
                         code_op = imports.plateforme['code_p'] + classe['code_n'] + str(imports.edition.annee) + \
                             Format.mois_string(imports.edition.mois) + article['code_d']
 
-                        if donnee['version-change'] == 'NEW' or donnee['version-change'] == 'CORRECTED':
+                        if donnee['version-change'] != 'IDEM':
                             dict_fact['items'].append({'number': article['code_sap'], 'qty': article['quantite'],
                                                        'price': net, 'unit': article['unite'],
                                                        'text': article['texte_sap'],
@@ -104,7 +104,7 @@ class Facture(object):
                         poste += 1
                     inc += 1
 
-                if donnee['version-change'] == 'NEW' or donnee['version-change'] == 'CORRECTED':
+                if donnee['version-change'] != 'IDEM':
                     if imports.edition.filigrane == "":
                         with open(Chemin.chemin([chemin_destination, "facture_"+str(id_fact)+".json"]), 'w') as outfile:
                             json.dump(dict_fact, outfile, indent=4)

@@ -48,6 +48,7 @@ from module_a import (VersionNew,
                       Ticket,
                       Sap,
                       Info,
+                      ClientsModifs,
                       ResultatNew)
 from imports import (Edition,
                      Imports)
@@ -150,6 +151,8 @@ try:
         if imports.version > 0:
             journal = Journal(imports, new_versions, new_transactions_2)
             journal.csv(DossierDestination(imports.chemin_enregistrement))
+            clients_modifs = ClientsModifs(imports, new_versions)
+            clients_modifs.csv(DossierDestination(imports.chemin_enregistrement))
         details = Details(imports, transactions_3, sommes_3.par_client, new_numeros, new_versions)
         details_all = DetailsAll(imports, transactions_3, sommes_3.par_client, details.csv_fichiers, new_versions)
         ann_subs = AnnexeSubsides(imports, sommes_3.par_client, details_all.csv_fichiers, new_versions)

@@ -33,7 +33,7 @@ class Pdfs(object):
         :param id_fact: id facture lié à l'annexe donnée
         :param donnee: données de la facture
         """
-        if donnee['version-change'] == 'NEW' or donnee['version-change'] == 'CORRECTED':
+        if donnee['version-change'] != 'IDEM' and donnee['version-change'] != 'CANCELED':
             par_fact = self.par_fact[id_fact]
             intype = donnee['invoice-type']
             parties = {}

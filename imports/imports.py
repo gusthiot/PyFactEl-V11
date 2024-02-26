@@ -28,7 +28,8 @@ from imports.construits import (Numero,
                                 Granted,
                                 UserLabo,
                                 Version,
-                                Transactions2)
+                                Transactions2,
+                                ClientPrev)
 from core import (Interface,
                   Chemin,
                   Format,
@@ -131,6 +132,8 @@ class Imports(object):
             self.numeros = Numero(dossier_source, self.edition, self.comptes, self.clients, self.resultats.vfact)
             self.versions = Version(dossier_source, self.edition, self.resultats.vfact)
             self.transactions_2 = Transactions2(dossier_source, self.edition, self.plateforme, self.resultats.vfact)
+            self.clients_prev = ClientPrev(dossier_source, self.edition, self.facturation, self.classes,
+                                           self.resultats.vfact)
 
         # vérification terminée, création des dossiers de sauvegarde
 
@@ -167,6 +170,10 @@ class Imports(object):
                             self.categories, self.groupes, self.categprix, self.coefprests, self.classprests,
                             self.overheads, self.partenaires, self.resultats, self.grants, self.userlabs]:
             destination_out.ecrire(fichier_out.nom_fichier, self.dossier_source.lire(fichier_out.nom_fichier))
+
+            destination_out.ecrire("client_" + str(self.edition.annee) + "_" + Format.mois_string(self.edition.mois) +
+                                   "_" + str(self.version) + ".csv",
+                                   self.dossier_source.lire(self.clients.nom_fichier))
         if self.logo != "":
             destination_in.ecrire(self.logo, dossier_source.lire(self.logo))
             destination_out.ecrire(self.logo, dossier_source.lire(self.logo))
@@ -176,5 +183,5 @@ class Imports(object):
             destination_out.ecrire(grille, dossier_source.lire(grille))
 
         if self.version > 0:
-            for fichier in [self.numeros, self.versions, self.transactions_2]:
+            for fichier in [self.numeros, self.versions, self.transactions_2, self.clients_prev]:
                 destination_in.ecrire(fichier.nom_fichier, self.dossier_source.lire(fichier.nom_fichier))

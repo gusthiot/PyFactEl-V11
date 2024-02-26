@@ -10,7 +10,8 @@ class Paramtexte(object):
 
     cles = ['editing-year', 'editing-month', 'invoice-year', 'invoice-month', 'invoice-version', 'invoice-project',
             'invoice-id', 'invoice-type', 'invoice-ref', 'platf-code', 'platf-op', 'platf-name', 'client-code',
-            'client-sap', 'client-name', 'client-idclass', 'client-class', 'client-labelclass', 'oper-id', 'oper-name',
+            'client-sap', 'client-name', 'client-name2', 'client-name3', 'client-ref', 'client-email', 'client-deliv',
+            'client-idclass', 'client-class', 'client-labelclass', 'oper-id', 'oper-name',
             'oper-note', 'oper-PO', 'staff-note', 'mach-id', 'mach-name', 'mach-extra', 'user-id', 'user-sciper',
             'user-name', 'user-first', 'user-name-f', 'proj-id', 'proj-nbr', 'proj-nbr-0', 'proj-name', 'proj-name-0',
             'proj-expl', 'flow-type', 'flow-cae', 'flow-noshow', 'flow-lvr', 'flow-srv', 'item-grp', 'item-id',

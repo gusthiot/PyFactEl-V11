@@ -21,7 +21,7 @@ class Sap(CsvList):
 
         for donnee in versions.valeurs.values():
             if donnee['version-change'] != 'CANCELED' and donnee['version-new-amount'] > 0:
-                if donnee['version-change'] == 'NEW' or donnee['version-change'] == 'CORRECTED':
+                if donnee['version-change'] != 'IDEM':
                     client = imports.clients.donnees[donnee['client-code']]
                     total = par_fact[donnee['invoice-id']]['transactions']['total']
                     ligne = [client['abrev_labo'], donnee['invoice-id'], round(2*total, 1)/2, "READY", "", ""]

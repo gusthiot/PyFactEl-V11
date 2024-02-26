@@ -17,3 +17,4 @@ from .sap import Sap
 from .info import Info
 from .details_all import DetailsAll
 from .annexe_all import AnnexeAll
+from .clients_modifs import ClientsModifs

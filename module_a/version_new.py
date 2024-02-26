@@ -27,6 +27,7 @@ class VersionNew(CsvDict):
 
         self.corrections = []
         self.clients = []
+        self.clients_changes = []
 
         if imports.version == 0:
             for fact_id in sommes_2.par_fact.keys():
@@ -34,6 +35,7 @@ class VersionNew(CsvDict):
         else:
             transactions_old = imports.transactions_2.donnees
             sommes_2_old = Sommes2.sommes_old(transactions_old)
+            self.__check_clients()
 
             for fact_id, donnee in imports.versions.donnees.items():
                 if fact_id not in sommes_2.par_fact.keys():
@@ -44,10 +46,14 @@ class VersionNew(CsvDict):
                         if donnee['client-code'] not in self.clients:
                             self.clients.append(donnee['client-code'])
                     else:
-                        self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
-                                              donnee['version-last'], 'IDEM', donnee['version-new-amount'],
-                                              donnee['version-new-amount']], fact_id)
-
+                        if donnee['client-code'] in self.clients_changes:
+                            self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
+                                                  self.imports.version, 'CLIENT', donnee['version-new-amount'],
+                                                  donnee['version-new-amount']], fact_id)
+                        else:
+                            self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
+                                                  donnee['version-last'], 'IDEM', donnee['version-new-amount'],
+                                                  donnee['version-new-amount']], fact_id)
                 else:
                     base_new = self.transactions_new[sommes_2.par_fact[fact_id]['base']]
                     if donnee['client-code'] != base_new['client-code']:
@@ -67,9 +73,14 @@ class VersionNew(CsvDict):
                         idem = False
 
                     if idem:
-                        self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
-                                              donnee['version-last'], 'IDEM', donnee['version-new-amount'],
-                                              donnee['version-new-amount']], fact_id)
+                        if donnee['client-code'] in self.clients_changes:
+                            self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
+                                                  self.imports.version, 'CLIENT', donnee['version-new-amount'],
+                                                  donnee['version-new-amount']], fact_id)
+                        else:
+                            self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
+                                                  donnee['version-last'], 'IDEM', donnee['version-new-amount'],
+                                                  donnee['version-new-amount']], fact_id)
                     else:
                         self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
                                               self.imports.version, 'CORRECTED', donnee['version-new-amount'],
@@ -80,6 +91,28 @@ class VersionNew(CsvDict):
             for fact_id in sommes_2.par_fact.keys():
                 if fact_id not in imports.versions.donnees.keys():
                     self.__add_new(fact_id, sommes_2.par_fact[fact_id])
+
+    def __check_clients(self):
+        for code, act in self.imports.clients.donnees.items():
+            if code not in self.imports.clients_prev.donnees.keys():
+                self.clients_changes.append(code)
+                self.clients.append(code)
+            else:
+                prec = self.imports.clients_prev.donnees[code]
+                if (act['code_sap'] != prec['code_sap']
+                        or act['abrev_labo'] != prec['abrev_labo']
+                        or act['nom2'] != prec['nom2']
+                        or act['nom3'] != prec['nom3']
+                        or act['ref'] != prec['ref']
+                        or act['email'] != prec['email']
+                        or act['mode'] != prec['mode']
+                        or act['id_classe'] != prec['id_classe']):
+                    self.clients_changes.append(code)
+                    self.clients.append(code)
+        for code in self.imports.clients_prev.donnees.keys():
+            if code not in self.imports.clients.donnees.keys():
+                self.clients_changes.append(code)
+                self.clients.append(code)
 
     def __add_new(self, fact_id, somme_fact):
         """
