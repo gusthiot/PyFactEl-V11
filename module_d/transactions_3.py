@@ -294,12 +294,8 @@ class Transactions3(CsvDict):
                 util_proj = self.__util_proj(entree['id_user'], compte, pt['flow-lvr'])
                 trans = [entree['date_livraison'], entree['quantite']] + self.__staff(entree, entree['quantite']) + \
                         [0, "", ""]
-                if entree['rabais'] > 0:
-                    discount = pt['discount-LVR']
-                else:
-                    discount = ""
                 prix = round(entree['quantite'] * tarif['valuation-price'], 2)
-                val = [tarif['valuation-price'], prix, discount, entree['rabais'], prix-entree['rabais']]
+                val = [tarif['valuation-price'], prix, "", 0, prix]
                 self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
 
         # SRV
@@ -409,7 +405,7 @@ class Transactions3(CsvDict):
         plateforme = self.imports.plateforme
         if type_s in self.imports.subsides.donnees.keys():
             subside = self.imports.subsides.donnees[type_s]
-            subs = (subside['type'] == 'MONO')
+            subs = (subside['type'] == 'MONO' and data['classe']['subsides'] == 'BONUS')
         else:
             subs = True
         if (data['classe']['ref_fact'] == 'INT' and data['classe']['avantage_HC'] == 'BONUS' and

@@ -9,8 +9,7 @@ class ClasseClient(CsvImport):
     Classe pour l'importation des données de Classes Clients
     """
 
-    cles = ['id_classe', 'code_n', 'intitule', 'ref_fact', 'avantage_HC', 'subsides', 'rabais_excep', 'grille',
-            'overhead']
+    cles = ['id_classe', 'code_n', 'intitule', 'ref_fact', 'avantage_HC', 'subsides', 'grille', 'overhead']
     nom_fichier = "classeclient.csv"
     libelle = "Classes Clients"
 
@@ -51,8 +50,6 @@ class ClasseClient(CsvImport):
                     msg += "l'avantage HC de la ligne " + str(ligne) + " doit être BONUS ou RABAIS\n"
                 if donnee['subsides'] != 'BONUS' and donnee['subsides'] != 'RABAIS':
                     msg += "le mode subsides de la ligne " + str(ligne) + " doit être BONUS ou RABAIS\n"
-                if donnee['rabais_excep'] != 'BONUS' and donnee['rabais_excep'] != 'RABAIS':
-                    msg += "le mode rabais exceptionnel de la ligne " + str(ligne) + " doit être BONUS ou RABAIS\n"
             if donnee['grille'] != 'OUI' and donnee['grille'] != 'NON':
                 msg += "la grille tarifaire de la ligne " + str(ligne) + " doit être OUI ou NON\n"
 

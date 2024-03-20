@@ -9,7 +9,7 @@ class Livraison(CsvImport):
     Classe pour l'importation des données de Livraisons
     """
 
-    cles = ['annee', 'mois', 'id_compte', 'id_user', 'id_prestation', 'date_livraison', 'quantite', 'rabais',
+    cles = ['annee', 'mois', 'id_compte', 'id_user', 'id_prestation', 'date_livraison', 'quantite',
             'id_operateur', 'id_livraison', 'date_commande', 'remarque', 'validation', 'id_staff']
     nom_fichier = "lvr.csv"
     libelle = "Livraison Prestations"
@@ -51,8 +51,6 @@ class Livraison(CsvImport):
             msg += self.test_id_coherence(donnee['id_staff'], "l'id staff", ligne, users, True)
 
             donnee['quantite'], info = Format.est_un_nombre(donnee['quantite'], "la quantité", ligne, 1, 0)
-            msg += info
-            donnee['rabais'], info = Format.est_un_nombre(donnee['rabais'], "le rabais", ligne, 2, 0)
             msg += info
 
             donnee['date_livraison'], info = Format.est_une_date(donnee['date_livraison'], "la date de livraison",
