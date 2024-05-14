@@ -409,7 +409,7 @@ class Transactions3(CsvDict):
         else:
             subs = True
         if (data['classe']['ref_fact'] == 'INT' and data['classe']['avantage_HC'] == 'BONUS' and
-                classprest['eligible'] == 'OUI' and subs and plateforme['grille'] != "" and
+                classprest['eligible'] == 'OUI' and subs and plateforme['grille'] == "OUI" and
                 data['classe']['grille'] == 'OUI'):
             icf = data['compte']['id_compte']
         else:

@@ -71,7 +71,7 @@ class Prestation(CsvImport):
                 msg += "l'id classe prestation '" + donnee['id_classe_prest'] + "' de la ligne " + str(ligne) +\
                        " n'est pas référencée dans les coefficients\n"
 
-            msg += self.test_id_coherence(donnee['id_plateforme'], "l'id plateforme", ligne, plateformes)
+            msg += plateformes.test_id(donnee['id_plateforme'])
 
             msg += self.test_id_coherence(donnee['id_machine'], "l'id machine", ligne, machines, True)
 

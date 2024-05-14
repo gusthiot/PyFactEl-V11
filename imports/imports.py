@@ -79,7 +79,7 @@ class Imports(object):
         self.prestations = Prestation(dossier_source, self.classprests, self.coefprests, self.plateformes,
                                       self.machines, self.edition)
 
-        self.plateforme = self.plateformes.donnees[self.edition.plateforme]
+        self.plateforme = self.plateformes.donnee
 
         self.acces = Acces(dossier_source, self.comptes, self.machines, self.users)
         self.noshows = NoShow(dossier_source, self.comptes, self.machines, self.users)
@@ -131,7 +131,7 @@ class Imports(object):
         if self.version > 0:
             self.numeros = Numero(dossier_source, self.edition, self.comptes, self.clients, self.resultats.vfact)
             self.versions = Version(dossier_source, self.edition, self.resultats.vfact)
-            self.transactions_2 = Transactions2(dossier_source, self.edition, self.plateforme, self.resultats.vfact)
+            self.transactions_2 = Transactions2(dossier_source, self.edition, self.resultats.vfact)
             self.clients_prev = ClientPrev(dossier_source, self.edition, self.facturation, self.classes,
                                            self.resultats.vfact)
 
@@ -177,8 +177,8 @@ class Imports(object):
         if self.logo != "":
             destination_in.ecrire(self.logo, dossier_source.lire(self.logo))
             destination_out.ecrire(self.logo, dossier_source.lire(self.logo))
-        if self.plateforme['grille'] != "":
-            grille = self.plateforme['grille'] + '.pdf'
+        if self.plateforme['grille'] == "OUI":
+            grille = 'grille.pdf'
             destination_in.ecrire(grille, dossier_source.lire(grille))
             destination_out.ecrire(grille, dossier_source.lire(grille))
 

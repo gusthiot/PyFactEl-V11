@@ -1,17 +1,16 @@
-from core import CsvImport
 from core import (Interface,
                   Format,
                   Chemin,
                   ErreurConsistance)
 
 
-class Plateforme(CsvImport):
+class Plateforme(object):
     """
     Classe pour l'importation des données de Plateformes
     """
 
     nom_fichier = "plateforme.csv"
-    cles = ['id_plateforme', 'code_p', 'centre', 'fonds', 'abrev_plat', 'int_plat', 'grille']
+    cles = ['Id-Plateforme', 'Code_P', 'CF', 'Fonds', 'Abrev-Plateforme', 'Intitulé-Plateforme', 'Grille-Plateforme']
     libelle = "Plateformes"
 
     def __init__(self, dossier_source, clients, edition):
@@ -21,57 +20,61 @@ class Plateforme(CsvImport):
         :param clients: clients importés
         :param edition: paramètres d'édition
         """
-        super().__init__(dossier_source)
+        donnees_csv = {}
+        try:
+            for ligne in dossier_source.reader(self.nom_fichier):
+                cle = ligne.pop(0)
+                if cle not in self.cles:
+                    Interface.fatal(ErreurConsistance(), "Clé inconnue dans %s: %s" % (self.nom_fichier, cle))
+                while ligne[-1] == "":
+                    del ligne[-1]
+                donnees_csv[cle] = ligne
+        except IOError as e:
+            Interface.fatal(e, "impossible d'ouvrir le fichier : "+self.nom_fichier)
 
         msg = ""
-        ligne = 1
-        donnees_dict = {}
-        abrevs = []
-        ids = []
+        self.donnee = {}
+        for cle in self.cles:
+            if cle not in donnees_csv:
+                msg += "\nClé manquante dans %s: %s" % (self.nom_fichier, cle)
 
-        del self.donnees[0]
-        for donnee in self.donnees:
-            donnee['id_plateforme'], info = Format.est_un_alphanumerique(donnee['id_plateforme'], "l'id plateforme",
-                                                                         ligne)
-            msg += info
-            if donnee['id_plateforme'] == "":
-                msg += "l'id plateforme " + str(ligne) + " ne peut être vide\n"
-            elif donnee['id_plateforme'] not in clients.donnees.keys():
-                msg += "l'id plateforme de la ligne " + str(ligne) + " n'existe pas dans les clients \n"
-            elif donnee['id_plateforme'] not in ids:
-                ids.append(donnee['id_plateforme'])
+            self.donnee['id_plateforme'], err = Format.est_un_alphanumerique(donnees_csv['Id-Plateforme'][1], "l'id plateforme")
+            msg += err
+
+            if donnees_csv['Id-Plateforme'][1] == "":
+                msg += "l'id plateforme ne peut être vide\n"
+            elif donnees_csv['Id-Plateforme'][1] not in clients.donnees.keys():
+                msg += "l'id plateforme n'existe pas dans les clients \n"
+            elif donnees_csv['Id-Plateforme'][1] != edition.plateforme:
+                msg += "l'id plateforme n'est pas celui de paramedit \n"
+
+            self.donnee['code_p'], err = Format.est_un_alphanumerique(donnees_csv['Code_P'][1], "le code P")
+            msg += err
+            self.donnee['centre'], err = Format.est_un_alphanumerique(donnees_csv['CF'][1], "le centre financier")
+            msg += err
+            self.donnee['fonds'], err = Format.est_un_alphanumerique(donnees_csv['Fonds'][1], "les fonds à créditer")
+            msg += err
+            self.donnee['abrev_plat'], err = Format.est_un_alphanumerique(donnees_csv['Abrev-Plateforme'][1], "l'abréviation")
+            msg += err
+            self.donnee['intitule'], err = Format.est_un_texte(donnees_csv['Intitulé-Plateforme'][1], "l'intitulé")
+            msg += err
+
+            if donnees_csv['Grille-Plateforme'][1] != 'OUI' and donnees_csv['Grille-Plateforme'][1] != 'NON':
+                msg += "grille-plateforme doit être OUI ou NON\n"
             else:
-                msg += "l'id plateforme de la ligne " + str(ligne) + " n'est pas unique \n"
+                self.donnee['grille'] = donnees_csv['Grille-Plateforme'][1]
 
-            donnee['code_p'], info = Format.est_un_alphanumerique(donnee['code_p'], "le code P", ligne)
-            msg += info
-            donnee['centre'], info = Format.est_un_alphanumerique(donnee['centre'], "le centre financier", ligne)
-            msg += info
-            donnee['fonds'], info = Format.est_un_alphanumerique(donnee['fonds'], "les fonds à créditer", ligne)
-            msg += info
-            donnee['abrev_plat'], info = Format.est_un_alphanumerique(donnee['abrev_plat'], "l'abréviation", ligne)
-            msg += info
-            if donnee['abrev_plat'] not in abrevs:
-                abrevs.append(donnee['abrev_plat'])
-            else:
-                msg += "l'abréviation plateforme de la ligne " + str(ligne) + " n'est pas unique \n"
-            donnee['int_plat'], info = Format.est_un_texte(donnee['int_plat'], "l'intitulé", ligne)
-            msg += info
-            donnee['grille'], info = Format.est_un_document(donnee['grille'], "la grille tarifaire", ligne, True)
-            msg += info
-            if donnee['id_plateforme'] == edition.plateforme and donnee['grille'] != "":
-                if not Chemin.existe(Chemin.chemin([dossier_source.chemin, donnee['grille'] + '.pdf'])):
-                    msg += "la grille de la ligne " + str(ligne) + " n'existe pas dans le dossier d'entrée \n"
-
-            donnees_dict[donnee['id_plateforme']] = donnee
-            ligne += 1
-
-        self.donnees = donnees_dict
+            if (donnees_csv['Grille-Plateforme'][1] == 'OUI' and
+                    not Chemin.existe(Chemin.chemin([dossier_source.chemin, 'grille.pdf']))):
+                    msg += "la grille n'existe pas dans le dossier d'entrée \n"
 
         if msg != "":
             Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
 
-        if edition.plateforme not in self.donnees.keys():
-            Interface.fatal(ErreurConsistance(),
-                            edition.libelle + "\n" + "l'id plateforme '" + str(edition.plateforme) +
-                            "' n'est pas référencé\n")
+    def test_id(self, id_plateforme):
+        msg = ""
+        if id_plateforme == "":
+            msg += "l'id plateforme ne peut être vide\n"
+        elif id_plateforme != self.donnee['id_plateforme']:
+            msg += "l'id plateforme " + id_plateforme + " n'est as celui attendu : " + self.donnee['id_plateforme'] + "\n"
+        return msg

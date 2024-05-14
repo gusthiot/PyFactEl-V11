@@ -43,7 +43,7 @@ class Categorie(CsvImport):
                 msg += "le flag coef_prest de l'id classe prestation '" + donnee['id_classe_prest'] + \
                        "' de la ligne " + str(ligne) + "est à OUI et devrait être à NON\n"
 
-            msg += self.test_id_coherence(donnee['id_plateforme'], "l'id plateforme", ligne, plateformes)
+            msg += plateformes.test_id(donnee['id_plateforme'])
 
             donnee['no_categorie'], info = Format.est_un_alphanumerique(donnee['no_categorie'], "le no catégorie",
                                                                         ligne)

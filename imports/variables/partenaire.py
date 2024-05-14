@@ -30,7 +30,7 @@ class Partenaire(CsvImport):
 
         for donnee in self.donnees:
 
-            msg += self.test_id_coherence(donnee['id_plateforme'], "l'id plateforme", ligne, plateformes)
+            msg += plateformes.test_id(donnee['id_plateforme'])
 
             msg += self.test_id_coherence(donnee['code_client'], "le code client", ligne, clients, True)
 

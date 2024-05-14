@@ -38,7 +38,7 @@ class Granted(CsvImport):
 
             msg += self.test_id_coherence(donnee['item-idclass'], "l'id classe prestation", ligne, classprests)
 
-            msg += self.test_id_coherence(donnee['platf-code'], "l'id plateforme", ligne, plateformes)
+            msg += plateformes.test_id(donnee['platf-code'])
 
             triplet = [donnee['proj-id'], donnee['platf-code'], donnee['item-idclass']]
             if triplet not in triplets:

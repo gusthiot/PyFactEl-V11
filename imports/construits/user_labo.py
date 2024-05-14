@@ -38,7 +38,7 @@ class UserLabo(CsvImport):
             donnee['month'], info = Format.est_un_entier(donnee['month'], "le mois", ligne, mini=1, maxi=12)
             msg += info
 
-            msg += self.test_id_coherence(donnee['platf-code'], "l'id plateforme", ligne, plateformes)
+            msg += plateformes.test_id(donnee['platf-code'])
 
             msg += self.test_id_coherence(donnee['client-code'], "le code client", ligne, clients)
 

@@ -39,7 +39,7 @@ class Resultat(object):
         msg += err
         self.plateforme, err = Format.est_un_alphanumerique(donnees_csv['Platform'][1], "l'id plateforme")
         msg += err
-        msg += plateformes.test_id_coherence(donnees_csv['Platform'][1], "l'id plateforme", 3, plateformes)
+        msg += plateformes.test_id(donnees_csv['Platform'][1])
         self.annee, err = Format.est_un_entier(donnees_csv['Year'][1], "l'année", mini=2000, maxi=2099)
         msg += err
         self.mois, err = Format.est_un_entier(donnees_csv['Month'][1], "le mois", mini=1, maxi=12)
@@ -51,7 +51,7 @@ class Resultat(object):
         if donnees_csv['Type'][1] != 'SAP' and donnees_csv['Type'][1] != 'PROFORMA' and donnees_csv['Type'][1] != 'SIMU':
             msg += "le type doit être SAP, PROFORMA ou SIMU\n"
         else:
-            self.type = donnees_csv['Type']
+            self.type = donnees_csv['Type'][1]
 
         if msg != "":
             Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)

@@ -34,7 +34,7 @@ class PlafSubside(CsvImport):
 
             msg += self.test_id_coherence(donnee['id_classe_prest'], "l'id classe prestation", ligne, classprests)
 
-            msg += self.test_id_coherence(donnee['id_plateforme'], "l'id plateforme", ligne, plateformes)
+            msg += plateformes.test_id(donnee['id_plateforme'])
 
             triplet = [donnee['id_subside'], donnee['id_plateforme'], donnee['id_classe_prest']]
             if triplet not in triplets:

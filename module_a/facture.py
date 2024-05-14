@@ -58,19 +58,10 @@ class Facture(object):
                             Format.mois_string(imports.edition.mois) + "_" + str(donnee['version-last']) + "_" +
                             str(id_fact) + ".pdf")
 
-                    # with open(Chemin.chemin([imports.chemin_pannexes, lien]), "rb") as pdf:
-                    #     annexe_base64 = base64.b64encode(pdf.read())
-
                     dict_fact['attachment'] = [{'filename': lien}]
-                    # dict_fact['attachment'] = [{'filename': lien, 'filecontent': annexe_base64.decode('utf-8')}]
 
-                    if classe['grille'] == "OUI":
-                        grille = imports.plateforme['grille'] + '.pdf'
-                        # with open(Chemin.chemin([imports.dossier_source.chemin, grille]), "rb") as pdf:
-                        #     grille_base64 = base64.b64encode(pdf.read())
-                        # dict_fact['attachment'].append({'filename': grille,
-                        #                                'filecontent': grille_base64.decode('utf-8')})
-                        dict_fact['attachment'].append({'filename': grille})
+                    if classe['grille'] == "OUI" and imports.plateforme['grille'] == "OUI":
+                        dict_fact['attachment'].append({'filename': "grille.pdf"})
 
                     dict_fact['partner'] = {'clientnr': code_sap, 'name2': client['nom2'], 'name3': client['nom3'],
                                             'email': client['email']}
@@ -78,8 +69,6 @@ class Facture(object):
                     dict_fact['items'] = []
 
                 inc = 1
-                # date_dernier = str(imports.edition.annee) + Format.mois_string(imports.edition.mois) + \
-                #     str(imports.edition.dernier_jour)
                 for id_compte, par_compte in par_fact[id_fact]['projets'].items():
                     nom = par_compte['numero']
                     poste = inc*10
