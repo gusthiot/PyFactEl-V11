@@ -70,7 +70,6 @@ class Pdfs(object):
                 \includegraphics[height=8mm]{logo}
                 \end{flushleft}
                 '''
-        plateforme = self.imports.plateforme
         if intype == "GLOB":
             dico = {'titre1': self.echappe('annex-client-titre1'), 'titre2': self.echappe('annex-client-titre2'),
                     'abrev': self.echappe('annex-client-abrev-platform'),
@@ -79,8 +78,8 @@ class Pdfs(object):
             dico = {'titre1': self.echappe('annex-compte-titre1'), 'titre2': self.echappe('annex-compte-titre2'),
                     'abrev': self.echappe('annex-compte-abrev-platform'),
                     'nom': self.echappe('annex-compte-name-platform'), 'num': self.echappe('annex-compte-proj-no')}
-        dico.update({'int_plat': Latex.echappe_caracteres(plateforme['int_plat']),
-                     'abrev_plat': Latex.echappe_caracteres(plateforme['abrev_plat']),
+        dico.update({'int_plat': Latex.echappe_caracteres(self.imports.plateforme['intitule']),
+                     'abrev_plat': Latex.echappe_caracteres(self.imports.plateforme['abrev_plat']),
                      'numero': Latex.echappe_caracteres(numero),
                      'intitule': Latex.echappe_caracteres(intitule)})
         contenu += r''' \begin{flushright}
