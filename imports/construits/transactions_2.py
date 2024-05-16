@@ -16,14 +16,15 @@ class Transactions2(CsvImport):
             'item-name', 'transac-quantity', 'item-unit', 'valuation-price', 'sum-deduct', 'total-fact']
     libelle = "Transactions 2"
 
-    def __init__(self, dossier_source, edition, version):
+    def __init__(self, dossier_source, edition, plateforme, version):
         """
         initialisation et importation des données
         :param dossier_source: Une instance de la classe dossier.DossierSource
         :param edition: paramètres d'édition
+        :param plateforme: plateforme traitée
         :param version: version de facturation ciblée
         """
-        self.nom_fichier = "Transaction2_" + edition.plateforme + "_" + str(edition.annee) + "_" + \
+        self.nom_fichier = "Transaction2_" + plateforme['abrev_plat'] + "_" + str(edition.annee) + "_" + \
                            Format.mois_string(edition.mois) + "_" + str(version) + ".csv"
         super().__init__(dossier_source)
 

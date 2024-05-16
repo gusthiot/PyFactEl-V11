@@ -131,7 +131,7 @@ class Imports(object):
         if self.version > 0:
             self.numeros = Numero(dossier_source, self.edition, self.comptes, self.clients, self.resultats.vfact)
             self.versions = Version(dossier_source, self.edition, self.resultats.vfact)
-            self.transactions_2 = Transactions2(dossier_source, self.edition, self.resultats.vfact)
+            self.transactions_2 = Transactions2(dossier_source, self.edition, self.plateforme, self.resultats.vfact)
             self.clients_prev = ClientPrev(dossier_source, self.edition, self.facturation, self.classes,
                                            self.resultats.vfact)
 
