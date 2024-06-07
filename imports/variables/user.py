@@ -20,9 +20,8 @@ class User(CsvImport):
         """
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_dict = {}
         ids = []
         # scipers = []
@@ -59,4 +58,4 @@ class User(CsvImport):
         self.donnees = donnees_dict
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

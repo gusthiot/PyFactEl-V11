@@ -20,21 +20,20 @@ class Overhead(CsvImport):
         :param artsap: articles SAP importés
         """
         super().__init__(dossier_source)
-        del self.donnees[0]
+
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_dict = {}
         ids = []
 
         for donnee in self.donnees:
-            donnee['id_overhead'], info = Format.est_un_alphanumerique(donnee['id_overhead'], "l'id overhead", ligne)
-            msg += info
+            donnee['id_overhead'], info = Format.est_un_alphanumerique(donnee['id_overhead'], "l'id overhead")
+            msg += self._erreur_ligne(ligne, info)
             if info == "":
                 if donnee['id_overhead'] not in ids:
                     ids.append(donnee['id_overhead'])
                 else:
-                    msg += "l'id overhead '" + donnee['id_overhead'] + "' de la ligne " + str(ligne) + \
-                           " n'est pas unique\n"
+                    msg += self._erreur_ligne(ligne, "l'id overhead '" + donnee['id_overhead'] + "' n'est pas unique\n")
 
             msg += self.test_id_coherence(donnee['id_article'], "l'id article SAP", ligne, artsap)
 
@@ -44,4 +43,4 @@ class Overhead(CsvImport):
         self.donnees = donnees_dict
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

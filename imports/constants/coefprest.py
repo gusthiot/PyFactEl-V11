@@ -22,9 +22,8 @@ class CoefPrest(CsvImport):
         """
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_dict = {}
         prests = []
         couples = []
@@ -35,22 +34,22 @@ class CoefPrest(CsvImport):
             if info == "" and donnee['id_classe'] not in clas:
                 clas.append(donnee['id_classe'])
             else:
-                msg += info
+                msg += self._erreur_ligne(ligne, info)
             info += self.test_id_coherence(donnee['id_classe_prest'], "l'id classe prestation", ligne, classprests)
             if info == "" and donnee['id_classe_prest'] not in prests:
                 prests.append(donnee['id_classe_prest'])
             else:
-                msg += info
+                msg += self._erreur_ligne(ligne, info)
 
             couple = [donnee['id_classe'], donnee['id_classe_prest']]
             if couple not in couples:
                 couples.append(couple)
             else:
-                msg += "Couple id classe prestation '" + donnee['id_classe_prest'] + "' et id classe client '" + \
-                       donnee['id_classe'] + "' de la ligne " + str(ligne) + " pas unique\n"
+                msg += self._erreur_ligne(ligne, "Couple id classe prestation '" + donnee['id_classe_prest'] +
+                                          "' et id classe client '" + donnee['id_classe'] + "' pas unique\n")
 
-            donnee['coefficient'], info = Format.est_un_nombre(donnee['coefficient'], "le coefficient", ligne, 2, 0)
-            msg += info
+            donnee['coefficient'], info = Format.est_un_nombre(donnee['coefficient'], "le coefficient", 2, 0)
+            msg += self._erreur_ligne(ligne, info)
 
             donnees_dict[donnee['id_classe'] + donnee['id_classe_prest']] = donnee
             ligne += 1
@@ -59,19 +58,20 @@ class CoefPrest(CsvImport):
 
         for id_classe in classes.donnees.keys():
             if id_classe not in clas:
-                msg += "L'id de classe '" + id_classe + "' dans les classes clients n'est pas présent dans " \
-                                                         "les coefficients de prestations\n"
+                msg += self._erreur_fichier("L'id de classe '" + id_classe +
+                                            "' dans les classes clients n'est pas présent dans "
+                                            "les coefficients de prestations\n")
 
         for id_classprest, classprest in classprests.donnees.items():
             if classprest['flag_coef'] == "OUI":
                 for id_classe in clas:
                     couple = [id_classe, id_classprest]
                     if couple not in couples:
-                        msg += "Couple id classe prestation '" + id_classprest + "' et id classe client '" + \
-                               id_classe + "' n'existe pas\n"
+                        msg += self._erreur_fichier("Couple id classe prestation '" + id_classprest +
+                                                    "' et id classe client '" + id_classe + "' n'existe pas\n")
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)
 
     def contient_classprest(self, id_classprest):
         """

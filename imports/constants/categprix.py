@@ -22,9 +22,8 @@ class CategPrix(CsvImport):
         """
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_dict = {}
         clas = []
         couples = []
@@ -35,24 +34,24 @@ class CategPrix(CsvImport):
             if info == "" and donnee['id_classe'] not in clas:
                 clas.append(donnee['id_classe'])
             else:
-                msg += info
+                msg += self._erreur_ligne(ligne, info)
 
             info = self.test_id_coherence(donnee['id_categorie'], "l'id catégorie", ligne, categories)
             if info == "" and donnee['id_categorie'] not in ids:
                 ids.append(donnee['id_categorie'])
             else:
-                msg += info
+                msg += self._erreur_ligne(ligne, info)
 
             if (donnee['id_categorie'] != "") and (donnee['id_classe'] != ""):
                 couple = [donnee['id_categorie'], donnee['id_classe']]
                 if couple not in couples:
                     couples.append(couple)
                 else:
-                    msg += "Couple id catégorie '" + donnee['id_categorie'] + "' et id classe '" + \
-                           donnee['id_classe'] + "' de la ligne " + str(ligne) + " pas unique\n"
+                    msg += self._erreur_ligne(ligne, "Couple id catégorie '" + donnee['id_categorie'] +
+                                              "' et id classe '" + donnee['id_classe'] + "' pas unique\n")
 
-            donnee['prix_unit'], info = Format.est_un_nombre(donnee['prix_unit'], "le prix unitaire ", ligne, 2)
-            msg += info
+            donnee['prix_unit'], info = Format.est_un_nombre(donnee['prix_unit'], "le prix unitaire ", 2)
+            msg += self._erreur_ligne(ligne, info)
 
             donnees_dict[donnee['id_classe'] + donnee['id_categorie']] = donnee
             ligne += 1
@@ -61,19 +60,19 @@ class CategPrix(CsvImport):
 
         for id_classe in classes.donnees.keys():
             if id_classe not in clas:
-                msg += "L'id de classe '" + id_classe + "' dans les classes clients n'est pas présent dans " \
-                                                         "les catégories prix\n"
+                msg += self._erreur_fichier("L'id de classe '" + id_classe +
+                                            "' dans les classes clients n'est pas présent dans les catégories prix\n")
 
         for id_cat in categories.donnees.keys():
             if id_cat not in ids:
-                msg += "L'id catégorie '" + id_cat + "' dans les catégories n'est pas présent dans " \
-                                                         "les catégories prix\n"
+                msg += self._erreur_fichier("L'id catégorie '" + id_cat +
+                                            "' dans les catégories n'est pas présent dans les catégories prix\n")
         for id_cat in ids:
             for classe in clas:
                 couple = [id_cat, classe]
                 if couple not in couples:
-                    msg += "Couple id catégorie '" + id_cat + "' et id classe client '" + \
-                           classe + "' n'existe pas\n"
+                    msg += self._erreur_fichier("Couple id catégorie '" + id_cat +
+                                                "' et id classe client '" + classe + "' n'existe pas\n")
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

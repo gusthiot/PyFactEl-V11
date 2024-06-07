@@ -22,31 +22,30 @@ class ClassePrestation(CsvImport):
         """
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_dict = {}
         ids = []
 
         for donnee in self.donnees:
             donnee['id_classe_prest'], info = Format.est_un_alphanumerique(donnee['id_classe_prest'],
-                                                                           "l'id classe prestation", ligne)
-            msg += info
+                                                                           "l'id classe prestation")
+            msg += self._erreur_ligne(ligne, info)
             if info == "":
                 if donnee['id_classe_prest'] not in ids:
                     ids.append(donnee['id_classe_prest'])
                 else:
-                    msg += "l'id classe prestation '" + donnee['id_classe_prest'] + "' de la ligne " + str(ligne) + \
-                           " n'est pas unique\n"
+                    msg += self._erreur_ligne(ligne, "l'id classe prestation '" + donnee['id_classe_prest'] +
+                                              "' n'est pas unique\n")
 
             if donnee['flag_coef'] != 'OUI' and donnee['flag_coef'] != 'NON':
-                msg += "le flag coeff_prest de la ligne " + str(ligne) + " doit être OUI ou NON\n"
+                msg += self._erreur_ligne(ligne, "le flag coeff_prest doit être OUI ou NON\n")
             if donnee['flag_usage'] != 'OUI' and donnee['flag_usage'] != 'NON':
-                msg += "le flag usage de la ligne " + str(ligne) + " doit être OUI ou NON\n"
+                msg += self._erreur_ligne(ligne, "le flag usage doit être OUI ou NON\n")
             if donnee['flag_conso'] != 'OUI' and donnee['flag_conso'] != 'NON':
-                msg += "le flag conso de la ligne " + str(ligne) + " doit être OUI ou NON\n"
+                msg += self._erreur_ligne(ligne, "le flag conso doit être OUI ou NON\n")
             if donnee['eligible'] != 'OUI' and donnee['eligible'] != 'NON':
-                msg += "l'éligible de la ligne " + str(ligne) + " doit être OUI ou NON\n"
+                msg += self._erreur_ligne(ligne, "l'éligible doit être OUI ou NON\n")
 
             msg += self.test_id_coherence(donnee['id_article'], "l'id article SAP", ligne, artsap)
 
@@ -58,4 +57,4 @@ class ClassePrestation(CsvImport):
         self.donnees = donnees_dict
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

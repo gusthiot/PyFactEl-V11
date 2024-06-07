@@ -24,23 +24,22 @@ class Acces(CsvImport):
         """
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_list = []
         coms = []
 
         for donnee in self.donnees:
-            donnee['mois'], info = Format.est_un_entier(donnee['mois'], "le mois ", ligne, 1, 12)
-            msg += info
-            donnee['annee'], info = Format.est_un_entier(donnee['annee'], "l'annee ", ligne, 2000, 2099)
-            msg += info
+            donnee['mois'], info = Format.est_un_entier(donnee['mois'], "le mois ", 1, 12)
+            msg += self._erreur_ligne(ligne, info)
+            donnee['annee'], info = Format.est_un_entier(donnee['annee'], "l'annee ", 2000, 2099)
+            msg += self._erreur_ligne(ligne, info)
 
             info = self.test_id_coherence(donnee['id_compte'], "l'id compte", ligne, comptes)
             if info == "" and donnee['id_compte'] not in coms:
                 coms.append(donnee['id_compte'])
             else:
-                msg += info
+                msg += self._erreur_ligne(ligne, info)
 
             msg += self.test_id_coherence(donnee['id_machine'], "l'id machine", ligne, machines)
 
@@ -51,32 +50,30 @@ class Acces(CsvImport):
             msg += self.test_id_coherence(donnee['id_staff'], "l'id staff", ligne, users, True)
 
             donnee['duree_machine_hp'], info = Format.est_un_nombre(donnee['duree_machine_hp'], "la durée machine hp",
-                                                                    ligne, 4, 0)
+                                                                    4, 0)
             msg += info
             donnee['duree_machine_hc'], info = Format.est_un_nombre(donnee['duree_machine_hc'], "la durée machine hc",
-                                                                    ligne, 4, 0)
-            msg += info
-            donnee['duree_run'], info = Format.est_un_nombre(donnee['duree_run'], "la durée du run", ligne, 4, 0)
-            msg += info
+                                                                    4, 0)
+            msg += self._erreur_ligne(ligne, info)
+            donnee['duree_run'], info = Format.est_un_nombre(donnee['duree_run'], "la durée du run", 4, 0)
+            msg += self._erreur_ligne(ligne, info)
             donnee['duree_operateur'], info = Format.est_un_nombre(donnee['duree_operateur'], "la durée opérateur",
-                                                                   ligne, 4, 0)
-            msg += info
+                                                                   4, 0)
+            msg += self._erreur_ligne(ligne, info)
             if donnee['duree_run'] < (donnee['duree_machine_hc'] + donnee['duree_machine_hp']):
-                msg += "la durée de run de la ligne " + str(ligne) + " ne peut pas être plus petite que HP + HC"
+                msg += self._erreur_ligne(ligne, "la durée de run ne peut pas être plus petite que HP + HC")
 
-            donnee['date_login'], info = Format.est_une_date(donnee['date_login'], "la date de login", ligne)
-            msg += info
+            donnee['date_login'], info = Format.est_une_date(donnee['date_login'], "la date de login")
+            msg += self._erreur_ligne(ligne, info)
 
-            donnee['remarque_op'], info = Format.est_un_texte(donnee['remarque_op'], "la remarque opérateur", ligne,
-                                                              True)
-            msg += info
+            donnee['remarque_op'], info = Format.est_un_texte(donnee['remarque_op'], "la remarque opérateur", True)
+            msg += self._erreur_ligne(ligne, info)
 
-            donnee['remarque_staff'], info = Format.est_un_texte(donnee['remarque_staff'], "la remarque staff", ligne,
-                                                                 True)
-            msg += info
+            donnee['remarque_staff'], info = Format.est_un_texte(donnee['remarque_staff'], "la remarque staff", True)
+            msg += self._erreur_ligne(ligne, info)
 
             if donnee['validation'] not in ['0', '1', '2', '3']:
-                msg += "la validation " + str(ligne) + " doit être parmi [0, 1, 2, 3]"
+                msg += self._erreur_ligne(ligne, "la validation doit être parmi [0, 1, 2, 3]")
 
             donnees_list.append(donnee)
 
@@ -84,4 +81,4 @@ class Acces(CsvImport):
 
         self.donnees = donnees_list
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

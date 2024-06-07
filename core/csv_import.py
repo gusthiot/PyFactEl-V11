@@ -29,8 +29,32 @@ class CsvImport(object):
                     continue
                 donnees_csv.append(donnees_ligne)
             self.donnees = donnees_csv
+            del self.donnees[0]
         except IOError as e:
             Interface.fatal(e, "impossible d'ouvrir le fichier : "+self.nom_fichier)
+
+    def _erreur_ligne(self, ligne, msg):
+        """
+        formate une erreur de ligne
+        :param ligne: ligne lue du fichier
+        :param msg: message d'erreur
+        :return: message formaté
+        """
+        if msg != "":
+            return self.libelle + " (" + self.nom_fichier + " ligne " + str(ligne) + ") : " + msg
+        else:
+            return ""
+
+    def _erreur_fichier(self, msg):
+        """
+        formate une erreur de contenu du fichier
+        :param msg: message d'erreur
+        :return: message formaté
+        """
+        if msg != "":
+            return self.libelle + " (" + self.nom_fichier + ") : " + msg
+        else:
+            return ""
 
     def _extraction_ligne(self, ligne):
         """
@@ -40,22 +64,29 @@ class CsvImport(object):
         """
         num = len(self.cles)
         if len(ligne) != num:
-            Interface.fatal(ErreurConsistance(),
-                         self.libelle + ": nombre de colonnes incorrect : " +
-                         str(len(ligne)) + ", attendu : " + str(num))
+            Interface.fatal(ErreurConsistance(), self._erreur_ligne(ligne, "nombre de colonnes incorrect : " +
+                         str(len(ligne)) + ", attendu : " + str(num) + "\n"))
         donnees_ligne = {}
         for xx in range(0, num):
             donnees_ligne[self.cles[xx]] = ligne[xx]
         return donnees_ligne
 
-    @staticmethod
-    def test_id_coherence(donnee, nom, ligne, corpus, zero=False):
+    def test_id_coherence(self, donnee, nom, ligne, corpus, zero=False):
+        """
+        vérifie si l'id donné est cohérent
+        :param donnee: id donné
+        :param nom: nom de l'id
+        :param ligne: ligne lue du fichier
+        :param corpus: données dans lesquelles l'id devrait se retrouver
+        :param zero: si l'id peut être égal à zéro
+        :return: un message d'erreur ou un string vide si ok
+        """
         msg = ""
         if donnee == "":
-            msg += nom + " de la ligne " + str(ligne) + " ne peut être vide\n"
+            msg += nom + " ne peut être vide\n"
         elif (not zero or donnee != "0") and donnee not in corpus.donnees.keys():
-            msg += nom + " '" + donnee + "' de la ligne " + str(ligne) + " n'est pas référencé"
+            msg += nom + " '" + donnee + "' n'est pas référencé"
             if zero:
                 msg += " ni égal à 0"
             msg += "\n"
-        return msg
+        return self._erreur_ligne(ligne, msg)

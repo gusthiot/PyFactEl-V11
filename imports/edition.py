@@ -31,25 +31,25 @@ class Edition(object):
         msg = ""
         for cle in self.cles:
             if cle not in donnees_csv:
-                msg += "\nClé manquante dans %s: %s" % (self.nom_fichier, cle)
+                msg += self._erreur_fichier("Clé manquante:" + cle + "\n")
 
         self.annee, err = Format.est_un_entier(donnees_csv['Year'], "l'année", mini=2000, maxi=2099)
-        msg += err
+        msg += self._erreur_fichier(err)
 
         self.mois, err = Format.est_un_entier(donnees_csv['Month'], "le mois", mini=1, maxi=12)
-        msg += err
+        msg += self._erreur_fichier(err)
 
         if module_a:
             self.plateforme, err = Format.est_un_entier(donnees_csv['Platform'], "l'id plateforme", mini=0)
         else:
             self.plateforme, err = Format.est_un_alphanumerique(donnees_csv['Platform'], "l'id plateforme")
-        msg += err
+        msg += self._erreur_fichier(err)
 
         self.filigrane, err = Format.est_un_texte(donnees_csv['Watermark'], "le filigrane", vide=True)
-        msg += err
+        msg += self._erreur_fichier(err)
 
         if donnees_csv['Type'] != 'SAP' and donnees_csv['Type'] != 'PROFORMA' and donnees_csv['Type'] != 'SIMU':
-            msg += "le type doit être SAP, PROFORMA ou SIMU\n"
+            msg += self._erreur_fichier("le type doit être SAP, PROFORMA ou SIMU\n")
         else:
             self.type = donnees_csv['Type']
 
@@ -74,4 +74,16 @@ class Edition(object):
         self.mois_txt = mois_fr[self.mois-1]
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)
+
+    def _erreur_fichier(self, msg):
+        """
+        formate une erreur de contenu du fichier
+        :param msg: message d'erreur
+        :return: message formaté
+        """
+        if msg != "":
+            return self.libelle + " (" + self.nom_fichier + ") : " + msg
+        else:
+            return ""
+

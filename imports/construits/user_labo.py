@@ -27,16 +27,15 @@ class UserLabo(CsvImport):
             self.nom_fichier = "User-labo_" + str(edition.annee-1) + "_" + Format.mois_string(12) + ".csv"
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_list = []
 
         for donnee in self.donnees:
-            donnee['year'], info = Format.est_un_entier(donnee['year'], "l'année", ligne, mini=2000, maxi=2099)
-            msg += info
-            donnee['month'], info = Format.est_un_entier(donnee['month'], "le mois", ligne, mini=1, maxi=12)
-            msg += info
+            donnee['year'], info = Format.est_un_entier(donnee['year'], "l'année", mini=2000, maxi=2099)
+            msg += self._erreur_ligne(ligne, info)
+            donnee['month'], info = Format.est_un_entier(donnee['month'], "le mois", mini=1, maxi=12)
+            msg += self._erreur_ligne(ligne, info)
 
             msg += plateformes.test_id(donnee['platf-code'])
 
@@ -50,4 +49,4 @@ class UserLabo(CsvImport):
         self.donnees = donnees_list
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

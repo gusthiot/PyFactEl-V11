@@ -22,36 +22,35 @@ class Categorie(CsvImport):
         """
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_dict = {}
         ids = []
 
         for donnee in self.donnees:
-            donnee['id_categorie'], info = Format.est_un_alphanumerique(donnee['id_categorie'], "l'id catégorie", ligne)
-            msg += info
+            donnee['id_categorie'], info = Format.est_un_alphanumerique(donnee['id_categorie'], "l'id catégorie")
+            msg += self._erreur_ligne(ligne, info)
             if info == "":
                 if donnee['id_categorie'] not in ids:
                     ids.append(donnee['id_categorie'])
                 else:
-                    msg += "l'id catégorie '" + donnee['id_categorie'] + "' de la ligne " + str(ligne) +\
-                           " n'est pas unique\n"
+                    msg += self._erreur_ligne(ligne,
+                                              "l'id catégorie '" + donnee['id_categorie'] + "' n'est pas unique\n")
 
             msg += self.test_id_coherence(donnee['id_classe_prest'], "l'id classe prestation", ligne, classprests)
             if classprests.donnees[donnee['id_classe_prest']]['flag_coef'] == "OUI":
-                msg += "le flag coef_prest de l'id classe prestation '" + donnee['id_classe_prest'] + \
-                       "' de la ligne " + str(ligne) + "est à OUI et devrait être à NON\n"
+                msg += self._erreur_ligne(ligne,
+                                          "le flag coef_prest de l'id classe prestation '" +
+                                          donnee['id_classe_prest'] + "' est à OUI et devrait être à NON\n")
 
-            msg += plateformes.test_id(donnee['id_plateforme'])
+            msg += self._erreur_ligne(ligne, plateformes.test_id(donnee['id_plateforme']))
 
-            donnee['no_categorie'], info = Format.est_un_alphanumerique(donnee['no_categorie'], "le no catégorie",
-                                                                        ligne)
-            msg += info
-            donnee['intitule'], info = Format.est_un_texte(donnee['intitule'], "l'intitulé", ligne)
-            msg += info
-            donnee['unite'], info = Format.est_un_texte(donnee['unite'], "l'unité", ligne)
-            msg += info
+            donnee['no_categorie'], info = Format.est_un_alphanumerique(donnee['no_categorie'], "le no catégorie")
+            msg += self._erreur_ligne(ligne, info)
+            donnee['intitule'], info = Format.est_un_texte(donnee['intitule'], "l'intitulé")
+            msg += self._erreur_ligne(ligne, info)
+            donnee['unite'], info = Format.est_un_texte(donnee['unite'], "l'unité")
+            msg += self._erreur_ligne(ligne, info)
 
             donnees_dict[donnee['id_categorie']] = donnee
             ligne += 1
@@ -59,4 +58,4 @@ class Categorie(CsvImport):
         self.donnees = donnees_dict
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

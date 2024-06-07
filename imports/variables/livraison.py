@@ -24,18 +24,16 @@ class Livraison(CsvImport):
         """
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_list = []
         coms = []
 
         for donnee in self.donnees:
-            donnee['mois'], info = Format.est_un_entier(donnee['mois'], "le mois ", ligne, 1, 12)
-            msg += info
-            donnee['annee'], info = Format.est_un_entier(donnee['annee'], "l'annee ", ligne, 2000, 2099)
-            msg += info
-
+            donnee['mois'], info = Format.est_un_entier(donnee['mois'], "le mois ", 1, 12)
+            msg += self._erreur_ligne(ligne, info)
+            donnee['annee'], info = Format.est_un_entier(donnee['annee'], "l'annee ", 2000, 2099)
+            msg += self._erreur_ligne(ligne, info)
             info = self.test_id_coherence(donnee['id_compte'], "l'id compte", ligne, comptes)
             if info == "" and donnee['id_compte'] not in coms:
                 coms.append(donnee['id_compte'])
@@ -50,23 +48,20 @@ class Livraison(CsvImport):
 
             msg += self.test_id_coherence(donnee['id_staff'], "l'id staff", ligne, users, True)
 
-            donnee['quantite'], info = Format.est_un_nombre(donnee['quantite'], "la quantité", ligne, 1, 0)
-            msg += info
+            donnee['quantite'], info = Format.est_un_nombre(donnee['quantite'], "la quantité", 1, 0)
+            msg += self._erreur_ligne(ligne, info)
 
-            donnee['date_livraison'], info = Format.est_une_date(donnee['date_livraison'], "la date de livraison",
-                                                                 ligne)
-            msg += info
-            donnee['date_commande'], info = Format.est_une_date(donnee['date_commande'], "la date de commande", ligne)
-            msg += info
-
-            donnee['id_livraison'], info = Format.est_un_texte(donnee['id_livraison'], "l'id livraison", ligne)
-            msg += info
-
-            donnee['remarque'], info = Format.est_un_texte(donnee['remarque'], "la remarque", ligne, True)
-            msg += info
+            donnee['date_livraison'], info = Format.est_une_date(donnee['date_livraison'], "la date de livraison")
+            msg += self._erreur_ligne(ligne, info)
+            donnee['date_commande'], info = Format.est_une_date(donnee['date_commande'], "la date de commande")
+            msg += self._erreur_ligne(ligne, info)
+            donnee['id_livraison'], info = Format.est_un_texte(donnee['id_livraison'], "l'id livraison")
+            msg += self._erreur_ligne(ligne, info)
+            donnee['remarque'], info = Format.est_un_texte(donnee['remarque'], "la remarque", True)
+            msg += self._erreur_ligne(ligne, info)
 
             if donnee['validation'] not in ['0', '1', '2', '3']:
-                msg += "la validation " + str(ligne) + " doit être parmi [0, 1, 2, 3]"
+                msg += self._erreur_ligne(ligne, "la validation doit être parmi [0, 1, 2, 3]\n")
 
             donnees_list.append(donnee)
 
@@ -74,4 +69,4 @@ class Livraison(CsvImport):
 
         self.donnees = donnees_list
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

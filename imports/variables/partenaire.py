@@ -22,15 +22,14 @@ class Partenaire(CsvImport):
         """
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_dict = {}
         couples = []
 
         for donnee in self.donnees:
 
-            msg += plateformes.test_id(donnee['id_plateforme'])
+            msg += self._erreur_ligne(ligne, plateformes.test_id(donnee['id_plateforme']))
 
             msg += self.test_id_coherence(donnee['code_client'], "le code client", ligne, clients, True)
 
@@ -41,8 +40,7 @@ class Partenaire(CsvImport):
             if couple not in couples:
                 couples.append(couple)
             else:
-                msg += "le couple de la ligne " + str(ligne) + \
-                       " n'est pas unique\n"
+                msg += self._erreur_ligne(ligne, "le couple n'est pas unique\n")
 
             donnees_dict[donnee['id_plateforme'] + donnee['code_client']] = donnee
             ligne += 1
@@ -50,4 +48,4 @@ class Partenaire(CsvImport):
         self.donnees = donnees_dict
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

@@ -36,45 +36,60 @@ class Plateforme(object):
         self.donnee = {}
         for cle in self.cles:
             if cle not in donnees_csv:
-                msg += "\nClé manquante dans %s: %s" % (self.nom_fichier, cle)
+                msg += self._erreur_fichier("Clé manquante dans: " + cle + "\n")
 
-            self.donnee['id_plateforme'], err = Format.est_un_alphanumerique(donnees_csv['Id-Plateforme'][1], "l'id plateforme")
-            msg += err
+            self.donnee['id_plateforme'], err = Format.est_un_alphanumerique(donnees_csv['Id-Plateforme'][1],
+                                                                             "l'id plateforme")
+            msg += self._erreur_fichier(err)
 
             if donnees_csv['Id-Plateforme'][1] == "":
-                msg += "l'id plateforme ne peut être vide\n"
+                msg += self._erreur_fichier("l'id plateforme ne peut être vide\n")
             elif donnees_csv['Id-Plateforme'][1] not in clients.donnees.keys():
-                msg += "l'id plateforme n'existe pas dans les clients \n"
+                msg += self._erreur_fichier("l'id plateforme n'existe pas dans les clients \n")
             elif donnees_csv['Id-Plateforme'][1] != edition.plateforme:
-                msg += "l'id plateforme n'est pas celui de paramedit \n"
+                msg += self._erreur_fichier("l'id plateforme n'est pas celui de paramedit \n")
 
             self.donnee['code_p'], err = Format.est_un_alphanumerique(donnees_csv['Code_P'][1], "le code P")
-            msg += err
+            msg += self._erreur_fichier(err)
             self.donnee['centre'], err = Format.est_un_alphanumerique(donnees_csv['CF'][1], "le centre financier")
-            msg += err
+            msg += self._erreur_fichier(err)
             self.donnee['fonds'], err = Format.est_un_alphanumerique(donnees_csv['Fonds'][1], "les fonds à créditer")
-            msg += err
-            self.donnee['abrev_plat'], err = Format.est_un_alphanumerique(donnees_csv['Abrev-Plateforme'][1], "l'abréviation")
-            msg += err
-            self.donnee['intitule'], err = Format.est_un_texte(donnees_csv['Intitulé-Plateforme'][1], "l'intitulé")
-            msg += err
+            msg += self._erreur_fichier(err)
+            self.donnee['abrev_plat'], err = Format.est_un_alphanumerique(donnees_csv['Abrev-Plateforme'][1],
+                                                                          "l'abréviation")
+            msg += self._erreur_fichier(err)
+            self.donnee['intitule'], err = Format.est_un_texte(donnees_csv['Intitulé-Plateforme'][1],
+                                                               "l'intitulé")
+            msg += self._erreur_fichier(err)
 
             if donnees_csv['Grille-Plateforme'][1] != 'OUI' and donnees_csv['Grille-Plateforme'][1] != 'NON':
-                msg += "grille-plateforme doit être OUI ou NON\n"
+                msg += self._erreur_fichier("grille-plateforme doit être OUI ou NON\n")
             else:
                 self.donnee['grille'] = donnees_csv['Grille-Plateforme'][1]
 
             if (donnees_csv['Grille-Plateforme'][1] == 'OUI' and
                     not Chemin.existe(Chemin.chemin([dossier_source.chemin, 'grille.pdf']))):
-                    msg += "la grille n'existe pas dans le dossier d'entrée \n"
+                msg += self._erreur_fichier("la grille n'existe pas dans le dossier d'entrée \n")
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)
 
     def test_id(self, id_plateforme):
         msg = ""
         if id_plateforme == "":
             msg += "l'id plateforme ne peut être vide\n"
         elif id_plateforme != self.donnee['id_plateforme']:
-            msg += "l'id plateforme " + id_plateforme + " n'est as celui attendu : " + self.donnee['id_plateforme'] + "\n"
+            msg += ("l'id plateforme " + id_plateforme + " n'est pas celui attendu : " +
+                    self.donnee['id_plateforme'] + "\n")
         return msg
+
+    def _erreur_fichier(self, msg):
+        """
+        formate une erreur de contenu du fichier
+        :param msg: message d'erreur
+        :return: message formaté
+        """
+        if msg != "":
+            return self.libelle + " (" + self.nom_fichier + ") : " + msg
+        else:
+            return ""

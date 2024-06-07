@@ -24,17 +24,16 @@ class Service(CsvImport):
         """
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_list = []
         coms = []
 
         for donnee in self.donnees:
-            donnee['mois'], info = Format.est_un_entier(donnee['mois'], "le mois ", ligne, 1, 12)
-            msg += info
-            donnee['annee'], info = Format.est_un_entier(donnee['annee'], "l'annee ", ligne, 2000, 2099)
-            msg += info
+            donnee['mois'], info = Format.est_un_entier(donnee['mois'], "le mois ", 1, 12)
+            msg += self._erreur_ligne(ligne, info)
+            donnee['annee'], info = Format.est_un_entier(donnee['annee'], "l'annee ", 2000, 2099)
+            msg += self._erreur_ligne(ligne, info)
 
             info = self.test_id_coherence(donnee['id_compte'], "l'id compte", ligne, comptes)
             if info == "" and donnee['id_compte'] not in coms:
@@ -50,23 +49,22 @@ class Service(CsvImport):
 
             msg += self.test_id_coherence(donnee['id_staff'], "l'id staff", ligne, users, True)
 
-            donnee['date'], info = Format.est_une_date(donnee['date'], "la date", ligne)
-            msg += info
+            donnee['date'], info = Format.est_une_date(donnee['date'], "la date")
+            msg += self._erreur_ligne(ligne, info)
 
-            donnee['duree_machine'], info = Format.est_un_nombre(donnee['duree_machine'], "la durée machine", ligne, 3,
-                                                                 0)
-            msg += info
-            donnee['duree_mo'], info = Format.est_un_nombre(donnee['duree_mo'], "la durée main d'oeuvre", ligne, 3, 0)
-            msg += info
-            donnee['id_service'], info = Format.est_un_alphanumerique(donnee['id_service'], "l'id service", ligne)
-            msg += info
-            donnee['intitule'], info = Format.est_un_texte(donnee['intitule'], "l'intitulé service", ligne)
-            donnee['remarque_staff'], info = Format.est_un_texte(donnee['remarque_staff'], "la remarque staff", ligne,
-                                                                 True)
-            msg += info
+            donnee['duree_machine'], info = Format.est_un_nombre(donnee['duree_machine'], "la durée machine", 3, 0)
+            msg += self._erreur_ligne(ligne, info)
+            donnee['duree_mo'], info = Format.est_un_nombre(donnee['duree_mo'], "la durée main d'oeuvre", 3, 0)
+            msg += self._erreur_ligne(ligne, info)
+            donnee['id_service'], info = Format.est_un_alphanumerique(donnee['id_service'], "l'id service")
+            msg += self._erreur_ligne(ligne, info)
+            donnee['intitule'], info = Format.est_un_texte(donnee['intitule'], "l'intitulé service")
+            msg += self._erreur_ligne(ligne, info)
+            donnee['remarque_staff'], info = Format.est_un_texte(donnee['remarque_staff'], "la remarque staff", True)
+            msg += self._erreur_ligne(ligne, info)
 
             if donnee['validation'] not in ['0', '1', '2', '3']:
-                msg += "la validation " + str(ligne) + " doit être parmi [0, 1, 2, 3]"
+                msg += self._erreur_ligne(ligne, "la validation doit être parmi [0, 1, 2, 3]\n")
 
             donnees_list.append(donnee)
 
@@ -74,4 +72,4 @@ class Service(CsvImport):
 
         self.donnees = donnees_list
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

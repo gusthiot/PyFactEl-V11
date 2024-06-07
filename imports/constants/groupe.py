@@ -23,23 +23,23 @@ class Groupe(CsvImport):
         """
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_dict = {}
         ids = []
 
         for donnee in self.donnees:
-            donnee['id_groupe'], info = Format.est_un_alphanumerique(donnee['id_groupe'], "l'id groupe", ligne)
-            msg += info
+            donnee['id_groupe'], info = Format.est_un_alphanumerique(donnee['id_groupe'], "l'id groupe")
             if info == "":
                 if donnee['id_groupe'] not in ids:
                     ids.append(donnee['id_groupe'])
                 else:
-                    msg += "l'id groupe '" + donnee['id_groupe'] + "' de la ligne " + str(ligne) + " n'est pas unique\n"
+                    msg += self._erreur_ligne(ligne, "l'id groupe '" + donnee['id_groupe'] + "' n'est pas unique\n")
+            else:
+                msg += self._erreur_ligne(ligne, info)
 
             if donnee['cae'] != 'OUI' and donnee['cae'] != 'NON':
-                msg += "le cae de la ligne " + str(ligne) + " doit être OUI ou NON\n"
+                msg += self._erreur_ligne(ligne, "le cae doit être OUI ou NON\n")
 
             cats = ['id_cat_mach', 'id_cat_mo', 'id_cat_plat', 'id_cat_cher', 'id_cat_hp', 'id_cat_hc', 'id_cat_fixe']
             noms = ['machine', 'opérateur', 'plateforme', 'onéreux', 'hp', 'hc', 'fixe']
@@ -54,4 +54,4 @@ class Groupe(CsvImport):
         self.donnees = donnees_dict
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

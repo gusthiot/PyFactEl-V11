@@ -20,34 +20,33 @@ class Subside(CsvImport):
         """
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_dict = {}
         ids = []
 
         for donnee in self.donnees:
-            donnee['id_subside'], info = Format.est_un_alphanumerique(donnee['id_subside'], "le id subside", ligne)
-            msg += info
+            donnee['id_subside'], info = Format.est_un_alphanumerique(donnee['id_subside'], "le id subside")
+            msg += self._erreur_ligne(ligne, info)
             if info == "":
                 if donnee['id_subside'] not in ids:
                     ids.append(donnee['id_subside'])
                 else:
-                    msg += "l'id de la ligne " + str(ligne) + " n'est pas unique\n"
-            donnee['intitule'], info = Format.est_un_texte(donnee['intitule'], "l'intitulé", ligne)
-            msg += info
+                    msg += self._erreur_ligne(ligne, "l'id n'est pas unique\n")
+            donnee['intitule'], info = Format.est_un_texte(donnee['intitule'], "l'intitulé")
+            msg += self._erreur_ligne(ligne, info)
 
             if donnee['type'] != 'MONO' and donnee['type'] != 'MULTI':
-                msg += "le type de la ligne " + str(ligne) + " doit être MONO ou MULTI\n"
+                msg += self._erreur_ligne(ligne, "le type doit être MONO ou MULTI\n")
             if donnee['debut'] != 'NULL':
-                donnee['debut'], info = Format.est_une_date(donnee['debut'], "la date de début", ligne)
-                msg += info
+                donnee['debut'], info = Format.est_une_date(donnee['debut'], "la date de début")
+                msg += self._erreur_ligne(ligne, info)
             if donnee['fin'] != 'NULL':
-                donnee['fin'], info = Format.est_une_date(donnee['fin'], "la date de fin", ligne)
-                msg += info
+                donnee['fin'], info = Format.est_une_date(donnee['fin'], "la date de fin")
+                msg += self._erreur_ligne(ligne, info)
             if donnee['debut'] != 'NULL' and donnee['fin'] != 'NULL':
                 if donnee['debut'] > donnee['fin']:
-                    msg += "la date de fin de la ligne " + str(ligne) + " doit être postérieure à la date de début"
+                    msg += self._erreur_ligne(ligne, "la date de fin doit être postérieure à la date de début")
 
             donnees_dict[donnee['id_subside']] = donnee
 
@@ -56,4 +55,4 @@ class Subside(CsvImport):
         self.donnees = donnees_dict
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

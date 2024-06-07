@@ -25,11 +25,11 @@ class Granted(CsvImport):
             self.nom_fichier = "granted_" + str(edition.annee) + "_" + Format.mois_string(edition.mois-1) + ".csv"
         else:
             self.nom_fichier = "granted_" + str(edition.annee-1) + "_" + Format.mois_string(12) + ".csv"
+
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_dict = {}
         triplets = []
 
@@ -44,13 +44,13 @@ class Granted(CsvImport):
             if triplet not in triplets:
                 triplets.append(triplet)
             else:
-                msg += "Triplet type '" + donnee['proj-id'] + "' id plateforme '" + donnee['platf-code'] + \
-                       "' et id classe prestation '" + donnee['item-idclass'] + "' de la ligne " + str(ligne) + \
-                       " pas unique\n"
+                msg += self._erreur_ligne(ligne, "Triplet type '" + donnee['proj-id'] + "' id plateforme '" +
+                                          donnee['platf-code'] + "' et id classe prestation '" +
+                                          donnee['item-idclass'] + "' pas unique\n")
 
             donnee['subsid-alrdygrant'], info = Format.est_un_nombre(donnee['subsid-alrdygrant'],
-                                                                     "le montant comptabilisé", ligne, 2, 0)
-            msg += info
+                                                                     "le montant comptabilisé", 2, 0)
+            msg += self._erreur_ligne(ligne, info)
 
             donnees_dict[donnee['proj-id'] + donnee['platf-code'] + donnee['item-idclass']] = donnee
             ligne += 1
@@ -58,4 +58,4 @@ class Granted(CsvImport):
         self.donnees = donnees_dict
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

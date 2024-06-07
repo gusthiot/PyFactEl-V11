@@ -33,25 +33,37 @@ class Resultat(object):
         msg = ""
         for cle in self.cles:
             if cle not in donnees_csv:
-                msg += "\nClé manquante dans %s: %s" % (self.nom_fichier, cle)
+                msg += self._erreur_fichier("Clé manquante:" + cle + "\n")
 
         self.vlog, err = Format.est_un_nombre(donnees_csv['FactEl'][1], "la version logicielle")
-        msg += err
+        msg += self._erreur_fichier(err)
         self.plateforme, err = Format.est_un_alphanumerique(donnees_csv['Platform'][1], "l'id plateforme")
-        msg += err
+        msg += self._erreur_fichier(err)
         msg += plateformes.test_id(donnees_csv['Platform'][1])
         self.annee, err = Format.est_un_entier(donnees_csv['Year'][1], "l'année", mini=2000, maxi=2099)
-        msg += err
+        msg += self._erreur_fichier(err)
         self.mois, err = Format.est_un_entier(donnees_csv['Month'][1], "le mois", mini=1, maxi=12)
-        msg += err
+        msg += self._erreur_fichier(err)
         self.vfact, err = Format.est_un_entier(donnees_csv['Version'][1], "la version de facturation", mini=0)
-        msg += err
+        msg += self._erreur_fichier(err)
         self.repertoire, err = Format.est_un_alphanumerique(donnees_csv['Folder'][1], "le répertoire")
-        msg += err
+        msg += self._erreur_fichier(err)
         if donnees_csv['Type'][1] != 'SAP' and donnees_csv['Type'][1] != 'PROFORMA' and donnees_csv['Type'][1] != 'SIMU':
-            msg += "le type doit être SAP, PROFORMA ou SIMU\n"
+            msg += self._erreur_fichier("le type doit être SAP, PROFORMA ou SIMU\n")
         else:
             self.type = donnees_csv['Type'][1]
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)
+
+    def _erreur_fichier(self, msg):
+        """
+        formate une erreur de contenu du fichier
+        :param msg: message d'erreur
+        :return: message formaté
+        """
+        if msg != "":
+            return self.libelle + " (" + self.nom_fichier + ") : " + msg
+        else:
+            return ""
+

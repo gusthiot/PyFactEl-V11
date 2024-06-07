@@ -32,20 +32,31 @@ class Facturation(object):
         msg = ""
         for cle in self.cles:
             if cle not in donnees_csv:
-                msg += "\nClé manquante dans %s: %s" % (self.nom_fichier, cle)
+                msg += self._erreur_fichier("Clé manquante:" + cle + "\n")
 
         self.code_int, err = Format.est_un_alphanumerique(donnees_csv['code_int'][1], "le code INT")
-        msg += err
+        msg += self._erreur_fichier(err)
         self.code_ext, err = Format.est_un_alphanumerique(donnees_csv['code_ext'][1], "le code EXT")
-        msg += err
+        msg += self._erreur_fichier(err)
         self.devise, err = Format.est_un_alphanumerique(donnees_csv['devise'][1], "la devise")
-        msg += err
+        msg += self._erreur_fichier(err)
 
         self.modes = []
         for mode in donnees_csv['modes'][1:]:
             mode, err = Format.est_un_alphanumerique(mode, "le mode d'envoi", vide=True)
             self.modes.append(mode)
-            msg += err
+            msg += self._erreur_fichier(err)
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)
+
+    def _erreur_fichier(self, msg):
+        """
+        formate une erreur de contenu du fichier
+        :param msg: message d'erreur
+        :return: message formaté
+        """
+        if msg != "":
+            return self.libelle + " (" + self.nom_fichier + ") : " + msg
+        else:
+            return ""

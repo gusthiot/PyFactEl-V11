@@ -21,37 +21,36 @@ class ClasseClient(CsvImport):
         """
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_dict = {}
         ids = []
 
         for donnee in self.donnees:
-            donnee['id_classe'], info = Format.est_un_alphanumerique(donnee['id_classe'], "l'id classe client", ligne)
-            msg += info
+            donnee['id_classe'], info = Format.est_un_alphanumerique(donnee['id_classe'], "l'id classe client")
+            msg += self._erreur_ligne(ligne, info)
             if info == "":
                 if donnee['id_classe'] not in ids:
                     ids.append(donnee['id_classe'])
                 else:
-                    msg += "l'id classe client '" + donnee['id_classe'] + "' de la ligne " + str(ligne) + \
-                           " n'est pas unique\n"
+                    msg += self._erreur_ligne(ligne,
+                                              "l'id classe client '" + donnee['id_classe'] + "' n'est pas unique\n")
 
-            donnee['code_n'], info = Format.est_un_alphanumerique(donnee['code_n'], "le code N", ligne)
-            msg += info
-            donnee['intitule'], info = Format.est_un_texte(donnee['intitule'], "l'intitulé", ligne)
-            msg += info
-            donnee['overhead'], info = Format.est_un_entier(donnee['overhead'], "l'overhead", ligne, 0)
-            msg += info
+            donnee['code_n'], info = Format.est_un_alphanumerique(donnee['code_n'], "le code N")
+            msg += self._erreur_ligne(ligne, info)
+            donnee['intitule'], info = Format.est_un_texte(donnee['intitule'], "l'intitulé")
+            msg += self._erreur_ligne(ligne, info)
+            donnee['overhead'], info = Format.est_un_entier(donnee['overhead'], "l'overhead", 0)
+            msg += self._erreur_ligne(ligne, info)
             if donnee['ref_fact'] != 'INT' and donnee['ref_fact'] != 'EXT':
-                msg += "le code référence client de la ligne " + str(ligne) + " doit être INT ou EXT\n"
+                msg += self._erreur_ligne(ligne, "le code référence client doit être INT ou EXT\n")
             if not module_a:
                 if donnee['avantage_HC'] != 'BONUS' and donnee['avantage_HC'] != 'RABAIS':
-                    msg += "l'avantage HC de la ligne " + str(ligne) + " doit être BONUS ou RABAIS\n"
+                    msg += self._erreur_ligne(ligne, "l'avantage HC doit être BONUS ou RABAIS\n")
                 if donnee['subsides'] != 'BONUS' and donnee['subsides'] != 'RABAIS':
-                    msg += "le mode subsides de la ligne " + str(ligne) + " doit être BONUS ou RABAIS\n"
+                    msg += self._erreur_ligne(ligne, "le mode subsides doit être BONUS ou RABAIS\n")
             if donnee['grille'] != 'OUI' and donnee['grille'] != 'NON':
-                msg += "la grille tarifaire de la ligne " + str(ligne) + " doit être OUI ou NON\n"
+                msg += self._erreur_ligne(ligne, "la grille tarifaire doit être OUI ou NON\n")
 
             donnees_dict[donnee['id_classe']] = donnee
             ligne += 1
@@ -59,4 +58,4 @@ class ClasseClient(CsvImport):
         self.donnees = donnees_dict
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

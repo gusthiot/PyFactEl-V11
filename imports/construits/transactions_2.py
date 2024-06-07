@@ -28,62 +28,61 @@ class Transactions2(CsvImport):
                            Format.mois_string(edition.mois) + "_" + str(version) + ".csv"
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_dict = {}
         ids = {}
 
         for donnee in self.donnees:
-            donnee['invoice-month'], info = Format.est_un_entier(donnee['invoice-month'], "le mois ", ligne, 1, 12)
-            msg += info
-            donnee['invoice-year'], info = Format.est_un_entier(donnee['invoice-year'], "l'annee ", ligne, 2000, 2099)
-            msg += info
-            donnee['invoice-version'], info = Format.est_un_entier(donnee['invoice-version'], "la version", ligne, 0)
-            msg += info
-            donnee['invoice-id'], info = Format.est_un_entier(donnee['invoice-id'], "l'id facture", ligne, 1001)
-            msg += info
-            donnee['client-code'], info = Format.est_un_alphanumerique(donnee['client-code'], "le code client", ligne)
-            msg += info
-            donnee['proj-id'], info = Format.est_un_alphanumerique(donnee['proj-id'], "l'id projet", ligne)
-            msg += info
-            donnee['user-id'], info = Format.est_un_alphanumerique(donnee['user-id'], "l'id user", ligne)
-            msg += info
-            donnee['item-idsap'], info = Format.est_un_alphanumerique(donnee['item-idsap'], "l'id article", ligne)
-            msg += info
-            donnee['item-id'], info = Format.est_un_alphanumerique(donnee['item-id'], "l'id item", ligne)
-            msg += info
+            donnee['invoice-month'], info = Format.est_un_entier(donnee['invoice-month'], "le mois ", 1, 12)
+            msg += self._erreur_ligne(ligne, info)
+            donnee['invoice-year'], info = Format.est_un_entier(donnee['invoice-year'], "l'annee ", 2000, 2099)
+            msg += self._erreur_ligne(ligne, info)
+            donnee['invoice-version'], info = Format.est_un_entier(donnee['invoice-version'], "la version", 0)
+            msg += self._erreur_ligne(ligne, info)
+            donnee['invoice-id'], info = Format.est_un_entier(donnee['invoice-id'], "l'id facture", 1001)
+            msg += self._erreur_ligne(ligne, info)
+            donnee['client-code'], info = Format.est_un_alphanumerique(donnee['client-code'], "le code client")
+            msg += self._erreur_ligne(ligne, info)
+            donnee['proj-id'], info = Format.est_un_alphanumerique(donnee['proj-id'], "l'id projet")
+            msg += self._erreur_ligne(ligne, info)
+            donnee['user-id'], info = Format.est_un_alphanumerique(donnee['user-id'], "l'id user")
+            msg += self._erreur_ligne(ligne, info)
+            donnee['item-idsap'], info = Format.est_un_alphanumerique(donnee['item-idsap'], "l'id article")
+            msg += self._erreur_ligne(ligne, info)
+            donnee['item-id'], info = Format.est_un_alphanumerique(donnee['item-id'], "l'id item")
+            msg += self._erreur_ligne(ligne, info)
             if donnee['date-start-m'] != "":
-                donnee['date-start-m'], info = Format.est_un_entier(donnee['date-start-m'], "le mois de départ", ligne,
+                donnee['date-start-m'], info = Format.est_un_entier(donnee['date-start-m'], "le mois de départ",
                                                                     1, 12)
-                msg += info
+                msg += self._erreur_ligne(ligne, info)
             if donnee['date-start-y'] != "":
-                donnee['date-start-y'], info = Format.est_un_entier(donnee['date-start-y'], "l'annee de départ", ligne,
+                donnee['date-start-y'], info = Format.est_un_entier(donnee['date-start-y'], "l'annee de départ",
                                                                     2000, 2099)
-                msg += info
+                msg += self._erreur_ligne(ligne, info)
             if donnee['date-end-m'] != "":
-                donnee['date-end-m'], info = Format.est_un_entier(donnee['date-end-m'], "le mois de fin", ligne, 1, 12)
-                msg += info
+                donnee['date-end-m'], info = Format.est_un_entier(donnee['date-end-m'], "le mois de fin", 1, 12)
+                msg += self._erreur_ligne(ligne, info)
             if donnee['date-end-y'] != "":
-                donnee['date-end-y'], info = Format.est_un_entier(donnee['date-end-y'], "l'annee de fin", ligne, 2000,
+                donnee['date-end-y'], info = Format.est_un_entier(donnee['date-end-y'], "l'annee de fin", 2000,
                                                                   2099)
-                msg += info
-            donnee['total-fact'], info = Format.est_un_nombre(donnee['total-fact'], "le montant total", ligne, 2, 0)
-            msg += info
+                msg += self._erreur_ligne(ligne, info)
+            donnee['total-fact'], info = Format.est_un_nombre(donnee['total-fact'], "le montant total", 2, 0)
+            msg += self._erreur_ligne(ligne, info)
             if donnee['invoice-id'] not in ids:
                 ids[donnee['invoice-id']] = donnee['client-code']
             else:
                 if donnee['client-code'] != ids[donnee['invoice-id']]:
-                    msg += "l'id facture '" + donnee['invoice-id'] + "' de la ligne " + str(ligne) + \
-                           " ne peut concerner 2 clients : " + ids[donnee['invoice-id']] + " et " + \
-                           donnee['client-code'] + "\n"
+                    msg += self._erreur_ligne(ligne, "l'id facture '" + donnee['invoice-id'] +
+                                              "' ne peut concerner 2 clients : " + ids[donnee['invoice-id']] + " et " +
+                                              donnee['client-code'] + "\n")
 
             if donnee['invoice-year'] != edition.annee:
-                msg += " mauvaise année à la ligne " + str(ligne)
+                msg += self._erreur_ligne(ligne, " mauvaise année\n")
             if donnee['invoice-month'] != edition.mois:
-                msg += " mauvais mois à la ligne " + str(ligne)
+                msg += self._erreur_ligne(ligne, " mauvais mois\n")
             if donnee['invoice-version'] != version:
-                msg += " mauvaise version à la ligne " + str(ligne)
+                msg += self._erreur_ligne(ligne, " mauvaise version\n")
 
             donnees_dict[ligne-1] = donnee
             ligne += 1
@@ -91,4 +90,4 @@ class Transactions2(CsvImport):
         self.donnees = donnees_dict
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

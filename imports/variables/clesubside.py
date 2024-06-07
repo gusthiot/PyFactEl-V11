@@ -23,9 +23,8 @@ class CleSubside(CsvImport):
         """
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_dict = {}
         quadruplets = []
 
@@ -43,8 +42,7 @@ class CleSubside(CsvImport):
             if quadruplet not in quadruplets:
                 quadruplets.append(quadruplet)
             else:
-                msg += "le quadruplet de la ligne " + str(ligne) + \
-                       " n'est pas unique\n"
+                msg += self._erreur_ligne(ligne, "le quadruplet n'est pas unique\n")
 
             if donnee['id_subside'] not in donnees_dict:
                 donnees_dict[donnee['id_subside']] = {}
@@ -63,4 +61,4 @@ class CleSubside(CsvImport):
         self.donnees = donnees_dict
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

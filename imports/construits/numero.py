@@ -24,9 +24,8 @@ class Numero(CsvImport):
                            "_" + str(version) + ".csv"
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_dict = {}
 
         for donnee in self.donnees:
@@ -34,8 +33,8 @@ class Numero(CsvImport):
 
             msg += self.test_id_coherence(donnee['client-code'], "le code client", ligne, clients)
 
-            donnee['invoice-id'], info = Format.est_un_entier(donnee['invoice-id'], "l'id facture", ligne, 1001)
-            msg += info
+            donnee['invoice-id'], info = Format.est_un_entier(donnee['invoice-id'], "l'id facture", 1001)
+            msg += self._erreur_ligne(ligne, info)
 
             donnees_dict[donnee['invoice-id']] = donnee
             ligne += 1
@@ -43,4 +42,4 @@ class Numero(CsvImport):
         self.donnees = donnees_dict
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

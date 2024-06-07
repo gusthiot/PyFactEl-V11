@@ -65,11 +65,12 @@ class Paramtexte(object):
 
                 ligne[0], err = Format.est_un_alphanumerique(ligne[0], "le label", chevrons=True)
                 if err != "":
-                    Interface.fatal(ErreurConsistance(), self.libelle + ": " + err)
+                    Interface.fatal(ErreurConsistance(), self.libelle + " (" + self.nom_fichier + ") : " + err)
 
                 ligne[1], err = Format.est_un_texte(ligne[1], "l'entête")
                 if err != "":
-                    Interface.fatal(ErreurConsistance(), self.libelle + ": pour le label '" + ligne[0] + "', " + err)
+                    Interface.fatal(ErreurConsistance(), self.libelle + " (" + self.nom_fichier +
+                                    ") : pour le label '" + ligne[0] + "', " + err)
 
                 labels.append(ligne[0])
                 self.donnees[ligne[0]] = ligne[1]
@@ -77,10 +78,12 @@ class Paramtexte(object):
             for cle in self.cles:
                 if cle not in labels:
                     Interface.fatal(ErreurConsistance(),
-                                    self.libelle + ": la clé '" + cle + "' n'est pas présente dans paramtext.csv")
+                                    self.libelle + " (" + self.nom_fichier + ") :  la clé '" + cle +
+                                    "' n'est pas présente dans paramtext.csv")
 
             for cle in labels:
                 if cle not in self.cles:
-                    Interface.affiche_message(self.libelle + ": la clé '" + cle + "' n'est pas présente dans les clés")
+                    Interface.affiche_message(self.libelle + " (" + self.nom_fichier + ") : la clé '" + cle +
+                                              "' n'est pas présente dans les clés")
         except IOError as e:
             Interface.fatal(e, "impossible d'ouvrir le fichier : "+self.nom_fichier)

@@ -24,43 +24,41 @@ class Client(CsvImport):
         """
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_dict = {}
         codes = []
 
         for donnee in self.donnees:
-            donnee['code_sap'], info = Format.est_un_alphanumerique(donnee['code_sap'], "le code client sap", ligne)
-            msg += info
+            donnee['code_sap'], info = Format.est_un_alphanumerique(donnee['code_sap'], "le code client sap")
+            msg += self._erreur_ligne(ligne, info)
 
             if module_a:
-                donnee['code'], info = Format.est_un_entier(donnee['code'], "le code client", ligne, 0)
+                donnee['code'], info = Format.est_un_entier(donnee['code'], "le code client", 0)
             else:
-                donnee['code'], info = Format.est_un_alphanumerique(donnee['code'], "le code client", ligne)
-            msg += info
+                donnee['code'], info = Format.est_un_alphanumerique(donnee['code'], "le code client")
+            msg += self._erreur_ligne(ligne, info)
             if info == "":
                 if donnee['code'] not in codes:
                     codes.append(donnee['code'])
                 else:
-                    msg += "le code client '" + donnee['code'] + "' de la ligne " + str(ligne) +\
-                           " n'est pas unique\n"
+                    msg += self._erreur_ligne(ligne, "le code client '" + donnee['code'] + "' n'est pas unique\n")
 
-            donnee['abrev_labo'], info = Format.est_un_alphanumerique(donnee['abrev_labo'], "l'abrev. labo", ligne)
-            msg += info
-            donnee['nom2'], info = Format.est_un_texte(donnee['nom2'], "le nom 2", ligne, True)
-            msg += info
-            donnee['nom3'], info = Format.est_un_texte(donnee['nom3'], "le nom 3", ligne, True)
-            msg += info
-            donnee['ref'], info = Format.est_un_texte(donnee['ref'], "la référence", ligne, True)
-            msg += info
+            donnee['abrev_labo'], info = Format.est_un_alphanumerique(donnee['abrev_labo'], "l'abrev. labo")
+            msg += self._erreur_ligne(ligne, info)
+            donnee['nom2'], info = Format.est_un_texte(donnee['nom2'], "le nom 2", True)
+            msg += self._erreur_ligne(ligne, info)
+            donnee['nom3'], info = Format.est_un_texte(donnee['nom3'], "le nom 3", True)
+            msg += self._erreur_ligne(ligne, info)
+            donnee['ref'], info = Format.est_un_texte(donnee['ref'], "la référence", True)
+            msg += self._erreur_ligne(ligne, info)
 
             if donnee['id_classe'] == "":
-                msg += "le type de labo de la ligne " + str(ligne) + " ne peut être vide\n"
+                msg += self._erreur_ligne(ligne, "le type de labo ne peut être vide\n")
             else:
                 if not donnee['id_classe'] in classes.donnees.keys():
-                    msg += "le type de labo '" + donnee['id_classe'] + "' de la ligne " + str(ligne) +\
-                        " n'existe pas dans les types N\n"
+                    msg += self._erreur_ligne(ligne, "le type de labo '" + donnee['id_classe'] +
+                                              "' n'existe pas dans les types N\n")
                 else:
                     av_hc = classes.donnees[donnee['id_classe']]['avantage_HC']
                     donnee['rh'] = 1
@@ -70,12 +68,11 @@ class Client(CsvImport):
                         donnee['rh'] = 0
 
             if (donnee['mode'] != "") and (donnee['mode'] not in facturation.modes):
-                msg += "le mode d'envoi '" + donnee['mode'] + "' de la ligne " + str(ligne) +\
-                    " n'existe pas dans les modes d'envoi généraux\n"
+                msg += self._erreur_ligne(ligne, "le mode d'envoi '" + donnee['mode'] +
+                                          "' n'existe pas dans les modes d'envoi généraux\n")
 
             if (donnee['mode'] == "MAIL") and (not re.match("[^@]+@[^@]+\.[^@]+", donnee['email'])):
-                msg += "le format de l'e-mail '" + donnee['email'] + "' de la ligne " + str(ligne) +\
-                    " n'est pas correct\n"
+                msg += self._erreur_ligne(ligne, "le format de l'e-mail '" + donnee['email'] + "' n'est pas correct\n")
 
             donnees_dict[donnee['code']] = donnee
             ligne += 1
@@ -83,4 +80,4 @@ class Client(CsvImport):
         self.donnees = donnees_dict
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)

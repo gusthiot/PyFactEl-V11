@@ -23,9 +23,8 @@ class PlafSubside(CsvImport):
         """
         super().__init__(dossier_source)
 
-        del self.donnees[0]
         msg = ""
-        ligne = 1
+        ligne = 2
         donnees_dict = {}
         triplets = []
 
@@ -34,25 +33,22 @@ class PlafSubside(CsvImport):
 
             msg += self.test_id_coherence(donnee['id_classe_prest'], "l'id classe prestation", ligne, classprests)
 
-            msg += plateformes.test_id(donnee['id_plateforme'])
+            msg += self._erreur_ligne(ligne, plateformes.test_id(donnee['id_plateforme']))
 
             triplet = [donnee['id_subside'], donnee['id_plateforme'], donnee['id_classe_prest']]
             if triplet not in triplets:
                 triplets.append(triplet)
             else:
-                msg += "Triplet id subside '" + donnee['id_subside'] + "' id plateforme '" + donnee['id_plateforme'] + \
-                       "' et id classe prestation '" + donnee['id_classe_prest'] + "' de la ligne " + str(ligne) + \
-                       " pas unique\n"
+                msg += self._erreur_ligne(ligne, "Triplet id subside '" + donnee['id_subside'] + "' id plateforme '" +
+                                          donnee['id_plateforme'] + "' et id classe prestation '" +
+                                          donnee['id_classe_prest'] + "' pas unique\n")
 
-            donnee['pourcentage'], info = Format.est_un_nombre(donnee['pourcentage'], "le pourcentage", ligne, 2, 0,
-                                                               100)
-            msg += info
-
-            donnee['max_mois'], info = Format.est_un_nombre(donnee['max_mois'], "le max mensuel", ligne, 2, 0)
-            msg += info
-
-            donnee['max_compte'], info = Format.est_un_nombre(donnee['max_compte'], "le max compte", ligne, 2, 0)
-            msg += info
+            donnee['pourcentage'], info = Format.est_un_nombre(donnee['pourcentage'], "le pourcentage", 2, 0, 100)
+            msg += self._erreur_ligne(ligne, info)
+            donnee['max_mois'], info = Format.est_un_nombre(donnee['max_mois'], "le max mensuel", 2, 0)
+            msg += self._erreur_ligne(ligne, info)
+            donnee['max_compte'], info = Format.est_un_nombre(donnee['max_compte'], "le max compte", 2, 0)
+            msg += self._erreur_ligne(ligne, info)
 
             donnees_dict[donnee['id_subside'] + donnee['id_plateforme'] + donnee['id_classe_prest']] = donnee
             ligne += 1
@@ -60,4 +56,4 @@ class PlafSubside(CsvImport):
         self.donnees = donnees_dict
 
         if msg != "":
-            Interface.fatal(ErreurConsistance(), self.libelle + "\n" + msg)
+            Interface.fatal(ErreurConsistance(), msg)
