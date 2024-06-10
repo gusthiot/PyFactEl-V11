@@ -57,11 +57,13 @@ class Paramtexte(object):
             for ligne in fichier_reader:
                 if len(ligne) != 2:
                     Interface.fatal(ErreurConsistance(),
-                                    self.libelle + ": nombre de colonnes incorrect : " + str(len(ligne)) +
-                                    ", attendu : 2")
+                                    self.libelle + " (" + self.nom_fichier + ") : nombre de colonnes incorrect : " +
+                                    str(len(ligne)) +
+                                    ", attendu : 2. Vérifier que les champs ne contiennent pas de point-virgule.")
                 if ligne[0] in labels:
                     Interface.fatal(ErreurConsistance(),
-                                    self.libelle + ": le label '" + ligne[0] + "' n'est pas unique\n")
+                                    self.libelle + " (" + self.nom_fichier + ") : le label '" + ligne[0] +
+                                    "' n'est pas unique\n")
 
                 ligne[0], err = Format.est_un_alphanumerique(ligne[0], "le label", chevrons=True)
                 if err != "":

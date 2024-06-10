@@ -64,8 +64,8 @@ class CsvImport(object):
         """
         num = len(self.cles)
         if len(ligne) != num:
-            Interface.fatal(ErreurConsistance(), self._erreur_ligne(ligne, "nombre de colonnes incorrect : " +
-                         str(len(ligne)) + ", attendu : " + str(num) + "\n"))
+            Interface.fatal(ErreurConsistance(), self._erreur_ligne(ligne, "Nombre de colonnes incorrect : " +
+                         str(len(ligne)) + ", attendu : " + str(num) + ". Vérifier que les champs ne contiennent pas de point-virgule. \n"))
         donnees_ligne = {}
         for xx in range(0, num):
             donnees_ligne[self.cles[xx]] = ligne[xx]
