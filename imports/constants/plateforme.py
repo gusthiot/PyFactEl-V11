@@ -10,7 +10,8 @@ class Plateforme(object):
     """
 
     nom_fichier = "plateforme.csv"
-    cles = ['Id-Plateforme', 'Code_P', 'CF', 'Fonds', 'Abrev-Plateforme', 'Intitulé-Plateforme', 'Grille-Plateforme']
+    cles = ['Id-Plateforme', 'Code_P', 'CF', 'Fonds', 'Admin', 'Abrev-Plateforme', 'Intitulé-Plateforme',
+            'Grille-Plateforme']
     libelle = "Plateformes"
 
     def __init__(self, dossier_source, clients, edition):
@@ -54,6 +55,8 @@ class Plateforme(object):
             self.donnee['centre'], err = Format.est_un_alphanumerique(donnees_csv['CF'][1], "le centre financier")
             msg += self._erreur_fichier(err)
             self.donnee['fonds'], err = Format.est_un_alphanumerique(donnees_csv['Fonds'][1], "les fonds à créditer")
+            msg += self._erreur_fichier(err)
+            self.donnee['admin'], err = Format.est_un_entier(donnees_csv['Admin'][1], "le sciper admin à créditer", 0)
             msg += self._erreur_fichier(err)
             self.donnee['abrev_plat'], err = Format.est_un_alphanumerique(donnees_csv['Abrev-Plateforme'][1],
                                                                           "l'abréviation")

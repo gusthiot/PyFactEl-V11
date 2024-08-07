@@ -58,7 +58,6 @@ parser.add_argument("-g", "--sansgraphiques", help="Pas d'interface graphique", 
 parser.add_argument("-e", "--entrees", help="Chemin des fichiers d'entrée")
 parser.add_argument("-d", "--destination", help="Racine des sauvegardes")
 parser.add_argument("-u", "--unique", help="Nom unique du dossier de sauvegarde")
-parser.add_argument("-s", "--sciper", help="Sciper de la personne lançant la facturation")
 parser.add_argument("-n", "--nopdf", help="Sans produire les pdfs", action="store_true")
 parser.add_argument("-l", "--login", help="Login de la personne lançant la facturation")
 args = parser.parse_args()
@@ -86,11 +85,6 @@ if args.unique:
     unique = args.unique
 else:
     unique = int(time.time())
-
-if args.sciper:
-    sciper = args.sciper
-else:
-    sciper = "000000"
 
 if args.login:
     login = args.login
@@ -171,7 +165,7 @@ try:
             else:
                 Interface.affiche_message("pdflatex n'est probablement pas installé")
 
-        factures = Facture(imports, new_versions, sommes_1.par_fact, sciper, imports.chemin_factures)
+        factures = Facture(imports, new_versions, sommes_1.par_fact, imports.chemin_factures)
         tickets = Ticket(imports, factures, sommes_1.par_client, new_versions, imports.chemin_enregistrement)
         resultats = ResultatNew(imports, unique)
         resultats.csv(DossierDestination(imports.chemin_out))

@@ -7,13 +7,12 @@ class Facture(object):
     Classe contenant les méthodes nécessaires à la génération du JSON des factures
     """
 
-    def __init__(self, imports, versions, par_fact, sciper, chemin_destination):
+    def __init__(self, imports, versions, par_fact, chemin_destination):
         """
         génère la facture sous forme de csv
         :param imports: données importées
         :param versions: versions des factures générées
         :param par_fact: tri des transactions 1
-        :param sciper: sciper de la personne lançant la facturation
         :param chemin_destination: le dossier de sauvegarde du fichier
         """
 
@@ -52,7 +51,7 @@ class Facture(object):
                     dict_fact['header'] = {'ordertype': genre, 'ordernr': ref, 'currency': imports.facturation.devise,
                                            'clientnr': code_sap, 'distribution': client['mode'],
                                            'description': your_ref}
-                    dict_fact['shipper'] = {'sciper': sciper, 'fund': imports.plateforme['fonds']}
+                    dict_fact['shipper'] = {'sciper': imports.plateforme['admin'], 'fund': imports.plateforme['fonds']}
 
                     lien = ("Annexe_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
                             Format.mois_string(imports.edition.mois) + "_" + str(donnee['version-last']) + "_" +
