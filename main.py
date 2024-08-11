@@ -60,6 +60,7 @@ parser.add_argument("-d", "--destination", help="Racine des sauvegardes")
 parser.add_argument("-u", "--unique", help="Nom unique du dossier de sauvegarde")
 parser.add_argument("-n", "--nopdf", help="Sans produire les pdfs", action="store_true")
 parser.add_argument("-l", "--login", help="Login de la personne lançant la facturation")
+parser.add_argument("-s", "--shortpath", help="Enregistrement sans arborescence complète", action="store_true")
 args = parser.parse_args()
 
 if args.sansgraphiques > 0:
@@ -69,6 +70,11 @@ if args.nopdf > 0:
     with_pdf = False
 else:
     with_pdf = True
+
+if args.shortpath > 0:
+    short_path = True
+else:
+    short_path = False
 
 if args.entrees:
     dossier_data = args.entrees
@@ -95,7 +101,7 @@ try:
     if Chemin.existe(Chemin.chemin([dossier_data, Edition.nom_fichier])):
         start_time = time.time()
 
-        imports = Imports(dossier_source, destination, unique)
+        imports = Imports(dossier_source, destination, unique, short_path)
 
         # Module D
         articles = Articles(imports)
