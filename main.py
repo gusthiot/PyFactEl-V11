@@ -61,6 +61,7 @@ parser.add_argument("-u", "--unique", help="Nom unique du dossier de sauvegarde"
 parser.add_argument("-n", "--nopdf", help="Sans produire les pdfs", action="store_true")
 parser.add_argument("-l", "--login", help="Login de la personne lançant la facturation")
 parser.add_argument("-s", "--shortpath", help="Enregistrement sans arborescence complète", action="store_true")
+parser.add_argument("-r", "--realmode", help="Mode de facturation passe de SIMU à REAL", action="store_true")
 args = parser.parse_args()
 
 if args.sansgraphiques > 0:
@@ -96,6 +97,11 @@ if args.login:
     login = args.login
 else:
     login = ""
+
+if args.realmode > 0:
+    mode = "REAL"
+else:
+    mode = "SIMU"
 
 try:
     if Chemin.existe(Chemin.chemin([dossier_data, Edition.nom_fichier])):
@@ -171,7 +177,7 @@ try:
             else:
                 Interface.affiche_message("pdflatex n'est probablement pas installé")
 
-        factures = Facture(imports, new_versions, sommes_1.par_fact, imports.chemin_factures)
+        factures = Facture(imports, new_versions, sommes_1.par_fact, imports.chemin_factures, mode)
         tickets = Ticket(imports, factures, sommes_1.par_client, new_versions, imports.chemin_enregistrement)
         resultats = ResultatNew(imports, unique)
         resultats.csv(DossierDestination(imports.chemin_out))
