@@ -7,14 +7,13 @@ class Facture(object):
     Classe contenant les méthodes nécessaires à la génération du JSON des factures
     """
 
-    def __init__(self, imports, versions, par_fact, chemin_destination, mode):
+    def __init__(self, imports, versions, par_fact, chemin_destination):
         """
         génère la facture sous forme de csv
         :param imports: données importées
         :param versions: versions des factures générées
         :param par_fact: tri des transactions 1
         :param chemin_destination: le dossier de sauvegarde des factures
-        :param mode: mode d'éxécution de facturation (real/simu)
         """
 
         self.par_client = {}
@@ -34,7 +33,7 @@ class Facture(object):
                 code_sap = client['code_sap']
 
                 if donnee['version-change'] != 'IDEM':
-                    dict_fact = {'execmode': mode}
+                    dict_fact = {'execmode': ""}
 
                     if classe['ref_fact'] == "INT":
                         genre = imports.facturation.code_int
