@@ -13,7 +13,7 @@ class Facture(object):
         :param imports: données importées
         :param versions: versions des factures générées
         :param par_fact: tri des transactions 1
-        :param chemin_destination: le dossier de sauvegarde du fichier
+        :param chemin_destination: le dossier de sauvegarde des factures
         :param mode: mode d'éxécution de facturation (real/simu)
         """
 
@@ -54,14 +54,16 @@ class Facture(object):
                                            'description': your_ref}
                     dict_fact['shipper'] = {'sciper': imports.plateforme['admin'], 'fund': imports.plateforme['fonds']}
 
-                    lien = ("Annexe_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
-                            Format.mois_string(imports.edition.mois) + "_" + str(donnee['version-last']) + "_" +
-                            str(id_fact) + ".pdf")
+                    nom = ("Annexe_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_"
+                           + Format.mois_string(imports.edition.mois) + "_" + str(donnee['version-last']) + "_"
+                           + str(id_fact) + ".pdf")
 
-                    dict_fact['attachment'] = [{'filename': lien}]
+                    dict_fact['attachment'] = [{'filename': nom, 'filetype': "application/pdf",
+                                                'filedescription': "Annexe PDF", 'filecontent': ""}]
 
                     if classe['grille'] == "OUI" and imports.plateforme['grille'] == "OUI":
-                        dict_fact['attachment'].append({'filename': "grille.pdf"})
+                        dict_fact['attachment'].append({'filename': "grille.pdf", 'filetype': "application/pdf",
+                                                        'filedescription': "Grille tarifaire PDF", 'filecontent': ""})
 
                     dict_fact['partner'] = {'clientnr': code_sap, 'name2': client['nom2'], 'name3': client['nom3'],
                                             'email': client['email']}
