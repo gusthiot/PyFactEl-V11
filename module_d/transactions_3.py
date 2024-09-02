@@ -187,8 +187,7 @@ class Transactions3(CsvDict):
                         prix = round(duree_hc * tarif['valuation-price'], 2)
                         reduc = round(tarif['valuation-price'] * machine['tx_rabais_hc']/100 * duree_hc, 2)
                         val = [tarif['valuation-price'], prix,
-                               pt['discount-HC'] + " -" + str(machine['tx_rabais_hc']) + "%", reduc,
-                               round(prix-reduc, 2)]
+                               pt['discount-HC'] + " -" + str(machine['tx_rabais_hc']) + "%", reduc, prix-reduc]
                         self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
 
             # K2 CAE-MO #
@@ -360,7 +359,7 @@ class Transactions3(CsvDict):
                         else:
                             ded_rab = transact['val'][3]
                             sub_rab = subs[10]
-                        tot = round(transact['val'][1] - ded_rab - sub_rab, 2)
+                        tot = transact['val'][1] - ded_rab - sub_rab
                     mont = [ded_rab, sub_rab, tot, ded_bon, sub_bon]
                     donnee = [imports.edition.annee, imports.edition.mois] + transact['rc'] + transact['ope'] + \
                         transact['up'] + transact['art'] + transact['trans'] + transact['val'] + subs + mont
@@ -495,8 +494,8 @@ class Transactions3(CsvDict):
                                                 comptabilise = self.comptabilises[cg_id]['subsid-alrdygrant']
                                             else:
                                                 comptabilise = 0
-                                            res_compte = round(plafond['max_compte'] - (grant + comptabilise), 2)
-                                            res_mois = round(plafond['max_mois'] - comptabilise, 2)
+                                            res_compte = plafond['max_compte'] - (grant + comptabilise)
+                                            res_mois = plafond['max_mois'] - comptabilise
                                             res = max(min(res_compte, res_mois), 0)
                                             max_mo = round(montant * plafond['pourcentage'] / 100, 2)
                                             mo = min(max_mo, res)

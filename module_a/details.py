@@ -1,8 +1,9 @@
 from core import (Format,
+                  CsvBase,
                   DossierDestination)
 
 
-class Details(object):
+class Details(CsvBase):
     """
     Classe pour la création du csv d'annexe détails
     """
@@ -21,18 +22,17 @@ class Details(object):
         :param numeros: table des numéros de version
         :param versions: versions des factures générées
         """
-
-        pt = imports.paramtexte.donnees
+        super().__init__(imports)
         self.csv_fichiers = {}
 
         for code, pc in par_client.items():
             if code in versions.clients:
                 client = imports.clients.donnees[code]
-                nom_zip = "Annexes_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" + \
-                          Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" + code + "_" + \
-                          client['abrev_labo'] + ".zip"
-                prefixe_csv = "Details_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" + \
-                              Format.mois_string(imports.edition.mois) + "_" + str(imports.version)
+                nom_zip = ("Annexes_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
+                           Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" + code + "_" +
+                           client['abrev_labo'] + ".zip")
+                prefixe_csv = ("Details_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
+                               Format.mois_string(imports.edition.mois) + "_" + str(imports.version))
 
                 for icf in pc['projets']:
                     tbtr = pc['projets'][icf]['transactions']
@@ -57,11 +57,4 @@ class Details(object):
                                 ligne.append(val[self.cles[cle]])
                         lignes.append(ligne)
 
-                    with DossierDestination(imports.chemin_cannexes).writer(nom_csv) as fichier_writer:
-                        ligne = []
-                        for cle in self.cles:
-                            ligne.append(pt[cle])
-                        fichier_writer.writerow(ligne)
-
-                        for ligne in lignes:
-                            fichier_writer.writerow(ligne)
+                    self.write(nom_csv, DossierDestination(imports.chemin_cannexes), lignes)

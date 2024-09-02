@@ -1,6 +1,6 @@
 from .erreurs import ErreurConsistance, ErreurCoherence
 from .dossier import DossierSource, DossierDestination
-from .csv_base import CsvDict, CsvList
+from .csv_base import CsvDict, CsvList, CsvBase
 from .format import Format
 from .interface import Interface
 from .chemin import Chemin

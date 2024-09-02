@@ -1,8 +1,9 @@
 from core import (Format,
+                  CsvBase,
                   DossierDestination)
 
 
-class DetailsAll(object):
+class DetailsAll(CsvBase):
     """
     Classe pour la création du csv d'annexe détails par client
     """
@@ -21,8 +22,7 @@ class DetailsAll(object):
         :param csv_fichiers: fichiers csv et nom du fichier zip par client
         :param versions: versions des factures générées
         """
-
-        pt = imports.paramtexte.donnees
+        super().__init__(imports)
         self.csv_fichiers = csv_fichiers
 
         for code, pc in par_client.items():
@@ -51,11 +51,4 @@ class DetailsAll(object):
                                 ligne.append(val[self.cles[cle]])
                         lignes.append(ligne)
 
-                with DossierDestination(imports.chemin_cannexes).writer(nom_csv) as fichier_writer:
-                    ligne = []
-                    for cle in self.cles:
-                        ligne.append(pt[cle])
-                    fichier_writer.writerow(ligne)
-
-                    for ligne in lignes:
-                        fichier_writer.writerow(ligne)
+                self.write(nom_csv, DossierDestination(imports.chemin_cannexes), lignes)

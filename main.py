@@ -174,11 +174,9 @@ try:
         factures = Facture(imports, new_versions, sommes_1.par_fact, imports.chemin_factures)
         tickets = Ticket(imports, factures, sommes_1.par_client, new_versions, imports.chemin_enregistrement)
         resultats = ResultatNew(imports, unique)
-        resultats.csv(DossierDestination(imports.chemin_out))
         sap = Sap(imports, new_versions, sommes_1.par_fact)
         sap.csv(DossierDestination(imports.chemin_enregistrement))
         info = Info(imports, unique, login)
-        info.csv(DossierDestination(imports.chemin_enregistrement))
 
         Interface.affiche_message("OK " + str(imports.version) + " !!! (" +
                                   str(datetime.timedelta(seconds=(time.time() - start_time))).split(".")[0] + ")")

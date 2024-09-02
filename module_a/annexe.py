@@ -1,8 +1,9 @@
 from core import (Format,
+                  CsvBase,
                   DossierDestination)
 
 
-class Annexe(object):
+class Annexe(CsvBase):
     """
     Classe pour la création du csv d'annexe
     """
@@ -19,8 +20,7 @@ class Annexe(object):
         :param csv_fichiers: fichiers csv et nom du fichier zip par client
         :param versions: versions des factures générées
         """
-
-        pt = imports.paramtexte.donnees
+        super().__init__(imports)
         self.csv_fichiers = csv_fichiers
 
         for id_fact in par_fact.keys():
@@ -29,11 +29,11 @@ class Annexe(object):
             if code in versions.clients:
                 intype = base['invoice-type']
                 client = imports.clients.donnees[code]
-                nom_zip = "Annexes_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" + \
-                          Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" + str(code) + "_" + \
-                          client['abrev_labo'] + ".zip"
-                prefixe = "Annexe_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" + \
-                          Format.mois_string(imports.edition.mois) + "_" + str(imports.version)
+                nom_zip = ("Annexes_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
+                           Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" + str(code) +
+                           "_" + client['abrev_labo'] + ".zip")
+                prefixe = ("Annexe_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
+                           Format.mois_string(imports.edition.mois) + "_" + str(imports.version))
 
                 lignes = []
 
@@ -41,7 +41,8 @@ class Annexe(object):
                     nom_csv = prefixe + "_" + str(id_fact) + "_" + client['abrev_labo'] + "_0.csv"
                 else:
                     compte = imports.comptes.donnees[base['proj-id']]
-                    nom_csv = prefixe + "_" + str(id_fact) + "_" + client['abrev_labo'] + "_" + compte['numero'] + ".csv"
+                    nom_csv = (prefixe + "_" + str(id_fact) + "_" + client['abrev_labo'] + "_" + compte['numero'] +
+                               ".csv")
 
                 if code not in self.csv_fichiers:
                     self.csv_fichiers[code] = {'nom': nom_zip, 'fichiers': []}
@@ -55,11 +56,4 @@ class Annexe(object):
                             ligne.append(trans[self.cles[cle]])
                         lignes.append(ligne)
 
-                with DossierDestination(imports.chemin_cannexes).writer(nom_csv) as fichier_writer:
-                    ligne = []
-                    for cle in self.cles:
-                        ligne.append(pt[cle])
-                    fichier_writer.writerow(ligne)
-
-                    for ligne in lignes:
-                        fichier_writer.writerow(ligne)
+                self.write(nom_csv, DossierDestination(imports.chemin_cannexes), lignes)
