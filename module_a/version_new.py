@@ -19,8 +19,8 @@ class VersionNew(CsvDict):
         :param sommes_2: sommes des transactions 2
         """
         super().__init__(imports)
-        self.nom = "Table-versions-factures_" + str(imports.edition.annee) + "_" + \
-                   Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv"
+        self.nom = ("Table-versions-factures_" + str(imports.edition.annee) + "_" +
+                    Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv")
         self.cles = Version.cles
 
         self.transactions_new = transactions_2_new.valeurs

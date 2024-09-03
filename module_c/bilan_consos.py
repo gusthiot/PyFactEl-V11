@@ -20,8 +20,8 @@ class BilanConsos(CsvList):
         """
         super().__init__(imports)
 
-        self.nom = "Bilan-conso-propre_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + \
-                   "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv"
+        self.nom = ("Bilan-conso-propre_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) +
+                    "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv")
 
         for ppi in par_projet.values():
             for par_item in ppi.values():

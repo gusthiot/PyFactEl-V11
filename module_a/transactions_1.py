@@ -22,8 +22,8 @@ class Transactions1(CsvDict):
         """
         super().__init__(imports)
 
-        self.nom = "Transaction1_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + \
-                   "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv"
+        self.nom = ("Transaction1_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) +
+                    "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv")
 
         i = 0
         for id_fact, par_fact in par_fact.items():
@@ -38,8 +38,8 @@ class Transactions1(CsvDict):
                         client = imports.clients.donnees[code]
                         id_classe = client['id_classe']
                         classe = imports.classes.donnees[id_classe]
-                        ref = classe['ref_fact'] + "_" + str(imports.edition.annee) + "_" + \
-                            Format.mois_string(imports.edition.mois) + "_" + str(version) + "_" + str(id_fact)
+                        ref = (classe['ref_fact'] + "_" + str(imports.edition.annee) + "_" +
+                               Format.mois_string(imports.edition.mois) + "_" + str(version) + "_" + str(id_fact))
                         for cle in self.cles:
                             if cle == 'invoice-ref':
                                 ligne.append(ref)

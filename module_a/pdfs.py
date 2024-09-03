@@ -20,8 +20,8 @@ class Pdfs(object):
         self.transactions = transactions_2
         self.par_fact = par_fact
 
-        self.prefixe = "Annexe_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" + \
-                       Format.mois_string(imports.edition.mois) + "_" + str(imports.version)
+        self.prefixe = ("Annexe_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
+                        Format.mois_string(imports.edition.mois) + "_" + str(imports.version))
         with concurrent.futures.ThreadPoolExecutor() as executor:
             for id_fact, donnee in versions.valeurs.items():
                 executor.submit(self.annexe_unique, id_fact, donnee)

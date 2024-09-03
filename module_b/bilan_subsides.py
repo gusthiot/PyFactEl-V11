@@ -21,8 +21,8 @@ class BilanSubsides(CsvList):
         """
         super().__init__(imports)
 
-        self.nom = "Bilan-subsides_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + \
-                   "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv"
+        self.nom = ("Bilan-subsides_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) +
+                    "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv")
 
         for par_code in par_client.values():
             for par_article in par_code['articles'].values():

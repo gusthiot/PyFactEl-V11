@@ -15,8 +15,8 @@ class NumeroNew(CsvList):
         :param transactions_3: transactions 3 générées
         """
         super().__init__(imports)
-        self.nom = "Table-numeros-factures_" + str(imports.edition.annee) + "_" + \
-                   Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv"
+        self.nom = ("Table-numeros-factures_" + str(imports.edition.annee) + "_" +
+                    Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv")
         self.cles = Numero.cles
 
         self.couples = {}

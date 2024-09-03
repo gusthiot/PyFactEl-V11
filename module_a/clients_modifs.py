@@ -17,8 +17,8 @@ class ClientsModifs(CsvDict):
         :param versions: versions nouvellement générées
         """
         super().__init__(imports)
-        self.nom = "Clients-modifs_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + \
-                   "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv"
+        self.nom = ("Clients-modifs_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) +
+                    "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv")
         unique = 0
 
         for code in versions.clients_changes:

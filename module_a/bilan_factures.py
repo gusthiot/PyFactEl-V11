@@ -20,8 +20,8 @@ class BilanFactures(CsvList):
         """
         super().__init__(imports)
 
-        self.nom = "Bilan-factures_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + \
-                   "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv"
+        self.nom = ("Bilan-factures_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) +
+                    "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv")
 
         for id_fact in par_fact.keys():
             pf = par_fact[id_fact]['transactions']['keys']

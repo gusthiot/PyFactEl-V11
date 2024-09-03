@@ -20,8 +20,8 @@ class StatUser(CsvList):
         """
         super().__init__(imports)
 
-        self.nom = "Stat-user_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" \
-                   + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv"
+        self.nom = ("Stat-user_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
+                    Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv")
 
         for par_client in par_user.values():
             for par_code in par_client.values():

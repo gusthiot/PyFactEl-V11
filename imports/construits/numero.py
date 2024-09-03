@@ -20,8 +20,8 @@ class Numero(CsvImport):
         :param clients: clients importés
         :param version: version de facturation
         """
-        self.nom_fichier = "Table-numeros-factures_" + str(edition.annee) + "_" + Format.mois_string(edition.mois) + \
-                           "_" + str(version) + ".csv"
+        self.nom_fichier = ("Table-numeros-factures_" + str(edition.annee) + "_" + Format.mois_string(edition.mois) +
+                            "_" + str(version) + ".csv")
         super().__init__(dossier_source)
 
         msg = ""

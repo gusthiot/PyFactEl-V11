@@ -16,8 +16,8 @@ class Journal(CsvDict):
         :param transactions_2: transactions 2 générées
         """
         super().__init__(imports)
-        self.nom = "Journal-corrections_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + \
-                   "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv"
+        self.nom = ("Journal-corrections_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) +
+                    "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv")
         self.cles = Transactions2.cles
         unique = 0
 

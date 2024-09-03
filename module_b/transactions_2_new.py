@@ -20,8 +20,8 @@ class Transactions2New(CsvDict):
         """
         super().__init__(imports)
 
-        self.nom = "Transaction2_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + \
-                   "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv"
+        self.nom = ("Transaction2_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) +
+                    "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv")
         self.cles = Transactions2.cles
 
         i = 0

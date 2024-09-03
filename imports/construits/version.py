@@ -21,8 +21,8 @@ class Version(CsvImport):
         :param version: version de facturation ciblée
         :param module_a: si on ne traite que le module A
         """
-        self.nom_fichier = "Table-versions-factures_" + str(edition.annee) + "_" + Format.mois_string(edition.mois) + \
-                           "_" + str(version) + ".csv"
+        self.nom_fichier = ("Table-versions-factures_" + str(edition.annee) + "_" + Format.mois_string(edition.mois) +
+                            "_" + str(version) + ".csv")
         super().__init__(dossier_source)
 
         msg = ""

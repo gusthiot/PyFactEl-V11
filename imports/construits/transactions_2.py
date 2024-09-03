@@ -24,8 +24,8 @@ class Transactions2(CsvImport):
         :param plateforme: plateforme traitée
         :param version: version de facturation ciblée
         """
-        self.nom_fichier = "Transaction2_" + plateforme['abrev_plat'] + "_" + str(edition.annee) + "_" + \
-                           Format.mois_string(edition.mois) + "_" + str(version) + ".csv"
+        self.nom_fichier = ("Transaction2_" + plateforme['abrev_plat'] + "_" + str(edition.annee) + "_" +
+                            Format.mois_string(edition.mois) + "_" + str(version) + ".csv")
         super().__init__(dossier_source)
 
         msg = ""

@@ -18,8 +18,8 @@ class BilanAnnules(CsvList):
         """
         super().__init__(imports)
 
-        self.nom = "Bilan-annulé_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + \
-                   "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv"
+        self.nom = ("Bilan-annulé_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) +
+                    "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv")
 
         for code, par_code in par_client.items():
             client = imports.clients.donnees[code]

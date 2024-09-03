@@ -20,8 +20,8 @@ class BilanUsages(CsvList):
         """
         super().__init__(imports)
 
-        self.nom = "Bilan-usage_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" + \
-                   Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv"
+        self.nom = ("Bilan-usage_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
+                    Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv")
 
         for pi in par_item.values():
             base = transactions_3.valeurs[pi['base']]

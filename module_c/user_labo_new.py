@@ -31,8 +31,8 @@ class UserLaboNew(CsvDict):
             valeur = []
             for i in range(0, len(UserLabo.cles)):
                 valeur.append(donnee[UserLabo.cles[i]])
-            key = str(donnee['year']) + Format.mois_string(donnee['month']) + donnee['day'] + donnee['user-id'] + \
-                donnee['client-code'] + donnee['platf-code']
+            key = (str(donnee['year']) + Format.mois_string(donnee['month']) + donnee['day'] + donnee['user-id'] +
+                   donnee['client-code'] + donnee['platf-code'])
             if key not in keys:
                 keys.append(key)
             else:

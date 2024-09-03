@@ -27,8 +27,8 @@ class Transactions3(CsvDict):
         :param tarifs: tarifs générés
         """
         super().__init__(imports)
-        self.nom = "Transaction3_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" \
-                   + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv"
+        self.nom = ("Transaction3_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
+                    Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv")
         self.comptabilises = {}
         self.valeurs = {}
 
@@ -254,8 +254,8 @@ class Transactions3(CsvDict):
                     ope = ["", "", "", "", id_machine, machine['nom'], ""]
                     util_proj = self.__util_proj(entree['id_user'], compte, pt['flow-noshow'])
                     art = self.__art_plate(article, code, texte, texte2, machine['id_groupe'])
-                    trans = [entree['date_debut'], entree['penalite']] + self.__staff(entree, entree['penalite']) + \
-                            [0, "", ""]
+                    trans = ([entree['date_debut'], entree['penalite']] + self.__staff(entree, entree['penalite']) +
+                             [0, "", ""])
                     prix = round(entree['penalite'] * tarif['valuation-price'], 2)
                     val = [tarif['valuation-price'], prix, "", 0, prix]
                     self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
@@ -292,8 +292,8 @@ class Transactions3(CsvDict):
                 ope = [entree['id_operateur'], operateur['prenom'] + " " + operateur['nom'],
                        pt['oper-PO'] + " " + str(entree['date_commande']), entree['remarque'], idm, nm, extra]
                 util_proj = self.__util_proj(entree['id_user'], compte, pt['flow-lvr'])
-                trans = [entree['date_livraison'], entree['quantite']] + self.__staff(entree, entree['quantite']) + \
-                        [0, "", ""]
+                trans = ([entree['date_livraison'], entree['quantite']] + self.__staff(entree, entree['quantite']) +
+                         [0, "", ""])
                 prix = round(entree['quantite'] * tarif['valuation-price'], 2)
                 val = [tarif['valuation-price'], prix, "", 0, prix]
                 self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
@@ -361,8 +361,8 @@ class Transactions3(CsvDict):
                             sub_rab = subs[10]
                         tot = transact['val'][1] - ded_rab - sub_rab
                     mont = [ded_rab, sub_rab, tot, ded_bon, sub_bon]
-                    donnee = [imports.edition.annee, imports.edition.mois] + transact['rc'] + transact['ope'] + \
-                        transact['up'] + transact['art'] + transact['trans'] + transact['val'] + subs + mont
+                    donnee = ([imports.edition.annee, imports.edition.mois] + transact['rc'] + transact['ope'] +
+                              transact['up'] + transact['art'] + transact['trans'] + transact['val'] + subs + mont)
                     self._ajouter_valeur(donnee, i)
                     i = i + 1
 

@@ -21,8 +21,8 @@ class StatMachine(CsvList):
         """
         super().__init__(imports)
 
-        self.nom = "Stat-machine_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" \
-                   + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv"
+        self.nom = ("Stat-machine_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
+                    Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv")
 
         for pmi in par_machine.values():
             for par_item in pmi.values():
