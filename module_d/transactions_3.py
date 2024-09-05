@@ -65,18 +65,15 @@ class Transactions3(CsvDict):
                         ref_client = self.__ref_client(rc_map, article, entree['date_login'])
                         tarif = tarifs.valeurs[id_classe + id_categorie]
                         art = self.__art_plate(article, "K3", pt['item-K3'], pt['item-K3a'], id_groupe)
-                        if article['platf-code'] == compte['code_client']:
+                        if article['platf-code'] == compte['code_client'] or entree['validation'] == "2":
                             usage = 0
-                            if compte['exploitation'] == "TRUE":
-                                runcae = ""
-                            else:
-                                runcae = 1
-                                counted = True
-                        elif entree['validation'] == "2":
-                            usage = 0
-                            runcae = ""
                         else:
                             usage = 1
+
+                        if ((article['platf-code'] == compte['code_client'] and compte['exploitation'] == "TRUE")
+                                or entree['validation'] == "2"):
+                            runcae = ""
+                        else:
                             runcae = 1
                             counted = True
                         trans = [entree['date_login'], 1] + self.__staff(entree, 1) + [usage, "", runcae]
@@ -198,19 +195,10 @@ class Transactions3(CsvDict):
                     ref_client = self.__ref_client(rc_map, article, entree['date_login'])
                     tarif = tarifs.valeurs[id_classe + id_categorie]
                     art = self.__art_plate(article, "K2", pt['item-K2'], pt['item-K2a'], id_groupe)
-                    if entree['validation'] == "2":
+                    if ((article['platf-code'] == compte['code_client'] and compte['exploitation'] == "TRUE")
+                            or entree['validation'] == "2"):
                         usage = 0
                         runcae = ""
-                    elif article['platf-code'] == compte['code_client']:
-                        if compte['exploitation'] == "TRUE":
-                            usage = 0
-                            runcae = ""
-                        else:
-                            usage = duree_op
-                            if counted:
-                                runcae = ""
-                            else:
-                                runcae = 1
                     else:
                         usage = duree_op
                         if counted:
