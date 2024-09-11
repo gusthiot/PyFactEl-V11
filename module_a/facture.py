@@ -64,8 +64,8 @@ class Facture(object):
                         dict_fact['attachment'].append({'filename': "grille.pdf", 'filetype': "application/pdf",
                                                         'filedescription': "Grille tarifaire PDF", 'filecontent': ""})
 
-                    dict_fact['partner'] = {'clientnr': code_sap, 'name2': client['nom2'], 'name3': client['nom3'],
-                                            'email': client['email']}
+                    dict_fact['partners'] = {'clientnr': code_sap, 'name2': client['nom2'], 'name3': client['nom3'],
+                                            'email': client['email'], 'role': "RE"}
 
                     dict_fact['items'] = []
 
