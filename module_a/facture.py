@@ -49,7 +49,7 @@ class Facture(object):
                            Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" + str(id_fact))
 
                     dict_fact['header'] = {'ordertype': genre, 'ordernr': ref, 'currency': imports.facturation.devise,
-                                           'clientnr': code_sap, 'distribution': client['mode'],
+                                           'distribution': client['mode'],
                                            'description': your_ref}
                     dict_fact['shipper'] = {'sciper': imports.plateforme['admin'], 'fund': imports.plateforme['fonds']}
 
@@ -64,7 +64,7 @@ class Facture(object):
                         dict_fact['attachment'].append({'filename': "grille.pdf", 'filetype': "application/pdf",
                                                         'filedescription': "Grille tarifaire PDF", 'filecontent': ""})
 
-                    dict_fact['partners'] = [{'role': "RE", 'clientnr': code_sap, 'name2': client['nom2'], 'name3': client['nom3'],
+                    dict_fact['partners'] = [{'role': "AG", 'clientnr': code_sap, 'name2': client['nom2'], 'name3': client['nom3'],
                                             'email': client['email']}]
 
                     dict_fact['items'] = []
