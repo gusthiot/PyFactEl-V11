@@ -49,7 +49,7 @@ class Facture(object):
                            Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" + str(id_fact))
 
                     dict_fact['header'] = {'ordertype': genre, 'ordernr': ref, 'currency': imports.facturation.devise,
-                                           'distribution': client['mode'],
+                                           'clientnr': code_sap, 'distribution': client['mode'],
                                            'description': your_ref}
                     dict_fact['shipper'] = {'sciper': imports.plateforme['admin'], 'fund': imports.plateforme['fonds']}
 
