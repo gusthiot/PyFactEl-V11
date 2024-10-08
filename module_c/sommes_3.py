@@ -154,10 +154,11 @@ class Sommes3(object):
                 if code_client not in self.par_user[user_id].keys():
                     self.par_user[user_id][code_client] = {'days': {}, 'base': key, 'stat_trans': 0, 'stat_run': 0}
                 puc = self.par_user[user_id][code_client]
-                puc['stat_trans'] += 1
-                if str(transaction['transac-runcae']) == "1":
-                    puc['stat_run'] += 1
-                # => stat user
+                if user_id != "0":
+                    puc['stat_trans'] += 1
+                    if str(transaction['transac-runcae']) == "1":
+                        puc['stat_run'] += 1
+                    # => stat user
 
                 day = transaction['transac-date'].day
                 if day not in puc['days'].keys():

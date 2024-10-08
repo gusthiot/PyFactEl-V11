@@ -298,7 +298,7 @@ class Transactions3(CsvDict):
             operateur = imports.users.donnees[entree['id_op']]
             rc_map = {'annee': entree['annee'], 'mois': entree['mois'], 'classe': imports.classes.donnees[id_classe],
                       'client': client, 'compte': compte}
-            util_proj = self.__util_proj(entree['id_user'], compte, pt['flow-srv'])
+            util_proj = self.__util_proj("", compte, pt['flow-srv'])
             ope = [entree['id_op'], operateur['prenom'] + " " + operateur['nom'], entree['intitule'],
                    entree['remarque_staff'], "", "", ""]
 
@@ -414,8 +414,12 @@ class Transactions3(CsvDict):
         :param flux: type de flux
         :return tableau contenant les valeurs de l'utilisateur et du projet
         """
-        user = self.imports.users.donnees[id_user]
-        return [user['id_user'], user['sciper'], user['nom'], user['prenom'], compte['id_compte'], compte['numero'],
+        if id_user != "":
+            user = self.imports.users.donnees[id_user]
+            utilisateur = [user['id_user'], user['sciper'], user['nom'], user['prenom']]
+        else:
+            utilisateur = ["", "", "", ""]
+        return utilisateur + [compte['id_compte'], compte['numero'],
                 compte['intitule'], compte['exploitation'], flux]
 
     def __art_plate(self, article, code_k, texte_k, texte2_k, id_groupe):

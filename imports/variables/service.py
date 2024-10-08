@@ -43,7 +43,7 @@ class Service(CsvImport):
 
             msg += self.test_id_coherence(donnee['id_groupe'], "l'id groupe", ligne, groupes)
 
-            msg += self.test_id_coherence(donnee['id_user'], "l'id user", ligne, users)
+            msg += self.test_id_coherence(donnee['id_user'], "l'id user", ligne, users, True)
 
             msg += self.test_id_coherence(donnee['id_op'], "l'id opérateur", ligne, users)
 

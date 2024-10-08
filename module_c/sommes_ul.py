@@ -25,23 +25,24 @@ class SommesUL(object):
             code = valeur['client-code']
             id_plateforme = valeur['platf-code']
             user = valeur['user-id']
-            if id_plateforme != code:
-                if mois == imports.edition.mois:
-                    jour = valeur['day']
-                    if jour not in pm['jours']:
-                        pm['jours'][jour] = []
-                    if user not in pm['jours'][jour]:
-                        pm['jours'][jour].append(user)
-                if user not in pm['users']:
-                    pm['users'].append(user)
-                semaine = valeur['week-nbr']
-                pse = self.par_ul['semaines']
-                if semaine not in pse:
-                    pse[semaine] = []
-                if user not in pse[semaine]:
-                    pse[semaine].append(user)
+            if user != "0":
+                if id_plateforme != code:
+                    if mois == imports.edition.mois:
+                        jour = valeur['day']
+                        if jour not in pm['jours']:
+                            pm['jours'][jour] = []
+                        if user not in pm['jours'][jour]:
+                            pm['jours'][jour].append(user)
+                    if user not in pm['users']:
+                        pm['users'].append(user)
+                    semaine = valeur['week-nbr']
+                    pse = self.par_ul['semaines']
+                    if semaine not in pse:
+                        pse[semaine] = []
+                    if user not in pse[semaine]:
+                        pse[semaine].append(user)
 
-            if code not in pm['clients']:
-                pm['clients'][code] = []
-            if user not in pm['clients'][code]:
-                pm['clients'][code].append(user)
+                if code not in pm['clients']:
+                    pm['clients'][code] = []
+                if user not in pm['clients'][code]:
+                    pm['clients'][code].append(user)

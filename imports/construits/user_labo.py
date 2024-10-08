@@ -41,7 +41,7 @@ class UserLabo(CsvImport):
 
             msg += self.test_id_coherence(donnee['client-code'], "le code client", ligne, clients)
 
-            msg += self.test_id_coherence(donnee['user-id'], "l'id user", ligne, users)
+            msg += self.test_id_coherence(donnee['user-id'], "l'id user", ligne, users, True)
 
             donnees_list.append(donnee)
             ligne += 1
