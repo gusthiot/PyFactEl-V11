@@ -298,7 +298,7 @@ class Transactions3(CsvDict):
             operateur = imports.users.donnees[entree['id_op']]
             rc_map = {'annee': entree['annee'], 'mois': entree['mois'], 'classe': imports.classes.donnees[id_classe],
                       'client': client, 'compte': compte}
-            util_proj = self.__util_proj("", compte, pt['flow-srv'])
+            util_proj = self.__util_proj("0", compte, pt['flow-srv'])
             ope = [entree['id_op'], operateur['prenom'] + " " + operateur['nom'], entree['intitule'],
                    entree['remarque_staff'], "", "", ""]
 
@@ -414,7 +414,7 @@ class Transactions3(CsvDict):
         :param flux: type de flux
         :return tableau contenant les valeurs de l'utilisateur et du projet
         """
-        if id_user != "":
+        if id_user != "0":
             user = self.imports.users.donnees[id_user]
             utilisateur = [user['id_user'], user['sciper'], user['nom'], user['prenom']]
         else:

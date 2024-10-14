@@ -42,7 +42,7 @@ class Livraison(CsvImport):
 
             msg += self.test_id_coherence(donnee['id_prestation'], "l'id prestation", ligne, prestations)
 
-            msg += self.test_id_coherence(donnee['id_user'], "l'id user", ligne, users)
+            msg += self.test_id_coherence(donnee['id_user'], "l'id user", ligne, users, True)
 
             msg += self.test_id_coherence(donnee['id_operateur'], "l'id opérateur", ligne, users)
 
