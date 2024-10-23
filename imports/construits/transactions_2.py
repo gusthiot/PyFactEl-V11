@@ -101,7 +101,7 @@ class Transactions2(CsvImport):
             msg += self._erreur_ligne(ligne, info)
             donnee['transac-quantity'], info = Format.est_un_nombre(donnee['transac-quantity'], "la quantité")
             msg += self._erreur_ligne(ligne, info)
-            donnee['item-unit'], info = Format.est_un_texte(donnee['item-unit'], "l'item unité")
+            donnee['item-unit'], info = Format.est_un_texte(donnee['item-unit'], "l'item unité", True)
             msg += self._erreur_ligne(ligne, info)
             donnee['valuation-price'], info = Format.est_un_nombre(donnee['valuation-price'], "le prix unitaire", 2, 0)
             msg += self._erreur_ligne(ligne, info)
