@@ -50,7 +50,7 @@ class Transactions2(CsvImport):
                 msg += self._erreur_ligne(ligne, "le type ne peut être que GLOB ou CPTE")
             donnee['platf-name'], info = Format.est_un_alphanumerique(donnee['platf-name'], "l'acronyme")
             msg += self._erreur_ligne(ligne, info)
-            msg += self.test_id_coherence(donnee['code_client'], "le code client", ligne, clients)
+            msg += self.test_id_coherence(donnee['client-code'], "le code client", ligne, clients)
             donnee['client-sap'], info = Format.est_un_alphanumerique(donnee['client-sap'], "le code client sap")
             msg += self._erreur_ligne(ligne, info)
             donnee['client-name'], info = Format.est_un_alphanumerique(donnee['client-name'], "le nom client")
