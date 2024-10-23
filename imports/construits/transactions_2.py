@@ -67,7 +67,7 @@ class Transactions2(CsvImport):
             donnee['proj-name'], info = Format.est_un_texte(donnee['proj-name'], "l'intitulé de compte")
             msg += self._erreur_ligne(ligne, info)
             msg += self.test_id_coherence(donnee['user-id'], "l'id user", ligne, users, True)
-            donnee['user-name-f'], info = Format.est_un_texte(donnee['user-name-f'], "le nom user")
+            donnee['user-name-f'], info = Format.est_un_texte(donnee['user-name-f'], "le nom user", True)
             msg += self._erreur_ligne(ligne, info)
             if donnee['date-start-m'] != "":
                 donnee['date-start-m'], info = Format.est_un_entier(donnee['date-start-m'], "le mois de départ",
