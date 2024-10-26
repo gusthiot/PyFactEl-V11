@@ -280,8 +280,11 @@ class Transactions3(CsvDict):
                 ope = [entree['id_operateur'], operateur['prenom'] + " " + operateur['nom'],
                        pt['oper-PO'] + " " + str(entree['date_commande']), entree['remarque'], idm, nm, extra]
                 util_proj = self.__util_proj(entree['id_user'], compte, pt['flow-lvr'])
+                usage = entree['quantite']
+                if entree['id_user'] == "0" or entree['validation'] == "2":
+                    usage = 0
                 trans = ([entree['date_livraison'], entree['quantite']] + self.__staff(entree, entree['quantite']) +
-                         [0, "", ""])
+                         [usage, "", ""])
                 prix = round(entree['quantite'] * tarif['valuation-price'], 2)
                 val = [tarif['valuation-price'], prix, "", 0, prix]
                 self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
