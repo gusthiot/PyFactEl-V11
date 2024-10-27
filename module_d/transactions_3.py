@@ -301,7 +301,7 @@ class Transactions3(CsvDict):
             operateur = imports.users.donnees[entree['id_op']]
             rc_map = {'annee': entree['annee'], 'mois': entree['mois'], 'classe': imports.classes.donnees[id_classe],
                       'client': client, 'compte': compte}
-            util_proj = self.__util_proj("0", compte, pt['flow-srv'])
+            util_proj = self.__util_proj(entree['id_user'], compte, pt['flow-srv'])
             ope = [entree['id_op'], operateur['prenom'] + " " + operateur['nom'], entree['intitule'],
                    entree['remarque_staff'], "", "", ""]
 
