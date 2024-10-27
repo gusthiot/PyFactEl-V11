@@ -46,7 +46,10 @@ class DetailsAll(CsvBase):
                         ligne = []
                         for cle in range(0, len(self.cles)):
                             if self.cles[cle] == 'user-name-f':
-                                ligne.append(val['user-name'] + " " + val['user-first'][0] + ".")
+                                if val['user-first'] != "":
+                                    ligne.append(val['user-name'] + " " + val['user-first'][0] + ".")
+                                else:
+                                    ligne.append(val['user-name'])
                             else:
                                 ligne.append(val[self.cles[cle]])
                         lignes.append(ligne)

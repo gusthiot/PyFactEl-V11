@@ -46,7 +46,10 @@ class Transactions2New(CsvDict):
                                             ligne.append("CPTE")
                                         for cle in range(5, 16):
                                             ligne.append(base[self.cles[cle]])
-                                        ligne.append(base['user-name'] + " " + base['user-first'][0] + ".")
+                                        if base['user-first'] != "":
+                                            ligne.append(base['user-name'] + " " + base['user-first'][0] + ".")
+                                        else:
+                                            ligne.append(base['user-name'])
                                         ligne += [par_user['start'].year, par_user['start'].month, par_user['end'].year,
                                                   par_user['end'].month, classprest['id_article']]
                                         for cle in range(22, 28):
