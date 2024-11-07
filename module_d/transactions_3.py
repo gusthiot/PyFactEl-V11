@@ -421,7 +421,7 @@ class Transactions3(CsvDict):
             user = self.imports.users.donnees[id_user]
             utilisateur = [user['id_user'], user['sciper'], user['nom'], user['prenom']]
         else:
-            utilisateur = ["", "", "", ""]
+            utilisateur = ["0", "", "", ""]
         return utilisateur + [compte['id_compte'], compte['numero'],
                 compte['intitule'], compte['exploitation'], flux]
 
