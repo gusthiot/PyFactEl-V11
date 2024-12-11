@@ -172,7 +172,8 @@ try:
                 Interface.affiche_message("pdflatex n'est probablement pas installé")
 
         factures = Facture(imports, new_versions, sommes_1.par_fact, imports.chemin_factures)
-        tickets = Ticket(imports, factures, sommes_1.par_client, new_versions, imports.chemin_enregistrement)
+        tickets = Ticket(imports, factures, sommes_1.par_client, new_versions, imports.chemin_enregistrement,
+                         transactions_1)
         resultats = ResultatNew(imports, unique)
         sap = Sap(imports, new_versions, sommes_1.par_fact)
         sap.csv(DossierDestination(imports.chemin_enregistrement))

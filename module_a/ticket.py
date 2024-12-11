@@ -8,7 +8,7 @@ class Ticket(object):
     Classe créant le JSON nécessaire à la génération des tickets
     """
 
-    def __init__(self, imports, factures, par_client, versions, chemin_destination):
+    def __init__(self, imports, factures, par_client, versions, chemin_destination, transactions_1):
         """
         génère les tickets sous forme de sections html
         :param imports: données importées
@@ -16,6 +16,7 @@ class Ticket(object):
         :param par_client: tri des transactions 1
         :param versions: versions des factures générées
         :param chemin_destination: le dossier de sauvegarde du fichier
+        :param transactions_1: transactions 1 générées
         """
 
         self.nom = ("Ticket_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
@@ -63,7 +64,16 @@ class Ticket(object):
                         reference = (classe['ref_fact'] + "_" + str(imports.edition.annee) + "_" +
                                      Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" +
                                      str(id_fact))
-                        dict_ticket[title]['factures'][id_fact] = {'ref': reference, 'postes': []}
+                        base = transactions_1.valeurs[par_client['factures'][id_fact]['transactions'][0]]
+                        intype = base['invoice-type']
+                        if intype == "GLOB":
+                            nbr = 0
+                            nom = "global"
+                        else:
+                            nbr = base['proj-nbr']
+                            nom = base['proj-name']
+                        dict_ticket[title]['factures'][id_fact] = {'ref': reference, 'postes': [], 'projet': nbr,
+                                                                   'intitule': nom}
 
                         total = 0
                         for dico_fact in par_fact['factures']:

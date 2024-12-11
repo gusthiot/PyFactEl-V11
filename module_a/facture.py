@@ -23,12 +23,11 @@ class Facture(object):
         for id_fact, donnee in versions.valeurs.items():
             if donnee['version-change'] != 'CANCELED' and donnee['version-new-amount'] > 0:
                 code = donnee['client-code']
-                intype = donnee['invoice-type']
                 client = imports.clients.donnees[code]
                 classe = imports.classes.donnees[client['id_classe']]
                 if code not in self.par_client:
                     self.par_client[code] = {}
-                self.par_client[code][id_fact] = {'factures': [], 'intype': intype, 'version': donnee['version-last']}
+                self.par_client[code][id_fact] = {'factures': [], 'version': donnee['version-last']}
 
                 code_sap = client['code_sap']
 
