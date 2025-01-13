@@ -50,6 +50,7 @@ from module_a import (VersionNew,
                       Sap,
                       Info,
                       ClientsModifs,
+                      Montants,
                       ResultatNew)
 from imports import (Edition,
                      Imports)
@@ -177,6 +178,8 @@ try:
         factures = Facture(imports, new_versions, sommes_1.par_fact, imports.chemin_factures)
         tickets = Ticket(imports, factures, sommes_1.par_client, new_versions, imports.chemin_enregistrement,
                          transactions_1)
+        montants = Montants(imports, sommes_1.par_client)
+        montants.csv(DossierDestination(imports.chemin_report))
         resultats = ResultatNew(imports, unique)
         sap = Sap(imports, new_versions, sommes_1.par_fact)
         sap.csv(DossierDestination(imports.chemin_enregistrement))

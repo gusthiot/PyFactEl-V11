@@ -1,5 +1,4 @@
-from core import (Format,
-                  CsvList)
+from core import CsvList
 
 
 class RabaisBonus(CsvList):

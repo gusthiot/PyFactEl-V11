@@ -41,6 +41,7 @@ class Sommes1(object):
 
             articles = self.par_client[trans['client-code']]['articles']
             if trans['item-order'] not in articles:
-                articles[trans['item-order']] = {'id': trans['item-idsap'], 'total': 0}
+                articles[trans['item-order']] = {'classe': trans['client-class'], 'id': trans['item-idsap'],
+                                                 'code': trans['item-codeD'], 'total': 0}
             articles[trans['item-order']]['total'] += trans['total-fact']
-            # => tickets
+            # => tickets & montants
