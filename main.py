@@ -27,6 +27,7 @@ from module_c import (UserLaboNew,
                       Sommes3)
 from module_b import (GrantedNew,
                       NumeroNew,
+                      RabaisBonus,
                       BilanSubsides,
                       BilanAnnules,
                       Transactions2New)
@@ -136,6 +137,8 @@ try:
         new_numeros.csv(DossierDestination(imports.chemin_out))
         bil_subs = BilanSubsides(imports, transactions_3, sommes_3.par_client)
         bil_subs.csv(DossierDestination(imports.chemin_bilans))
+        rab_bon = RabaisBonus(imports, transactions_3, sommes_3.par_client)
+        rab_bon.csv(DossierDestination(imports.chemin_report))
         bil_annule = BilanAnnules(imports, sommes_3.par_client)
         bil_annule.csv(DossierDestination(imports.chemin_bilans))
         new_transactions_2 = Transactions2New(imports, transactions_3, sommes_3.par_client, new_numeros)

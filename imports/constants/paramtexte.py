@@ -39,8 +39,8 @@ class Paramtexte(object):
             'annex-compte-end', 'annex-compte-prestation', 'annex-compte-quantity', 'annex-compte-unit',
             'annex-compte-unit-price', 'annex-compte-total-CHF', 'annex-compte-subtotal', 'annex-compte-total',
             'annex-compte-pied-page-g1', 'annex-compte-pied-page-g2', 'res-factel', 'res-pltf', 'res-year', 'res-month',
-            'res-version', 'res-folder', 'res-type', 'filigr-prof', 'track-status', 'track-doc-nr', 'track-err-msg',
-            'info-created', 'info-sent', 'info-closed']
+            'res-version', 'res-folder', 'res-type', 'info-created', 'info-sent', 'info-closed', 'filigr-prof',
+            'track-status', 'track-doc-nr', 'track-err-msg', 'total-subsid', 'total-remb']
 
     nom_fichier = "paramtext.csv"
     libelle = "Paramètres de Texte"

@@ -2,6 +2,7 @@ from core import CsvImport
 from core import (Interface,
                   Format,
                   ErreurConsistance)
+import re
 
 
 class User(CsvImport):
@@ -9,7 +10,7 @@ class User(CsvImport):
     Classe pour l'importation des données de Users
     """
 
-    cles = ['id_user', 'sciper', 'nom', 'prenom']
+    cles = ['id_user', 'sciper', 'nom', 'prenom', 'email']
     nom_fichier = "user.csv"
     libelle = "Users"
 
@@ -24,7 +25,7 @@ class User(CsvImport):
         ligne = 2
         donnees_dict = {}
         ids = []
-        # scipers = []
+        scipers = []
 
         for donnee in self.donnees:
             donnee['id_user'], info = Format.est_un_alphanumerique(donnee['id_user'], "l'id user", ligne)
@@ -39,13 +40,18 @@ class User(CsvImport):
 
             donnee['sciper'], info = Format.est_un_alphanumerique(donnee['sciper'], "le sciper", ligne)
             msg += info
-            # if donnee['sciper'] == "":
-            #     msg += "le sciper de la ligne " + str(ligne) + " ne peut être vide\n"
-            # elif donnee['sciper'] not in scipers:
-            #     scipers.append(donnee['sciper'])
-            # else:
-            #     msg += "le sciper '" + donnee['sciper'] + "' de la ligne " + str(ligne) +\
-            #            " n'est pas unique\n"
+            if donnee['sciper'] == "":
+                msg += "le sciper de la ligne " + str(ligne) + " ne peut être vide\n"
+            elif donnee['sciper'] not in scipers:
+                scipers.append(donnee['sciper'])
+            else:
+                msg += "le sciper '" + donnee['sciper'] + "' de la ligne " + str(ligne) +\
+                       " n'est pas unique\n"
+
+            pattern = (r"[^@]+@[^@]+\.[^@]+")
+            if donnee['email'] != "" and re.fullmatch(pattern, donnee['email']) is None:
+                msg += "l'email de la ligne " + str(ligne) + " n'est pas correct\n"
+
 
             donnee['nom'], info = Format.est_un_texte(donnee['nom'], "le nom", ligne)
             msg += info
