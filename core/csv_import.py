@@ -23,8 +23,10 @@ class CsvImport(object):
         try:
             fichier_reader = dossier_source.reader(self.nom_fichier)
             donnees_csv = []
+            numero = 1
             for ligne in fichier_reader:
-                donnees_ligne = self._extraction_ligne(ligne)
+                donnees_ligne = self._extraction_ligne(ligne, numero)
+                numero += 1
                 if donnees_ligne == -1:
                     continue
                 donnees_csv.append(donnees_ligne)
@@ -41,7 +43,7 @@ class CsvImport(object):
         :return: message formaté
         """
         if msg != "":
-            return self.libelle + " (" + self.nom_fichier + " ligne " + str(ligne) + ") : " + msg
+            return self.libelle + " (" + self.nom_fichier + ", ligne " + str(ligne) + ") : " + msg
         else:
             return ""
 
@@ -56,27 +58,28 @@ class CsvImport(object):
         else:
             return ""
 
-    def _extraction_ligne(self, ligne):
+    def _extraction_ligne(self, ligne, num_ligne):
         """
         extracte une ligne de données du csv
         :param ligne: ligne lue du fichier
+        :param num_ligne: numéro de ligne lue du fichier
         :return: tableau représentant la ligne, indexé par les clés
         """
         num = len(self.cles)
         if len(ligne) != num:
-            Interface.fatal(ErreurConsistance(), self._erreur_ligne(ligne, "Nombre de colonnes incorrect : " +
+            Interface.fatal(ErreurConsistance(), self._erreur_ligne(num_ligne, "Nombre de colonnes incorrect : " +
                          str(len(ligne)) + ", attendu : " + str(num) + ". Vérifier que les champs ne contiennent pas de point-virgule. \n"))
         donnees_ligne = {}
         for xx in range(0, num):
             donnees_ligne[self.cles[xx]] = ligne[xx]
         return donnees_ligne
 
-    def test_id_coherence(self, donnee, nom, ligne, corpus, zero=False):
+    def test_id_coherence(self, donnee, nom, num_ligne, corpus, zero=False):
         """
         vérifie si l'id donné est cohérent
         :param donnee: id donné
         :param nom: nom de l'id
-        :param ligne: ligne lue du fichier
+        :param num_ligne: numéro de ligne lue du fichier
         :param corpus: données dans lesquelles l'id devrait se retrouver
         :param zero: si l'id peut être égal à zéro
         :return: un message d'erreur ou un string vide si ok
@@ -89,4 +92,4 @@ class CsvImport(object):
             if zero:
                 msg += " ni égal à 0"
             msg += "\n"
-        return self._erreur_ligne(ligne, msg)
+        return self._erreur_ligne(num_ligne, msg)
