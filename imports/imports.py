@@ -166,14 +166,14 @@ class Imports(object):
 
         destination_in = DossierDestination(self.chemin_in)
         destination_out = DossierDestination(self.chemin_out)
-        for fichier_in in [self.paramtexte, self.facturation, self.classes, self.plateformes, self.artsap,
+        for fichier_in in [self.facturation, self.classes, self.plateformes, self.artsap,
                            self.categories, self.groupes, self.machines, self.categprix, self.coefprests,
                            self.prestations, self.classprests, self.overheads, self.clients, self.subsides,
                            self.plafonds, self.cles, self.comptes, self.users, self.acces, self.noshows,
                            self.livraisons, self.services, self.partenaires, self.resultats, self.grants, self.userlabs,
                            self.edition]:
             destination_in.ecrire(fichier_in.nom_fichier, self.dossier_source.lire(fichier_in.nom_fichier))
-        for fichier_out in [self.paramtexte, self.facturation, self.classes, self.plateformes, self.artsap,
+        for fichier_out in [self.facturation, self.classes, self.plateformes, self.artsap,
                             self.categories, self.groupes, self.categprix, self.coefprests, self.classprests,
                             self.overheads, self.partenaires, self.resultats, self.grants, self.userlabs]:
             destination_out.ecrire(fichier_out.nom_fichier, self.dossier_source.lire(fichier_out.nom_fichier))
