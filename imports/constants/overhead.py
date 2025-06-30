@@ -9,7 +9,7 @@ class Overhead(CsvImport):
     Classe pour l'importation des données de Overheads
     """
 
-    cles = ['id_overhead', 'no_overhead', 'intitule', 'id_article']
+    cles = ['id_overhead', 'overhead_pc', 'id_article']
     nom_fichier = "overhead.csv"
     libelle = "Overheads"
 
@@ -36,7 +36,8 @@ class Overhead(CsvImport):
                     msg += self._erreur_ligne(ligne, "l'id overhead '" + donnee['id_overhead'] + "' n'est pas unique\n")
 
             msg += self.test_id_coherence(donnee['id_article'], "l'id article SAP", ligne, artsap)
-
+            donnee['overhead_pc'], info = Format.est_un_nombre(donnee['overhead_pc'], "l'overhead", -1, 0, 100)
+            msg += self._erreur_ligne(ligne, info)
             donnees_dict[donnee['id_overhead']] = donnee
             ligne += 1
 

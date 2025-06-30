@@ -19,7 +19,7 @@ class Info(CsvBase):
         lignes = []
         self.nom = "info.csv"
 
-        lignes.append(['FactEl', self.pt['res-factel'], 11.01, ""])
+        lignes.append(['FactEl', self.pt['res-factel'], 11.02, ""])
         lignes.append(['Platform', self.pt['res-pltf'], imports.edition.plateforme, ""])
         lignes.append(['Year', self.pt['res-year'], imports.edition.annee, ""])
         lignes.append(['Month', self.pt['res-month'], imports.edition.mois, ""])

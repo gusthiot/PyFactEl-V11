@@ -9,7 +9,7 @@ class Categorie(CsvImport):
     Classe pour l'importation des données de Catégories
     """
 
-    cles = ['id_categorie', 'no_categorie', 'intitule', 'unite', 'id_plateforme', 'id_classe_prest']
+    cles = ['id_categorie', 'no_categorie', 'intitule', 'unite', 'nb_dec', 'id_plateforme', 'id_classe_prest']
     nom_fichier = "categorie.csv"
     libelle = "Catégories"
 
@@ -50,6 +50,8 @@ class Categorie(CsvImport):
             donnee['intitule'], info = Format.est_un_texte(donnee['intitule'], "l'intitulé")
             msg += self._erreur_ligne(ligne, info)
             donnee['unite'], info = Format.est_un_texte(donnee['unite'], "l'unité")
+            msg += self._erreur_ligne(ligne, info)
+            donnee['nb_dec'], info = Format.est_un_entier(donnee['nb_dec'], "le nombre de décimales", 0, 8)
             msg += self._erreur_ligne(ligne, info)
 
             donnees_dict[donnee['id_categorie']] = donnee

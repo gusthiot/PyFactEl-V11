@@ -2,6 +2,7 @@ from core import CsvImport
 from core import (Interface,
                   Format,
                   ErreurConsistance)
+import math
 
 
 class CategPrix(CsvImport):
@@ -50,8 +51,13 @@ class CategPrix(CsvImport):
                     msg += self._erreur_ligne(ligne, "Couple id catégorie '" + donnee['id_categorie'] +
                                               "' et id classe '" + donnee['id_classe'] + "' pas unique\n")
 
-            donnee['prix_unit'], info = Format.est_un_nombre(donnee['prix_unit'], "le prix unitaire ", 2)
+            categorie = categories.donnees[donnee['id_categorie']]
+            donnee['prix_unit'], info = Format.est_un_nombre(donnee['prix_unit'], "le prix unitaire ", categorie['nb_dec'], 0)
             msg += self._erreur_ligne(ligne, info)
+
+            pow10 = math.pow(10, 9-categorie['nb_dec'])
+            if donnee['prix_unit'] >= pow10:
+                msg += self._erreur_ligne(ligne, "le prix unitaire doit être strictement inférieur à " + str(pow10))
 
             donnees_dict[donnee['id_classe'] + donnee['id_categorie']] = donnee
             ligne += 1

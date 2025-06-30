@@ -9,7 +9,8 @@ class ClassePrestation(CsvImport):
     Classe pour l'importation des données de Classes Prestations
     """
 
-    cles = ['id_classe_prest', 'id_article', 'flag_coef', 'flag_usage', 'flag_conso', 'eligible', 'id_overhead']
+    cles = ['id_classe_prest', 'id_article', 'flag_coef', 'flag_usage', 'flag_conso', 'eligible', 'id_ovh_prest',
+            "no_ovh", "intitule_ovh"]
     nom_fichier = "classeprestation.csv"
     libelle = "Classes Prestations"
 
@@ -48,8 +49,6 @@ class ClassePrestation(CsvImport):
                 msg += self._erreur_ligne(ligne, "l'éligible doit être OUI ou NON\n")
 
             msg += self.test_id_coherence(donnee['id_article'], "l'id article SAP", ligne, artsap)
-
-            msg += self.test_id_coherence(donnee['id_overhead'], "l'id overhead", ligne, overheads, True)
 
             donnees_dict[donnee['id_classe_prest']] = donnee
             ligne += 1

@@ -9,15 +9,15 @@ class ClasseClient(CsvImport):
     Classe pour l'importation des données de Classes Clients
     """
 
-    cles = ['id_classe', 'code_n', 'intitule', 'ref_fact', 'avantage_HC', 'subsides', 'grille', 'overhead']
+    cles = ['id_classe', 'code_n', 'intitule', 'ref_fact', 'avantage_HC', 'subsides', 'grille', 'id_overhead']
     nom_fichier = "classeclient.csv"
     libelle = "Classes Clients"
 
-    def __init__(self, dossier_source, module_a=False):
+    def __init__(self, dossier_source, overheads):
         """
         initialisation et importation des données
         :param dossier_source: Une instance de la classe dossier.DossierSource
-        :param module_a: si on ne traite que le module A
+        :param overheads: overheads importés
         """
         super().__init__(dossier_source)
 
@@ -40,11 +40,9 @@ class ClasseClient(CsvImport):
             msg += self._erreur_ligne(ligne, info)
             donnee['intitule'], info = Format.est_un_texte(donnee['intitule'], "l'intitulé")
             msg += self._erreur_ligne(ligne, info)
-            donnee['overhead'], info = Format.est_un_entier(donnee['overhead'], "l'overhead", 0)
-            msg += self._erreur_ligne(ligne, info)
+            msg += self.test_id_coherence(donnee['id_overhead'], "l'id overhead", ligne, overheads, True)
             if donnee['ref_fact'] != 'INT' and donnee['ref_fact'] != 'EXT':
                 msg += self._erreur_ligne(ligne, "le code référence client doit être INT ou EXT\n")
-            if not module_a:
                 if donnee['avantage_HC'] != 'BONUS' and donnee['avantage_HC'] != 'RABAIS':
                     msg += self._erreur_ligne(ligne, "l'avantage HC doit être BONUS ou RABAIS\n")
                 if donnee['subsides'] != 'BONUS' and donnee['subsides'] != 'RABAIS':

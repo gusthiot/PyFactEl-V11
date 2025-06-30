@@ -27,6 +27,9 @@ class Transactions2New(CsvDict):
         i = 0
         if par_client is not None and transactions_3 is not None and numeros is not None:
             for code, par_code in par_client.items():
+                client = imports.clients.donnees[code]
+                id_classe = client['id_classe']
+                classe = imports.classes.donnees[id_classe]
                 for icf in par_code['projets']:
                     par_fact = par_code['projets'][icf]
                     id_fact = numeros.couples[code][icf]
@@ -60,11 +63,10 @@ class Transactions2New(CsvDict):
                                         self._ajouter_valeur(ligne, i)
                                         somme_classe += total_fact
                                         i += 1
-                            if somme_classe > 0 and classprest['id_overhead'] != "0" and base is not None:
-                                classe = imports.classes.donnees[base['client-idclass']]
-                                if classe['overhead'] > 0:
+                            if somme_classe > 0 and classe['id_overhead'] != "0" and base is not None:
+                                overhead = imports.overheads.donnees[classe['id_overhead']]
+                                if overhead['overhead_pc'] > 0:
                                     ligne = [imports.edition.annee, imports.edition.mois, imports.version, id_fact]
-                                    overhead = imports.overheads.donnees[classprest['id_overhead']]
                                     artsap = imports.artsap.donnees[overhead['id_article']]
                                     if base['invoice-project'] == "0":
                                         ligne.append("GLOB")
@@ -73,9 +75,9 @@ class Transactions2New(CsvDict):
                                     for cle in range(5, 15):
                                         ligne.append(base[self.cles[cle]])
                                     ligne += ["0", "", "", "", "", "", overhead['id_article'], artsap['code_d'],
-                                              artsap['ordre'], artsap['intitule'], classprest['id_overhead'],
-                                              overhead['no_overhead'], overhead['intitule'], round(somme_classe, 2), "%",
-                                              classe['overhead'], 0, round(2*somme_classe * classe['overhead'] / 100, 1)/2]
+                                              artsap['ordre'], artsap['intitule'], classprest['id_ovh_prest'],
+                                              classprest['no_ovh'], classprest['intitule_ovh'], round(somme_classe, 2), "%",
+                                              overhead['overhead_pc'], 0, round(2*somme_classe * overhead['overhead_pc'] / 100, 1)/2]
                                     self._ajouter_valeur(ligne, i)
                                     i += 1
 
