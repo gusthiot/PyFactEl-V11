@@ -183,8 +183,9 @@ class Pdfs(object):
 
                         dico.update({'user': trans['user-name-f'], 'start': start, 'end': end,
                                      'prest': Latex.echappe_caracteres(trans['item-name']),
-                                     'quant': quantite, 'unit': Latex.echappe_caracteres(trans['item-unit']),
-                                     'price': Format.nombre(trans['valuation-price']),
+                                     'quant': quantite,
+                                     'unit': Latex.echappe_caracteres(trans['item-unit']),
+                                     'price': trans['valuation-price'],
                                      'deduct': Format.nombre(trans['sum-deduct']),
                                      'total': Format.nombre(trans['total-fact'])})
                         ligne = r'''\fl{%(user)s} & \fl{%(start)s} & \fl{%(end)s} & 

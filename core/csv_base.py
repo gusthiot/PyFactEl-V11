@@ -24,18 +24,6 @@ class CsvBase(object):
             ligne.append(self.pt[cle])
         return ligne
 
-    def check_ligne(self, ligne):
-        """
-        arrondissement des float pour éviter les mauvaises surprises
-        """
-        result = []
-        for valeur in ligne:
-            if isinstance(valeur, float):
-                result.append(round(valeur, 3))
-            else:
-                result.append(valeur)
-        return result
-
     def write(self, nom, dossier_destination, lignes, keys=True):
         """
         création du fichier csv à partir de la liste des noms de colonnes et d'une liste de valeurs
@@ -48,7 +36,7 @@ class CsvBase(object):
             if keys:
                 fichier_writer.writerow(self.get_keys())
             for ligne in lignes:
-                fichier_writer.writerow(self.check_ligne(ligne))
+                fichier_writer.writerow(ligne)
 
 
 class CsvDict(CsvBase):
@@ -72,7 +60,7 @@ class CsvDict(CsvBase):
                 ligne = []
                 for i in range(0, len(self.cles)):
                     ligne.append(valeur[self.cles[i]])
-                fichier_writer.writerow(self.check_ligne(ligne))
+                fichier_writer.writerow(ligne)
 
     def _ajouter_valeur(self, donnee, unique):
         """
@@ -104,4 +92,4 @@ class CsvList(CsvBase):
         with dossier_destination.writer(self.nom) as fichier_writer:
             fichier_writer.writerow(self.get_keys())
             for ligne in self.lignes:
-                fichier_writer.writerow(self.check_ligne(ligne))
+                fichier_writer.writerow(ligne)
