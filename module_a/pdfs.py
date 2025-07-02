@@ -185,7 +185,7 @@ class Pdfs(object):
                                      'prest': Latex.echappe_caracteres(trans['item-name']),
                                      'quant': quantite,
                                      'unit': Latex.echappe_caracteres(trans['item-unit']),
-                                     'price': trans['valuation-price'],
+                                     'price': Format.nombre(trans['valuation-price'], trans['item-nbdeci']),
                                      'deduct': Format.nombre(trans['sum-deduct']),
                                      'total': Format.nombre(trans['total-fact'])})
                         ligne = r'''\fl{%(user)s} & \fl{%(start)s} & \fl{%(end)s} & 

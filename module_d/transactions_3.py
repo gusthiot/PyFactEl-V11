@@ -11,7 +11,7 @@ class Transactions3(CsvDict):
             'client-labelclass', 'oper-id', 'oper-name', 'oper-note', 'staff-note', 'mach-id', 'mach-name',
             'mach-extra', 'user-id', 'user-sciper', 'user-name', 'user-first', 'proj-id', 'proj-nbr', 'proj-name',
             'proj-expl', 'flow-type', 'item-grp', 'item-id', 'item-codeK', 'item-textK', 'item-text2K', 'item-nbr',
-            'item-name', 'item-unit', 'item-idclass', 'item-codeD', 'item-flag-usage', 'item-flag-conso',
+            'item-name', 'item-unit', 'item-nbdeci', 'item-idclass', 'item-codeD', 'item-flag-usage', 'item-flag-conso',
             'item-eligible', 'item-order', 'item-labelcode', 'item-extra', 'platf-code', 'platf-op', 'platf-name',
             'transac-date', 'transac-raw', 'transac-valid', 'transac-id-staff', 'transac-staff', 'transac-quantity',
             'transac-usage', 'transac-runtime', 'transac-runcae', 'valuation-price', 'valuation-brut', 'discount-type',
@@ -77,7 +77,8 @@ class Transactions3(CsvDict):
                             runcae = 1
                             counted = True
                         trans = [entree['date_login'], 1] + self.__staff(entree, 1) + [usage, "", runcae]
-                        val = [tarif['valuation-price'], tarif['valuation-price'], "", 0, tarif['valuation-price']]
+                        prix = round(tarif['valuation-price'], 2)
+                        val = [tarif['valuation-price'], prix, "", 0, prix]
                         self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
 
                 # K7 CAE-runf #
@@ -100,7 +101,8 @@ class Transactions3(CsvDict):
                                 runcae = 1
                                 counted = True
                         trans = [entree['date_login'], 1] + self.__staff(entree, 1) + [usage, "", runcae]
-                        val = [tarif['valuation-price'], tarif['valuation-price'], "", 0, tarif['valuation-price']]
+                        prix = round(tarif['valuation-price'], 2)
+                        val = [tarif['valuation-price'], prix, "", 0, prix]
                         self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
 
                 # K4 CAE-Extra #
@@ -437,9 +439,10 @@ class Transactions3(CsvDict):
         """
         plateforme = self.imports.plateforme
         return [id_groupe, article['item-id'], code_k, texte_k, texte2_k, article['item-nbr'], article['item-name'],
-                article['item-unit'], article['item-idclass'], article['item-codeD'], article['item-flag-usage'],
-                article['item-flag-conso'], article['item-eligible'], article['item-order'], article['item-labelcode'],
-                article['item-extra'], article['platf-code'], plateforme['code_p'], plateforme['abrev_plat']]
+                article['item-unit'], article['item-nbdeci'], article['item-idclass'], article['item-codeD'],
+                article['item-flag-usage'], article['item-flag-conso'], article['item-eligible'], article['item-order'],
+                article['item-labelcode'], article['item-extra'], article['platf-code'], plateforme['code_p'],
+                plateforme['abrev_plat']]
 
     def __subsides(self, transact, article):
         """

@@ -13,7 +13,7 @@ class Transactions2(CsvImport):
             'client-code', 'client-sap', 'client-name', 'client-idclass', 'client-class', 'client-labelclass',
             'proj-id', 'proj-nbr', 'proj-name', 'user-id', 'user-name-f', 'date-start-y', 'date-start-m', 'date-end-y',
             'date-end-m', 'item-idsap', 'item-codeD', 'item-order', 'item-labelcode', 'item-id', 'item-nbr',
-            'item-name', 'transac-quantity', 'item-unit', 'valuation-price', 'sum-deduct', 'total-fact']
+            'item-name', 'transac-quantity', 'item-unit', 'item-nbdeci', 'valuation-price', 'sum-deduct', 'total-fact']
     libelle = "Transactions 2"
 
     def __init__(self, dossier_source, edition, plateforme, clients, comptes, users, articles, version):
@@ -102,6 +102,8 @@ class Transactions2(CsvImport):
             donnee['transac-quantity'], info = Format.est_un_nombre(donnee['transac-quantity'], "la quantité")
             msg += self._erreur_ligne(ligne, info)
             donnee['item-unit'], info = Format.est_un_texte(donnee['item-unit'], "l'item unité", True)
+            msg += self._erreur_ligne(ligne, info)
+            donnee['item-nbdeci'], info = Format.est_un_entier(donnee['item-nbdeci'], "le nombre de décimal", 0)
             msg += self._erreur_ligne(ligne, info)
             donnee['valuation-price'], info = Format.est_un_nombre(donnee['valuation-price'], "le prix unitaire", 2, 0)
             msg += self._erreur_ligne(ligne, info)

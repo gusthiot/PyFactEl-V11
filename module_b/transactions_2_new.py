@@ -58,7 +58,7 @@ class Transactions2New(CsvDict):
                                         for cle in range(22, 28):
                                             ligne.append(base[self.cles[cle]])
                                         total_fact = round(2*par_user['total'], 1)/2
-                                        ligne += [round(par_user['quantity'], 3), base['item-unit'],
+                                        ligne += [round(par_user['quantity'], 3), base['item-unit'], base['item-nbdeci'],
                                                   base['valuation-price'], round(par_user['deduct'], 2), total_fact]
                                         self._ajouter_valeur(ligne, i)
                                         somme_classe += total_fact
@@ -76,8 +76,9 @@ class Transactions2New(CsvDict):
                                         ligne.append(base[self.cles[cle]])
                                     ligne += ["0", "", "", "", "", "", overhead['id_article'], artsap['code_d'],
                                               artsap['ordre'], artsap['intitule'], classprest['id_ovh_prest'],
-                                              classprest['no_ovh'], classprest['intitule_ovh'], round(somme_classe, 2), "%",
-                                              overhead['overhead_pc'], 0, round(2*somme_classe * overhead['overhead_pc'] / 100, 1)/2]
+                                              classprest['no_ovh'], classprest['intitule_ovh'], round(somme_classe, 2),
+                                              "%", 2, overhead['overhead_pc'], 0,
+                                              round(2*somme_classe * overhead['overhead_pc'] / 100, 1)/2]
                                     self._ajouter_valeur(ligne, i)
                                     i += 1
 
@@ -102,7 +103,7 @@ class Transactions2New(CsvDict):
                              donnee['date-start-m'], donnee['date-end-y'], donnee['date-end-m'], id_article,
                              article['code_d'], article['ordre'], article['intitule'], donnee['item-id'],
                              donnee['item-nbr'], donnee['item-name'], round(donnee['transac-quantity'], 3),
-                             donnee['item-unit'], donnee['valuation-price'], donnee['deduct-CHF'],
+                             donnee['item-unit'], donnee['item-nbdeci'], donnee['valuation-price'], donnee['deduct-CHF'],
                              round(2*montant, 1)/2]
                     self._ajouter_valeur(ligne, i)
                     i += 1

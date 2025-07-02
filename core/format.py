@@ -23,15 +23,16 @@ class Format(object):
             return "mois pas un entier"
 
     @staticmethod
-    def nombre(nombre):
+    def nombre(nombre, signifiant=2):
         """
         affiche un nombre en float arrondi avec 2 chiffres après la virgule et avec un séparateur des milliers
         :param nombre: nombre à afficher
-        :return: nombre arrondi, avec 2 chiffres après la virgule, en string
+        :param signifiant: nombre de chiffres après la virgule
+        :return: nombre arrondi, avec 2 chiffres par défaut après la virgule, en string
         """
         try:
             float(nombre)
-            return '{:,.2f}'.format(nombre).replace(",", "'")
+            return '{:,.'+str(signifiant)+'f}'.format(nombre).replace(",", "'")
         except ValueError:
             return "pas un nombre"
 
