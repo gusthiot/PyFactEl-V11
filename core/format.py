@@ -32,7 +32,7 @@ class Format(object):
         """
         try:
             float(nombre)
-            return '{:,.'+str(signifiant)+'f}'.format(nombre).replace(",", "'")
+            return ('{:,.'+str(signifiant)+'f}').format(nombre).replace(",", "'")
         except ValueError:
             return "pas un nombre"
 
