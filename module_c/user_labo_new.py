@@ -45,13 +45,14 @@ class UserLaboNew(CsvDict):
             for code, par_code in par_client.items():
                 for jour in par_code['days'].values():
                     trans = transactions_3.valeurs[jour]
-                    valeur = [imports.edition.annee, imports.edition.mois]
-                    for cle in range(2, len(UserLabo.cles)):
-                        if UserLabo.cles[cle] == 'day':
-                            valeur.append(trans['transac-date'].day)
-                        elif UserLabo.cles[cle] == 'week-nbr':
-                            valeur.append(trans['transac-date'].isocalendar()[1])
-                        else:
-                            valeur.append(trans[UserLabo.cles[cle]])
-                    self._ajouter_valeur(valeur, str(imports.edition.annee) + str(imports.edition.mois) +
-                                         str(trans['transac-date'].day) + id_user + code)
+                    if trans['transac-valid'] != "2":
+                        valeur = [imports.edition.annee, imports.edition.mois]
+                        for cle in range(2, len(UserLabo.cles)):
+                            if UserLabo.cles[cle] == 'day':
+                                valeur.append(trans['transac-date'].day)
+                            elif UserLabo.cles[cle] == 'week-nbr':
+                                valeur.append(trans['transac-date'].isocalendar()[1])
+                            else:
+                                valeur.append(trans[UserLabo.cles[cle]])
+                        self._ajouter_valeur(valeur, str(imports.edition.annee) + str(imports.edition.mois) +
+                                             str(trans['transac-date'].day) + id_user + code)
