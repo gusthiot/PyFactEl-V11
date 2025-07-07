@@ -56,8 +56,12 @@ class CategPrix(CsvImport):
             msg += self._erreur_ligne(ligne, info)
 
             pow10 = math.pow(10, 9-categorie['nb_dec'])
+            nbN = 9
+            if donnee['prix_unit'] > 0:
+                nbN = int(math.log10(donnee['prix_unit'])) + 1
             if donnee['prix_unit'] >= pow10:
-                msg += self._erreur_ligne(ligne, "le prix unitaire doit être strictement inférieur à " + str(pow10))
+                msg += self._erreur_ligne(ligne, "le prix unitaire dépasse 9 chiffres (" + str(categorie['nb_dec'])
+                                          +" décimales imposées, et la partie entière est sur " + str(nbN) + " chiffres)\n")
 
             donnees_dict[donnee['id_classe'] + donnee['id_categorie']] = donnee
             ligne += 1
