@@ -48,4 +48,4 @@ class Journal(CsvDict):
         """
         self._ajouter_valeur([trans['invoice-year'], trans['invoice-month'], version, trans['invoice-id'], "", "", "",
                               "", "", "", "", "", trans['proj-id'], "", "", trans['user-id'], "", "", "", "", "",
-                              trans['item-idsap'], "", "", "", trans['item-id'], "", "", "", "", "", "", ""], unique)
+                              trans['item-idsap'], "", "", "", trans['item-id'], "", "", "", "", "", "", "", ""], unique)
