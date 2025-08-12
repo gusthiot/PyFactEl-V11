@@ -6,18 +6,31 @@ class Transactions3(CsvDict):
     Classe pour la création des transactions de niveau 3
     """
 
-    cles = ['editing-year', 'editing-month', 'year', 'month', 'invoice-year', 'invoice-month', 'invoice-version',
-            'invoice-project', 'client-code', 'client-sap', 'client-name', 'client-idclass', 'client-class',
-            'client-labelclass', 'oper-id', 'oper-name', 'oper-note', 'staff-note', 'mach-id', 'mach-name',
-            'mach-extra', 'user-id', 'user-sciper', 'user-name', 'user-first', 'proj-id', 'proj-nbr', 'proj-name',
-            'proj-expl', 'flow-type', 'item-grp', 'item-id', 'item-codeK', 'item-textK', 'item-text2K', 'item-nbr',
-            'item-name', 'item-unit', 'item-nbdeci', 'item-idclass', 'item-codeD', 'item-flag-usage', 'item-flag-conso',
-            'item-eligible', 'item-order', 'item-labelcode', 'item-extra', 'platf-code', 'platf-op', 'platf-name',
-            'transac-date', 'transac-raw', 'transac-valid', 'transac-id-staff', 'transac-staff', 'transac-quantity',
-            'transac-usage', 'transac-runtime', 'transac-runcae', 'valuation-price', 'valuation-brut', 'discount-type',
-            'discount-CHF', 'valuation-net', 'subsid-code', 'subsid-name', 'subsid-type', 'subsid-start', 'subsid-end',
-            'subsid-ok', 'subsid-pourcent', 'subsid-maxproj', 'subsid-maxmois', 'subsid-reste', 'subsid-CHF',
-            'deduct-CHF', 'subsid-deduct', 'total-fact', 'discount-bonus', 'subsid-bonus']
+    cles = [
+        # ref_client
+        'editing-year', 'editing-month', 'year', 'month', 'invoice-year', 'invoice-month', 'invoice-version',
+        'invoice-project', 'client-code', 'client-sap', 'client-name', 'client-idclass', 'client-class',
+        'client-labelclass',
+        # ope
+        'oper-id', 'oper-name', 'oper-note', 'staff-note', 'mach-id', 'mach-name', 'mach-extra',
+        # util_proj
+        'user-id', 'user-sciper', 'user-name', 'user-first', 'proj-id', 'proj-nbr', 'proj-name', 'proj-expl',
+        'flow-type',
+        # art_plate
+        'item-grp', 'item-id', 'item-codeK', 'item-textK', 'item-text2K', 'item-nbr', 'item-name', 'item-unit',
+        'item-nbdeci', 'item-idclass', 'item-codeD', 'item-flag-usage', 'item-flag-conso', 'item-eligible',
+        'item-order', 'item-labelcode', 'item-extra', 'platf-code', 'platf-op', 'platf-name',
+        # trans
+        'transac-date', 'transac-raw', 'transac-valid', 'transac-id-staff', 'transac-staff', 'transac-quantity',
+        'transac-usage', 'transac-runtime', 'transac-runcae',
+        # val
+        'valuation-price', 'valuation-brut', 'discount-type', 'discount-CHF', 'valuation-net',
+        # subs
+        'subsid-code', 'subsid-name', 'subsid-type', 'subsid-start', 'subsid-end', 'subsid-ok', 'subsid-pourcent',
+        'subsid-maxproj', 'subsid-maxmois', 'subsid-reste', 'subsid-CHF',
+        # mont
+        'deduct-CHF', 'subsid-deduct', 'total-fact', 'discount-bonus', 'subsid-bonus'
+    ]
 
     def __init__(self, imports, articles, tarifs):
         """
@@ -185,8 +198,8 @@ class Transactions3(CsvDict):
                                                                                                      runcae]
                         prix = round(duree_hc * tarif['valuation-price'], 2)
                         reduc = round(tarif['valuation-price'] * machine['tx_rabais_hc']/100 * duree_hc, 2)
-                        val = [tarif['valuation-price'], prix,
-                               pt['discount-HC'] + " -" + str(machine['tx_rabais_hc']) + "%", reduc, prix-reduc]
+                        val = [tarif['valuation-price'], prix, pt['discount-HC'] + " -" +
+                               str(machine['tx_rabais_hc']) + "%", reduc, round(prix-reduc, 2)]
                         self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
 
             # K2 CAE-MO #
@@ -352,7 +365,7 @@ class Transactions3(CsvDict):
                         else:
                             ded_rab = transact['val'][3]
                             sub_rab = subs[10]
-                        tot = transact['val'][1] - ded_rab - sub_rab
+                        tot = round(transact['val'][1] - ded_rab - sub_rab, 2)
                     mont = [ded_rab, sub_rab, tot, ded_bon, sub_bon]
                     donnee = ([imports.edition.annee, imports.edition.mois] + transact['rc'] + transact['ope'] +
                               transact['up'] + transact['art'] + transact['trans'] + transact['val'] + subs + mont)
