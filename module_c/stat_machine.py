@@ -1,5 +1,8 @@
 from core import (Format,
+                  DossierDestination,
                   CsvList)
+from .report_files import Statmach
+
 import math
 
 
@@ -24,6 +27,7 @@ class StatMachine(CsvList):
         self.nom = ("Stat-machine_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
                     Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv")
 
+        statmach = Statmach(imports)
         for pmi in par_machine.values():
             for par_item in pmi.values():
                 ligne = [imports.edition.annee, imports.edition.mois]
@@ -41,6 +45,10 @@ class StatMachine(CsvList):
                     for rt in rts:
                         somme += math.pow(rt-avg, 2)
                     stddev = math.sqrt(1 / nn * somme)
+                    statmach.lignes.append([base['mach-id'], round(runtime, 3), nn, round(avg, 3), round(stddev, 3)])
                 ligne += [round(par_item['quantity'], 3), round(par_item['usage'], 3), round(runtime, 3), nn,
                           round(avg, 3), round(stddev, 3)]
                 self.lignes.append(ligne)
+
+
+        statmach.csv(DossierDestination(imports.chemin_report))

@@ -7,6 +7,7 @@ class Montants(CsvList):
     """
 
     cles = ['client-code', 'client-class', 'item-codeD', 'total-fact']
+    nom = "montants.csv"
 
     def __init__(self, imports, par_client):
         """
@@ -15,8 +16,6 @@ class Montants(CsvList):
         :param par_client: tri des transactions
         """
         super().__init__(imports)
-
-        self.nom = ("montants.csv")
 
         for code, par_client in par_client.items():
             for ordre, par_article in sorted(par_client['articles'].items()):

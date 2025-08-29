@@ -20,6 +20,7 @@ from module_c import (UserLaboNew,
                       BilanUsages,
                       BilanConsos,
                       StatMachine,
+                      ReportFiles,
                       StatNbUser,
                       StatUser,
                       StatClient,
@@ -130,6 +131,7 @@ try:
         stat_cli.csv(DossierDestination(imports.chemin_bilans))
         stat_mach = StatMachine(imports, transactions_3, sommes_3.par_machine)
         stat_mach.csv(DossierDestination(imports.chemin_bilans))
+        report_files = ReportFiles(imports, sommes_3)
 
         # Module B
         new_grants = GrantedNew(imports, transactions_3)

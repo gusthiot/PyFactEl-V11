@@ -24,7 +24,7 @@ class BilanConsos(CsvList):
                     "_" + Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + ".csv")
 
         for ppi in par_projet.values():
-            for par_item in ppi.values():
+            for par_item in ppi['items'].values():
                 base = transactions_3.valeurs[par_item['base']]
                 if base['item-flag-conso'] == "OUI":
                     ligne = [imports.edition.annee, imports.edition.mois]

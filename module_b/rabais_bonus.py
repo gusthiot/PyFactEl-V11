@@ -8,6 +8,7 @@ class RabaisBonus(CsvList):
 
     cles = ['client-code', 'client-class', 'item-codeD', 'deduct-CHF', 'subsid-deduct', 'discount-bonus',
             'subsid-bonus']
+    nom = "rabaisbonus.csv"
 
     def __init__(self, imports, transactions_3, par_client):
         """
@@ -17,8 +18,6 @@ class RabaisBonus(CsvList):
         :param par_client: tri des transactions
         """
         super().__init__(imports)
-
-        self.nom = ("rabaisbonus.csv")
 
         for par_code in par_client.values():
             for par_article in par_code['articles'].values():

@@ -7,3 +7,4 @@ from .stat_nb_user import StatNbUser
 from .stat_user import StatUser
 from .stat_client import StatClient
 from .stat_machine import StatMachine
+from .report_files import ReportFiles
