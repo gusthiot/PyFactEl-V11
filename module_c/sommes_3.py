@@ -99,6 +99,18 @@ class Sommes3(object):
                 pca[code_d]['sub_remb'] += transaction['subsid-bonus']
                 # => bilan subsides | rabais_bonus
 
+                pcu = self.par_client[code_client]['users']
+                if user_id not in pcu.keys():
+                    pcu[user_id] = {'items': {}, 'machines': {}, 'flow': {}}
+
+                if flow == 'lvr':
+                    pcui = pcu[user_id]['items']
+                    if item_id not in pcui.keys():
+                        pcui[item_id] = 0
+                    pcui[item_id] += transaction['transac-usage']
+                    # par client/user/item id
+                    # => statlvr
+
             # Module C : mois de traitement = mois d'activité
             if (imports.edition.annee == date.year and
                     imports.edition.mois == date.month):
@@ -163,14 +175,6 @@ class Sommes3(object):
                 pcu = self.par_client[code_client]['users']
                 if user_id not in pcu.keys():
                     pcu[user_id] = {'items': {}, 'machines': {}, 'flow': {}}
-
-                if flow == 'lvr':
-                    pcui = pcu[user_id]['items']
-                    if item_id not in pcui.keys():
-                        pcui[item_id] = 0
-                    pcui[item_id] += transaction['transac-usage']
-                    # par client/user/item id
-                    # => statlvr
 
                 if flow == 'noshow' and plateforme_id != code_client:
                     pcum = pcu[user_id]['machines']

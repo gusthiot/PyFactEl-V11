@@ -9,9 +9,8 @@ class Groupe(CsvImport):
     Classe pour l'importation des données de Machines Cmi
     """
 
-    # K1, K2, K3, K4, K5, K5, K6
-    cles = ['id_groupe', 'cae', 'id_cat_mach', 'id_cat_mo', 'id_cat_plat', 'id_cat_cher', 'id_cat_hp', 'id_cat_hc',
-            'id_cat_fixe']
+    cles = ['id_groupe', 'cae', 'item-id-K1', 'item-id-K2', 'item-id-K3', 'item-id-K4', 'item-id-K5', 'item-id-K6',
+            'item-id-K7']
     nom_fichier = "groupe.csv"
     libelle = "Groupes de machines"
 
@@ -41,7 +40,7 @@ class Groupe(CsvImport):
             if donnee['cae'] != 'OUI' and donnee['cae'] != 'NON':
                 msg += self._erreur_ligne(ligne, "le cae doit être OUI ou NON\n")
 
-            cats = ['id_cat_mach', 'id_cat_mo', 'id_cat_plat', 'id_cat_cher', 'id_cat_hp', 'id_cat_hc', 'id_cat_fixe']
+            cats = ['item-id-K1', 'item-id-K2', 'item-id-K3', 'item-id-K4', 'item-id-K5', 'item-id-K6', 'item-id-K7']
             noms = ['machine', 'opérateur', 'plateforme', 'onéreux', 'hp', 'hc', 'fixe']
             for ii in range(0, len(cats)):
                 cat = cats[ii]

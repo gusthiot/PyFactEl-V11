@@ -71,7 +71,7 @@ class Transactions3(CsvDict):
 
             if duree_hp > 0 or duree_hc > 0:
                 # K3 CAE-run #
-                id_categorie = groupe['id_cat_plat']
+                id_categorie = groupe['item-id-K3']
                 if id_categorie != '0' and duree_op == 0:
                     article = articles.valeurs[id_categorie]
                     if imports.edition.plateforme == article['platf-code']:
@@ -95,7 +95,7 @@ class Transactions3(CsvDict):
                         self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
 
                 # K7 CAE-runf #
-                id_categorie = groupe['id_cat_fixe']
+                id_categorie = groupe['item-id-K7']
                 if id_categorie != '0':
                     article = articles.valeurs[id_categorie]
                     if imports.edition.plateforme == article['platf-code']:
@@ -119,7 +119,7 @@ class Transactions3(CsvDict):
                         self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
 
                 # K4 CAE-Extra #
-                id_categorie = groupe['id_cat_cher']
+                id_categorie = groupe['item-id-K4']
                 if id_categorie != '0':
                     prix_extra = imports.categprix.donnees[id_classe + id_categorie]['prix_unit']
                     if prix_extra > 0:
@@ -146,7 +146,7 @@ class Transactions3(CsvDict):
                             self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
 
             # K1 ...
-            id_categorie = groupe['id_cat_mach']
+            id_categorie = groupe['item-id-K1']
             if id_categorie != '0':
                 article = articles.valeurs[id_categorie]
                 if imports.edition.plateforme == article['platf-code']:
@@ -203,7 +203,7 @@ class Transactions3(CsvDict):
                         self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
 
             # K2 CAE-MO #
-            id_categorie = groupe['id_cat_mo']
+            id_categorie = groupe['item-id-K2']
             if id_categorie != '0' and duree_op > 0:
                 article = articles.valeurs[id_categorie]
                 if imports.edition.plateforme == article['platf-code']:
@@ -238,13 +238,13 @@ class Transactions3(CsvDict):
                       'client': client, 'compte': compte}
             if entree['type'] == 'HP':
                 # K5 NoShow-HP #
-                id_categorie = groupe['id_cat_hp']
+                id_categorie = groupe['item-id-K5']
                 code = "K5"
                 texte = pt['item-K5']
                 texte2 = pt['item-K5a']
             else:
                 # K6 NoShow-HC #
-                id_categorie = groupe['id_cat_hc']
+                id_categorie = groupe['item-id-K6']
                 code = "K6"
                 texte = pt['item-K6']
                 texte2 = pt['item-K6a']
@@ -290,7 +290,7 @@ class Transactions3(CsvDict):
                     machine = imports.machines.donnees[id_machine]
                     groupe = imports.groupes.donnees[machine['id_groupe']]
                     nm = machine['nom']
-                    extra = groupe['id_cat_mach']
+                    extra = groupe['item-id-K1']
                 art = self.__art_plate(article, "", "", "", "")
                 ope = [entree['id_operateur'], operateur['prenom'] + " " + operateur['nom'],
                        pt['oper-PO'] + " " + str(entree['date_commande']), entree['remarque'], idm, nm, extra]
@@ -321,7 +321,7 @@ class Transactions3(CsvDict):
                    entree['remarque_staff'], "", "", ""]
 
             # SRV-EQ K1 | SRV-MO K2 | SRV-Extra K4 | SRV-runf K7 #
-            categories = [groupe['id_cat_mach'], groupe['id_cat_mo'], groupe['id_cat_cher'], groupe['id_cat_fixe']]
+            categories = [groupe['item-id-K1'], groupe['item-id-K2'], groupe['item-id-K4'], groupe['item-id-K7']]
             raws = [entree['duree_machine'], entree['duree_mo'], entree['duree_machine'], 1]
             codes_k = ["K1", "K2", "K4", "K7"]
             items_k = [pt['item-K1'], pt['item-K2'], pt['item-K4'], pt['item-K7']]

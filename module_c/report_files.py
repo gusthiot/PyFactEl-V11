@@ -35,7 +35,8 @@ class Statnoshow(CsvList):
 
 class Statcae(CsvList):
 
-    cles = ['client-code', 'client-class', 'user-sciper', 'item-codeK', 'mach-id', 'transac-usage', 'transac-runcae']
+    cles = ['client-code', 'client-class', 'user-sciper', 'item-codeK', 'mach-id', 'item-nbr', 'item-name', 'item-unit',
+            'transac-usage', 'transac-runcae']
     nom = "statcae.csv"
 
 
@@ -47,7 +48,7 @@ class Statpltf(CsvList):
 
 class Stattran(CsvList):
 
-    cles = ['client-code', 'user-sciper', 'flow-type', 'transac-nbr']
+    cles = ['client-code', 'client-class', 'user-sciper', 'flow-type', 'transac-nbr']
     nom = "stattran.csv"
 
 
@@ -85,8 +86,20 @@ class ReportFiles(object):
                             nr = 0
                             if item_k == 'K1':
                                 nr = par_machine['Nr']
-                            statcae.lignes.append([code_client, code_n, sciper, item_k, machine_id,
-                                                round(usage, 3), nr])
+                            item_nbr = "0"
+                            item_name = "0"
+                            item_unit = "0"
+                            groupe_id = imports.machines.donnees[machine_id]['id_groupe']
+                            if groupe_id != "0":
+                                categorie_id = imports.groupes.donnees[groupe_id]["item-id-"+item_k]
+                                if categorie_id != "0":
+                                    categorie = imports.categories.donnees[categorie_id]
+                                    item_nbr = categorie['no_categorie']
+                                    item_name = categorie['intitule']
+                                    item_unit = categorie['unite']
+
+                            statcae.lignes.append([code_client, code_n, sciper, item_k, machine_id, item_nbr, item_name,
+                                                   item_unit, round(usage, 3), nr])
 
                     for date in par_user['dates']:
                         statdate.lignes.append([code_client, code_n, sciper, date])
@@ -111,7 +124,9 @@ class ReportFiles(object):
                         statnoshow.lignes.append([code_client, sciper, item_k, machine_id, round(quantity, 3)])
 
                 for flow, nb in par_user['flow'].items():
-                    stattran.lignes.append([code_client, sciper, flow, nb])
+                    classe_id = imports.clients.donnees[code_client]['id_classe']
+                    classe = imports.classes.donnees[classe_id]['code_n']
+                    stattran.lignes.append([code_client, classe, sciper, flow, nb])
 
         statoper = Statoper(imports)
         for flow, par_flow in sommes_3.par_flow.items():
