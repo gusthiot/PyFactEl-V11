@@ -9,7 +9,8 @@ class ClasseClient(CsvImport):
     Classe pour l'importation des données de Classes Clients
     """
 
-    cles = ['id_classe', 'code_n', 'intitule', 'ref_fact', 'avantage_HC', 'subsides', 'grille', 'id_overhead']
+    cles = ['id_classe', 'code_n', 'intitule', 'ref_fact', 'avantage_HC', 'subsides', 'grille', 'id_overhead',
+            'id_base']
     nom_fichier = "classeclient.csv"
     libelle = "Classes Clients"
 

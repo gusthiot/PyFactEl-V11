@@ -181,7 +181,7 @@ class Imports(object):
             destination_out.ecrire("client_" + str(self.edition.annee) + "_" + Format.mois_string(self.edition.mois) +
                                    "_" + str(self.version) + ".csv",
                                    self.dossier_source.lire(self.clients.nom_fichier))
-        for fichier_base in ["base.csv", "basecateg.csv", "categkitem.csv"]:
+        for fichier_base in ["base.csv", "basecateg.csv"]:
             destination_in.ecrire(fichier_base, self.dossier_source.lire(fichier_base))
             destination_out.ecrire(fichier_base, self.dossier_source.lire(fichier_base))
 

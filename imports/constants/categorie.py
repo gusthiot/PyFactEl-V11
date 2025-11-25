@@ -9,7 +9,7 @@ class Categorie(CsvImport):
     Classe pour l'importation des données de Catégories
     """
 
-    cles = ['id_categorie', 'no_categorie', 'intitule', 'unite', 'nb_dec', 'id_plateforme', 'id_classe_prest']
+    cles = ['id_categorie', 'no_categorie', 'intitule', 'unite', 'nb_dec', 'id_plateforme', 'id_classe_prest', 'item_K']
     nom_fichier = "categorie.csv"
     libelle = "Catégories"
 
@@ -53,6 +53,9 @@ class Categorie(CsvImport):
             msg += self._erreur_ligne(ligne, info)
             donnee['nb_dec'], info = Format.est_un_entier(donnee['nb_dec'], "le nombre de décimales", 0, 8)
             msg += self._erreur_ligne(ligne, info)
+            if donnee['item_K'] not in ['K1', 'K2', 'K3', 'K4', 'K5', 'K6', 'K7']:
+                msg += self._erreur_ligne(ligne, "l'item K doit faire partie de cette liste : K1, K2, K3, K4, K5, "
+                                                 "K6, K7 \n")
 
             donnees_dict[donnee['id_categorie']] = donnee
             ligne += 1
