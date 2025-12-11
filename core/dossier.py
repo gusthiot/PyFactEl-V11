@@ -24,7 +24,7 @@ class _DossierBase(object):
         """
         self.chemin = chemin_dossier
         self.delimiteur = delimiteur
-        self.quotechar = "|"
+        self.quotechar = '"'
         self.encodage = encodage
 
     def _open(self, chemin_relatif, flags):
@@ -81,7 +81,7 @@ class DossierDestination(_DossierBase):
     def writer(self, chemin_relatif):
         with self._open(chemin_relatif, "w") as csv_fichier:
             yield csv.writer(csv_fichier, delimiter=self.delimiteur,
-                             quotechar=self.quotechar)
+                             quotechar=self.quotechar, quoting=csv.QUOTE_STRINGS)
 
     def string_ecrire(self, chemin_relatif, texte):
         with self._open(chemin_relatif, "w") as fd:
