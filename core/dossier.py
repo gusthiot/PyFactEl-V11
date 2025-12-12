@@ -81,7 +81,7 @@ class DossierDestination(_DossierBase):
     def writer(self, chemin_relatif):
         with self._open(chemin_relatif, "w") as csv_fichier:
             yield csv.writer(csv_fichier, delimiter=self.delimiteur,
-                             quotechar=self.quotechar, quoting=csv.QUOTE_STRINGS)
+                             quotechar=self.quotechar, quoting=csv.QUOTE_NONNUMERIC)
 
     def string_ecrire(self, chemin_relatif, texte):
         with self._open(chemin_relatif, "w") as fd:
