@@ -8,18 +8,19 @@ class Info(CsvBase):
     Classe pour la création du fichier d'information
     """
 
-    def __init__(self, imports, unique, login):
+    def __init__(self, imports, unique, login, version_logiciel):
         """
         initialisation des données
         :param imports: données importées
         :param unique: nom unique de répértoire
         :param login: login de la personne lançant la facturation
+        :param version_logiciel: version du logiciel
         """
         super().__init__(imports)
         lignes = []
         self.nom = "info.csv"
 
-        lignes.append(['FactEl', self.pt['res-factel'], 11.03, ""])
+        lignes.append(['FactEl', self.pt['res-factel'], version_logiciel, ""])
         lignes.append(['Platform', self.pt['res-pltf'], imports.edition.plateforme, ""])
         lignes.append(['Year', self.pt['res-year'], imports.edition.annee, ""])
         lignes.append(['Month', self.pt['res-month'], imports.edition.mois, ""])

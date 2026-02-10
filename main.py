@@ -64,10 +64,17 @@ parser.add_argument("-u", "--unique", help="Nom unique du dossier de sauvegarde"
 parser.add_argument("-n", "--nopdf", help="Sans produire les pdfs", action="store_true")
 parser.add_argument("-l", "--login", help="Login de la personne lançant la facturation")
 parser.add_argument("-s", "--shortpath", help="Enregistrement sans arborescence complète", action="store_true")
+parser.add_argument("-v", "--version", help="Version du logiciel attendue")
 args = parser.parse_args()
 
 if args.sansgraphiques > 0:
     Interface.interface_graphique(False)
+
+version_logiciel = "11.03"
+if args.version:
+    if args.version != version_logiciel:
+        Interface.fatal("Version logiciel trouvée : " + version_logiciel + ", version logiciel attendue : " +
+                        args.version, "Erreur de version :\n")
 
 if args.nopdf > 0:
     with_pdf = False
@@ -185,7 +192,7 @@ try:
         resultats = ResultatNew(imports, unique)
         sap = Sap(imports, new_versions, sommes_1.par_fact)
         sap.csv(DossierDestination(imports.chemin_enregistrement))
-        info = Info(imports, unique, login)
+        info = Info(imports, unique, login, version_logiciel)
 
         Interface.affiche_message("OK " + str(imports.version) + " !!! (" +
                                   str(datetime.timedelta(seconds=(time.time() - start_time))).split(".")[0] + ")")

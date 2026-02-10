@@ -8,4 +8,5 @@ from .plafsubside import PlafSubside
 from .service import Service
 from .subside import Subside
 from .user import User
-from .partenaire import Partenaire
+from .machine import Machine
+from .prestation import Prestation
