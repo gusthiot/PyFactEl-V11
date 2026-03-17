@@ -28,7 +28,7 @@ class Transactions2New(CsvDict):
         if par_client is not None and transactions_3 is not None and numeros is not None:
             for code, par_code in par_client.items():
                 client = imports.clients.donnees[code]
-                id_classe = client['id_classe']
+                id_classe = imports.id_classe(client)
                 classe = imports.classes.donnees[id_classe]
                 for icf in par_code['projets']:
                     par_fact = par_code['projets'][icf]
@@ -88,7 +88,7 @@ class Transactions2New(CsvDict):
                         imports.edition.mois == donnee['invoice-month']):
                     code = donnee['client-code']
                     client = imports.clients.donnees[code]
-                    id_classe = client['id_classe']
+                    id_classe = imports.id_classe(client)
                     classe = imports.classes.donnees[id_classe]
                     id_article = donnee['item-idsap']
                     article = imports.artsap.donnees[id_article]

@@ -53,7 +53,7 @@ class Transactions3(CsvDict):
                 continue
             compte = imports.comptes.donnees[entree['id_compte']]
             client = imports.clients.donnees[compte['code_client']]
-            id_classe = self.__id_classe(client)
+            id_classe = imports.id_classe(client)
             id_machine = entree['id_machine']
             machine = imports.machines.donnees[id_machine]
             id_groupe = machine['id_groupe']
@@ -230,7 +230,7 @@ class Transactions3(CsvDict):
                 continue
             compte = imports.comptes.donnees[entree['id_compte']]
             client = imports.clients.donnees[compte['code_client']]
-            id_classe = self.__id_classe(client)
+            id_classe = imports.id_classe(client)
             id_machine = entree['id_machine']
             machine = imports.machines.donnees[id_machine]
             groupe = imports.groupes.donnees[machine['id_groupe']]
@@ -268,7 +268,7 @@ class Transactions3(CsvDict):
                 continue
             compte = imports.comptes.donnees[entree['id_compte']]
             client = imports.clients.donnees[compte['code_client']]
-            id_classe = self.__id_classe(client)
+            id_classe = imports.id_classe(client)
             id_prestation = entree['id_prestation']
             prestation = imports.prestations.donnees[id_prestation]
             operateur = imports.users.donnees[entree['id_operateur']]
@@ -310,7 +310,7 @@ class Transactions3(CsvDict):
                 continue
             compte = imports.comptes.donnees[entree['id_compte']]
             client = imports.clients.donnees[compte['code_client']]
-            id_classe = self.__id_classe(client)
+            id_classe = imports.id_classe(client)
             id_groupe = entree['id_groupe']
             groupe = imports.groupes.donnees[id_groupe]
             operateur = imports.users.donnees[entree['id_op']]
@@ -390,12 +390,6 @@ class Transactions3(CsvDict):
         if entree['validation'] != "2" and entree['validation'] != "3":
             quantite = raw
         return [entree['validation'], id_staff, staff, quantite]
-
-    def __id_classe(self, client):
-        plateforme = self.imports.plateforme
-        if plateforme['id_plateforme'] + client['code'] in self.imports.partenaires.donnees.keys():
-            return self.imports.partenaires.donnees[plateforme['id_plateforme'] + client['code']]['id_classe']
-        return client['id_classe']
 
     def __ref_client(self, data, article, date):
         """
