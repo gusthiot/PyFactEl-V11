@@ -36,7 +36,7 @@ class Transactions1(CsvDict):
                         ligne = []
                         code = base['client-code']
                         client = imports.clients.donnees[code]
-                        id_classe = client['id_classe']
+                        id_classe = imports.id_classe(client)
                         classe = imports.classes.donnees[id_classe]
                         ref = (classe['ref_fact'] + "_" + str(imports.edition.annee) + "_" +
                                Format.mois_string(imports.edition.mois) + "_" + str(version) + "_" + str(id_fact))

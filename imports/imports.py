@@ -196,3 +196,12 @@ class Imports(object):
         if self.version > 0:
             for fichier in [self.numeros, self.versions, self.transactions_2, self.clients_prev]:
                 destination_in.ecrire(fichier.nom_fichier, self.dossier_source.lire(fichier.nom_fichier))
+
+    def id_classe(self, client):
+        """
+        détermine si on prend l'id du client ou celui du partenaire lié à la plateforme
+        :param client: client dont on veut déterminer l'id classe
+        """
+        if self.plateforme['id_plateforme'] + client['code'] in self.partenaires.donnees.keys():
+            return self.partenaires.donnees[self.plateforme['id_plateforme'] + client['code']]['id_classe']
+        return client['id_classe']
