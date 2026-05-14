@@ -48,7 +48,7 @@ from module_a import (VersionNew,
                       Facture,
                       Total,
                       Ticket,
-                      Sap,
+                      SapNew,
                       Info,
                       ClientsModifs,
                       Montants,
@@ -190,8 +190,8 @@ try:
         montants = Montants(imports, sommes_1.par_client)
         montants.csv(DossierDestination(imports.chemin_report))
         resultats = ResultatNew(imports, unique)
-        sap = Sap(imports, new_versions, sommes_1.par_fact)
-        sap.csv(DossierDestination(imports.chemin_enregistrement))
+        new_sap = SapNew(imports, new_versions, sommes_1.par_fact)
+        new_sap.csv(DossierDestination(imports.chemin_enregistrement))
         info = Info(imports, unique, login, version_logiciel)
 
         Interface.affiche_message("OK " + str(imports.version) + " !!! (" +

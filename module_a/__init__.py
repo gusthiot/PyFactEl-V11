@@ -13,7 +13,7 @@ from .total import Total
 from .resultat_new import ResultatNew
 from .details import Details
 from .annexe_subsides import AnnexeSubsides
-from .sap import Sap
+from .sap_new import SapNew
 from .info import Info
 from .details_all import DetailsAll
 from .annexe_all import AnnexeAll

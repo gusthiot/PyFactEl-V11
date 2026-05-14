@@ -29,6 +29,7 @@ from imports.construits import (Numero,
                                 UserLabo,
                                 Version,
                                 Transactions2,
+                                Sap,
                                 ClientPrev)
 from core import (Interface,
                   Chemin,
@@ -136,6 +137,7 @@ class Imports(object):
                                                 self.users, self.artsap, self.resultats.vfact)
             self.clients_prev = ClientPrev(dossier_source, self.edition, self.facturation, self.classes,
                                            self.resultats.vfact)
+            self.sap = Sap(dossier_source)
 
         # vérification terminée, création des dossiers de sauvegarde
 

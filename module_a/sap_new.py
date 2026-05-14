@@ -1,12 +1,11 @@
 from core import CsvList
+from imports.construits import Sap
 
 
-class Sap(CsvList):
+class SapNew(CsvList):
     """
     Classe pour la création du fichier SAP
     """
-
-    cles = ['client-name', 'invoice-id', 'total-fact', 'track-status', 'track-doc-nr', 'track-err-msg']
 
     def __init__(self, imports, versions, par_fact):
         """
@@ -16,8 +15,8 @@ class Sap(CsvList):
         :param par_fact: tri des transactions 1
         """
         super().__init__(imports)
-
-        self.nom = "sap.csv"
+        self.cles = Sap.cles
+        self.nom = Sap.nom_fichier
 
         for donnee in versions.valeurs.values():
             if donnee['version-change'] != 'CANCELED' and donnee['version-new-amount'] > 0:

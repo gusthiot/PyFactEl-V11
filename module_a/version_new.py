@@ -39,21 +39,24 @@ class VersionNew(CsvDict):
 
             for fact_id, donnee in imports.versions.donnees.items():
                 if fact_id not in sommes_2.par_fact.keys():
+                    code = 'IDEM'
+                    version = self.imports.version
+                    montant = donnee['version-new-amount']
                     if fact_id in sommes_2_old.keys():
-                        self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
-                                              self.imports.version, 'CANCELED', donnee['version-new-amount'], 0],
-                                             fact_id)
+                        code = 'CANCELED'
+                        montant = 0
                         if donnee['client-code'] not in self.clients:
                             self.clients.append(donnee['client-code'])
                     else:
                         if donnee['client-code'] in self.clients_changes:
-                            self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
-                                                  self.imports.version, 'CLIENT', donnee['version-new-amount'],
-                                                  donnee['version-new-amount']], fact_id)
+                            code = 'CLIENT'
+                        elif fact_id in self.imports.sap.donnees:
+                            print(fact_id)
+                            code = 'SAP'
                         else:
-                            self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
-                                                  donnee['version-last'], 'IDEM', donnee['version-new-amount'],
-                                                  donnee['version-new-amount']], fact_id)
+                            version = donnee['version-last']
+                    self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
+                                          version, code, donnee['version-new-amount'], montant], fact_id)
                 else:
                     base_new = self.transactions_new[sommes_2.par_fact[fact_id]['base']]
                     if donnee['client-code'] != base_new['client-code']:
@@ -72,27 +75,33 @@ class VersionNew(CsvDict):
                     if self.__compare(sommes_2_old[fact_id], sommes_2.par_fact[fact_id]):
                         idem = False
 
+                    code = 'IDEM'
+                    version = self.imports.version
+                    montant = donnee['version-new-amount']
                     if idem:
                         if donnee['client-code'] in self.clients_changes:
-                            self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
-                                                  self.imports.version, 'CLIENT', donnee['version-new-amount'],
-                                                  donnee['version-new-amount']], fact_id)
+                            code = 'CLIENT'
+                        elif fact_id in self.imports.sap.donnees:
+                            print("bis",fact_id)
+                            code = 'SAP'
                         else:
-                            self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
-                                                  donnee['version-last'], 'IDEM', donnee['version-new-amount'],
-                                                  donnee['version-new-amount']], fact_id)
+                            version = donnee['version-last']
                     else:
-                        self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
-                                              self.imports.version, 'CORRECTED', donnee['version-new-amount'],
-                                              round(sommes_2.par_fact[fact_id]['total'], 2)], fact_id)
+                        montant = round(sommes_2.par_fact[fact_id]['total'], 2)
+                        code = 'CORRECTED'
                         if donnee['client-code'] not in self.clients:
                             self.clients.append(donnee['client-code'])
+                    self._ajouter_valeur([fact_id, donnee['client-code'], donnee['invoice-type'],
+                                          version, code, donnee['version-new-amount'], montant], fact_id)
 
             for fact_id in sommes_2.par_fact.keys():
                 if fact_id not in imports.versions.donnees.keys():
                     self.__add_new(fact_id, sommes_2.par_fact[fact_id])
 
     def __check_clients(self):
+        """
+        comparaison des données clents entre ancienne et nouvelle version
+        """
         for code, act in self.imports.clients.donnees.items():
             if code not in self.imports.clients_prev.donnees.keys():
                 self.clients_changes.append(code)
