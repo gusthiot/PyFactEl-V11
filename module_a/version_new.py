@@ -51,7 +51,6 @@ class VersionNew(CsvDict):
                         if donnee['client-code'] in self.clients_changes:
                             code = 'CLIENT'
                         elif fact_id in self.imports.sap.donnees:
-                            print(fact_id)
                             code = 'SAP'
                         else:
                             version = donnee['version-last']
@@ -81,8 +80,7 @@ class VersionNew(CsvDict):
                     if idem:
                         if donnee['client-code'] in self.clients_changes:
                             code = 'CLIENT'
-                        elif fact_id in self.imports.sap.donnees:
-                            print("bis",fact_id)
+                        elif str(fact_id) in self.imports.sap.donnees:
                             code = 'SAP'
                         else:
                             version = donnee['version-last']
@@ -137,7 +135,7 @@ class VersionNew(CsvDict):
 
     def __ajout_correction(self, par_user, sens):
         """
-        ajout d'une correction au journal, dans le cas où une des transaction n'existe pas
+        ajout d'une correction au journal, dans le cas où une des transactions n'existe pas
         :param par_user: transaction(s) existante(s) pour un utilisateur (normalement une seule)
         :param sens: si nouvelle ou ancienne transaction
         """
