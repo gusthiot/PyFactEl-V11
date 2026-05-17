@@ -38,10 +38,10 @@ class Version(CsvImport):
             donnee['version-last'], info = Format.est_un_entier(donnee['version-last'], "la version", 0)
             msg += self._erreur_ligne(ligne, info)
 
-            options = ['NEW', 'CANCELED', 'CORRECTED', 'IDEM', 'CLIENT']
+            options = ['NEW', 'CANCELED', 'CORRECTED', 'IDEM', 'CLIENT', 'SAP']
             if donnee['version-change'] not in options:
                 msg += self._erreur_ligne(ligne,
-                                          "le version-change doit être NEW, CANCELED, CORRECTED, IDEM ou CLIENT\n")
+                                          "le version-change doit être NEW, CANCELED, CORRECTED, IDEM, CLIENT ou SAP\n")
 
             donnee['version-old-amount'], info = Format.est_un_nombre(donnee['version-old-amount'], "l'ancien montant",
                                                                       2, 0)
