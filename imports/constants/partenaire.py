@@ -8,7 +8,7 @@ class Partenaire(CsvImport):
     Classe pour l'importation des données de Partenaires
     """
 
-    cles = ['id_plateforme', 'code_client', 'id_classe']
+    cles = ['code_client', 'id_classe']
     nom_fichier = "partenaire.csv"
     libelle = "Partenaires"
 
@@ -25,11 +25,9 @@ class Partenaire(CsvImport):
         msg = ""
         ligne = 2
         donnees_dict = {}
-        couples = []
+        clients = []
 
         for donnee in self.donnees:
-
-            msg += self._erreur_ligne(ligne, plateformes.test_id(donnee['id_plateforme']))
 
             msg += self.test_id_coherence(donnee['code_client'], "le code client", ligne, clients, True)
 
@@ -37,12 +35,12 @@ class Partenaire(CsvImport):
 
             couple = donnee['id_plateforme'] + donnee['code_client']
 
-            if couple not in couples:
-                couples.append(couple)
+            if donnee['code_client'] not in clients:
+                clients.append(donnee['code_client'])
             else:
-                msg += self._erreur_ligne(ligne, "le couple n'est pas unique\n")
+                msg += self._erreur_ligne(ligne, "l'id client n'est pas unique\n")
 
-            donnees_dict[donnee['id_plateforme'] + donnee['code_client']] = donnee
+            donnees_dict[donnee['code_client']] = donnee
             ligne += 1
 
         self.donnees = donnees_dict

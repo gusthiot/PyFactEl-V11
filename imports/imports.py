@@ -66,7 +66,7 @@ class Imports(object):
         self.clients = Client(dossier_source, self.facturation, self.classes)
         self.plateformes = Plateforme(dossier_source, self.clients, self.edition)
         self.partenaires = Partenaire(dossier_source, self.clients, self.plateformes, self.classes)
-        self.classprests = ClassePrestation(dossier_source, self.artsap, self.overheads)
+        self.classprests = ClassePrestation(dossier_source, self.artsap)
         self.resultats = Resultat(dossier_source, self.plateformes)
         self.categories = Categorie(dossier_source, self.classprests, self.plateformes)
         self.groupes = Groupe(dossier_source, self.categories)
@@ -204,6 +204,6 @@ class Imports(object):
         détermine si on prend l'id du client ou celui du partenaire lié à la plateforme
         :param client: client dont on veut déterminer l'id classe
         """
-        if self.plateforme['id_plateforme'] + client['code'] in self.partenaires.donnees.keys():
-            return self.partenaires.donnees[self.plateforme['id_plateforme'] + client['code']]['id_classe']
+        if client['code'] in self.partenaires.donnees.keys():
+            return self.partenaires.donnees[client['code']]['id_classe']
         return client['id_classe']

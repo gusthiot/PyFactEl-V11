@@ -9,17 +9,16 @@ class ClassePrestation(CsvImport):
     Classe pour l'importation des données de Classes Prestations
     """
 
-    cles = ['id_classe_prest', 'id_article', 'flag_coef', 'flag_usage', 'flag_conso', 'eligible', 'id_ovh_prest',
+    cles = ['id_classe_prest', 'intitule', 'id_article', 'flag_coef', 'flag_usage', 'flag_conso', 'eligible', 'id_ovh_prest',
             "no_ovh", "intitule_ovh"]
     nom_fichier = "classeprestation.csv"
     libelle = "Classes Prestations"
 
-    def __init__(self, dossier_source, artsap, overheads):
+    def __init__(self, dossier_source, artsap):
         """
         initialisation et importation des données
         :param dossier_source: Une instance de la classe dossier.DossierSource
         :param artsap: articles SAP importés
-        :param overheads: overheads importés
         """
         super().__init__(dossier_source)
 
@@ -49,6 +48,9 @@ class ClassePrestation(CsvImport):
                 msg += self._erreur_ligne(ligne, "l'éligible doit être OUI ou NON\n")
 
             msg += self.test_id_coherence(donnee['id_article'], "l'id article SAP", ligne, artsap)
+            article = artsap.donnees[donnee['id_article']]
+            if article['type'] != 'STD':
+                msg += self._erreur_ligne(ligne, "le type d'article doit être STD \n")
 
             donnees_dict[donnee['id_classe_prest']] = donnee
             ligne += 1

@@ -9,7 +9,7 @@ class Categorie(CsvImport):
     Classe pour l'importation des données de Catégories
     """
 
-    cles = ['id_categorie', 'no_categorie', 'intitule', 'unite', 'nb_dec', 'id_plateforme', 'id_classe_prest', 'item_K']
+    cles = ['id_categorie', 'no_categorie', 'intitule', 'unite', 'nb_dec', 'id_classe_prest', 'item_K']
     nom_fichier = "categorie.csv"
     libelle = "Catégories"
 
@@ -42,8 +42,6 @@ class Categorie(CsvImport):
                 msg += self._erreur_ligne(ligne,
                                           "le flag coef_prest de l'id classe prestation '" +
                                           donnee['id_classe_prest'] + "' est à OUI et devrait être à NON\n")
-
-            msg += self._erreur_ligne(ligne, plateformes.test_id(donnee['id_plateforme']))
 
             donnee['no_categorie'], info = Format.est_un_alphanumerique(donnee['no_categorie'], "le no catégorie")
             msg += self._erreur_ligne(ligne, info)

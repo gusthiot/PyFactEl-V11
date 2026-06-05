@@ -36,6 +36,10 @@ class Overhead(CsvImport):
                     msg += self._erreur_ligne(ligne, "l'id overhead '" + donnee['id_overhead'] + "' n'est pas unique\n")
 
             msg += self.test_id_coherence(donnee['id_article'], "l'id article SAP", ligne, artsap)
+            article = artsap.donnees[donnee['id_article']]
+            if article['type'] != 'OVH':
+                msg += self._erreur_ligne(ligne, "le type d'article doit être OVH \n")
+
             donnee['overhead_pc'], info = Format.est_un_nombre(donnee['overhead_pc'], "l'overhead", -1, 0, 100)
             msg += self._erreur_ligne(ligne, info)
             donnees_dict[donnee['id_overhead']] = donnee

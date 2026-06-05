@@ -9,7 +9,7 @@ class ArticleSap(CsvImport):
     Classe pour l'importation des données des Articles SAP
     """
 
-    cles = ['id_article', 'code_d', 'ordre', 'intitule', 'code_sap', 'quantite', 'unite', 'texte_sap']
+    cles = ['id_article', 'type', 'code_d', 'ordre', 'intitule', 'code_sap', 'quantite', 'unite', 'texte_sap']
     nom_fichier = "articlesap.csv"
     libelle = "Articles SAP"
 
@@ -37,6 +37,8 @@ class ArticleSap(CsvImport):
 
             donnee['code_d'], info = Format.est_un_alphanumerique(donnee['code_d'], "le code D")
             msg += self._erreur_ligne(ligne, info)
+            if donnee['type'] not in ['STD', 'OVH']:
+                msg += self._erreur_ligne(ligne, "le type d'article doit être STD ou OVH \n")
             donnee['intitule'], info = Format.est_un_texte(donnee['intitule'], "l'intitulé")
             msg += self._erreur_ligne(ligne, info)
             donnee['code_sap'], info = Format.est_un_entier(donnee['code_sap'], "le code sap", 1)
