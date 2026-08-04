@@ -70,7 +70,7 @@ args = parser.parse_args()
 if args.sansgraphiques > 0:
     Interface.interface_graphique(False)
 
-version_logiciel = "11.03"
+version_logiciel = "11.04"
 if args.version:
     if args.version != version_logiciel:
         Interface.fatal("Version logiciel trouvée : " + version_logiciel + ", version logiciel attendue : " +

@@ -12,12 +12,11 @@ class Partenaire(CsvImport):
     nom_fichier = "partenaire.csv"
     libelle = "Partenaires"
 
-    def __init__(self, dossier_source, clients, plateformes, classes):
+    def __init__(self, dossier_source, clients, classes):
         """
         initialisation et importation des données
         :param dossier_source: Une instance de la classe dossier.DossierSource
         :param clients: clients importés
-        :param plateformes: plateformes importées
         :param classes: classes clients importées
         """
         super().__init__(dossier_source)
@@ -25,18 +24,15 @@ class Partenaire(CsvImport):
         msg = ""
         ligne = 2
         donnees_dict = {}
-        clients = []
+        codes = []
 
         for donnee in self.donnees:
-
             msg += self.test_id_coherence(donnee['code_client'], "le code client", ligne, clients, True)
 
             msg += self.test_id_coherence(donnee['id_classe'], "l'id classe client", ligne, classes, True)
 
-            couple = donnee['id_plateforme'] + donnee['code_client']
-
-            if donnee['code_client'] not in clients:
-                clients.append(donnee['code_client'])
+            if donnee['code_client'] not in codes:
+                codes.append(donnee['code_client'])
             else:
                 msg += self._erreur_ligne(ligne, "l'id client n'est pas unique\n")
 

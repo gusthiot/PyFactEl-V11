@@ -34,7 +34,6 @@ class Resultat(object):
         for cle in self.cles:
             if cle not in donnees_csv:
                 msg += self._erreur_fichier("Clé manquante:" + cle + "\n")
-
         self.vlog, err = Format.est_un_nombre(donnees_csv['FactEl'][1], "la version logicielle")
         msg += self._erreur_fichier(err)
         self.plateforme, err = Format.est_un_alphanumerique(donnees_csv['Platform'][1], "l'id plateforme")
