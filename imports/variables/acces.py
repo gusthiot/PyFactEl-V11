@@ -9,10 +9,10 @@ class Acces(CsvImport):
     Classe pour l'importation des données de Contrôle Accès Equipement
     """
 
-    cles = ['annee', 'mois', 'id_compte', 'id_user', 'id_machine', 'date_login', 'duree_machine_hp', 'duree_machine_hc',
-            'duree_run', 'duree_operateur', 'id_op', 'remarque_op', 'remarque_staff', 'validation', 'id_staff']
-    nom_fichier = "cae.csv"
-    libelle = "Contrôle Accès Equipement"
+    cles = ['annee', 'mois', 'id_compte', 'id_user', 'id_machine', 'date_login', 'dlog', 'dlog_hp', 'disable',
+            't_mach', 'duree_operateur', 'id_op', 'remarque_op', 'remarque_staff', 'validation', 'id_staff']
+    nom_fichier = "caelog.csv"
+    libelle = "Log Contrôle Accès Equipement"
 
     def __init__(self, dossier_source, comptes, machines, users):
         """
@@ -49,19 +49,19 @@ class Acces(CsvImport):
 
             msg += self.test_id_coherence(donnee['id_staff'], "l'id staff", ligne, users, True)
 
-            donnee['duree_machine_hp'], info = Format.est_un_nombre(donnee['duree_machine_hp'], "la durée machine hp",
-                                                                    4, 0)
+            donnee['dlog'], info = Format.est_un_entier(donnee['dlog'], "le DLOG", 0)
             msg += info
-            donnee['duree_machine_hc'], info = Format.est_un_nombre(donnee['duree_machine_hc'], "la durée machine hc",
-                                                                    4, 0)
+            donnee['dlog_hp'], info = Format.est_un_entier(donnee['dlog_hp'], "le DLOG.HP", 0)
             msg += self._erreur_ligne(ligne, info)
-            donnee['duree_run'], info = Format.est_un_nombre(donnee['duree_run'], "la durée du run", 4, 0)
+            donnee['disable'], info = Format.est_un_entier(donnee['disable'], "le disable S3 ", 0, 1)
             msg += self._erreur_ligne(ligne, info)
-            donnee['duree_operateur'], info = Format.est_un_nombre(donnee['duree_operateur'], "la durée opérateur",
-                                                                   4, 0)
+            donnee['t_mach'], info = Format.est_un_entier(donnee['t_mach'], "la durée du run", 0)
             msg += self._erreur_ligne(ligne, info)
-            if donnee['duree_run'] < (donnee['duree_machine_hc'] + donnee['duree_machine_hp']):
-                msg += self._erreur_ligne(ligne, "la durée de run ne peut pas être plus petite que HP + HC")
+            donnee['duree_operateur'], info = Format.est_un_entier(donnee['duree_operateur'], "la durée opérateur",
+                                                                 0)
+            msg += self._erreur_ligne(ligne, info)
+            if donnee['dlog_hp'] > donnee['dlog']:
+                msg += self._erreur_ligne(ligne, "le DLOG.HP ne peut pas être plus grand que DLOG")
 
             donnee['date_login'], info = Format.est_une_date(donnee['date_login'], "la date de login")
             msg += self._erreur_ligne(ligne, info)

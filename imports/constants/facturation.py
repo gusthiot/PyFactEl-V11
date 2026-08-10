@@ -32,7 +32,7 @@ class Facturation(object):
         msg = ""
         for cle in self.cles:
             if cle not in donnees_csv:
-                msg += self._erreur_fichier("Clé manquante:" + cle + "\n")
+                msg += self._erreur_fichier("Clé manquante:" + cle)
 
         self.code_int, err = Format.est_un_alphanumerique(donnees_csv['code_int'][1], "le code INT")
         msg += self._erreur_fichier(err)

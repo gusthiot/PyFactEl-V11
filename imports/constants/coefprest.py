@@ -60,7 +60,7 @@ class CoefPrest(CsvImport):
             if id_classe not in clas:
                 msg += self._erreur_fichier("L'id de classe '" + id_classe +
                                             "' dans les classes clients n'est pas présent dans "
-                                            "les coefficients de prestations\n")
+                                            "les coefficients de prestations")
 
         for id_classprest, classprest in classprests.donnees.items():
             if classprest['flag_coef'] == "OUI":
@@ -68,7 +68,7 @@ class CoefPrest(CsvImport):
                     couple = [id_classe, id_classprest]
                     if couple not in couples:
                         msg += self._erreur_fichier("Couple id classe prestation '" + id_classprest +
-                                                    "' et id classe client '" + id_classe + "' n'existe pas\n")
+                                                    "' et id classe client '" + id_classe + "' n'existe pas")
 
         if msg != "":
             Interface.fatal(ErreurConsistance(), msg)

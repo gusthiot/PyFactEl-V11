@@ -27,8 +27,6 @@ class CsvImport(object):
             for ligne in fichier_reader:
                 donnees_ligne = self._extraction_ligne(ligne, numero)
                 numero += 1
-                if donnees_ligne == -1:
-                    continue
                 donnees_csv.append(donnees_ligne)
             self.donnees = donnees_csv
             del self.donnees[0]
@@ -43,7 +41,7 @@ class CsvImport(object):
         :return: message formaté
         """
         if msg != "":
-            return self.libelle + " (" + self.nom_fichier + ", ligne " + str(ligne) + ") : " + msg
+            return self.libelle + " (" + self.nom_fichier + ", ligne " + str(ligne) + ") : " + msg + "\n"
         else:
             return ""
 

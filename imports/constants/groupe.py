@@ -9,7 +9,7 @@ class Groupe(CsvImport):
     Classe pour l'importation des données de Machines Cmi
     """
 
-    cles = ['id_groupe', 'cae', 'item-id-K1', 'item-id-K2', 'item-id-K3', 'item-id-K4', 'item-id-K5', 'item-id-K6',
+    cles = ['id_groupe', 'intitule', 'cae', 'item-id-K1', 'item-id-K2', 'item-id-K3', 'item-id-K4', 'item-id-K5', 'item-id-K6',
             'item-id-K7']
     nom_fichier = "groupe.csv"
     libelle = "Groupes de machines"

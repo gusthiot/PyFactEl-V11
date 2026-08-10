@@ -37,18 +37,18 @@ class Plateforme(object):
         self.donnee = {}
         for cle in self.cles:
             if cle not in donnees_csv:
-                msg += self._erreur_fichier("Clé manquante dans: " + cle + "\n")
+                msg += self._erreur_fichier("Clé manquante dans: " + cle)
 
             self.donnee['id_plateforme'], err = Format.est_un_alphanumerique(donnees_csv['Id-Plateforme'][1],
                                                                              "l'id plateforme")
             msg += self._erreur_fichier(err)
 
             if donnees_csv['Id-Plateforme'][1] == "":
-                msg += self._erreur_fichier("l'id plateforme ne peut être vide\n")
+                msg += self._erreur_fichier("l'id plateforme ne peut être vide")
             elif donnees_csv['Id-Plateforme'][1] not in clients.donnees.keys():
-                msg += self._erreur_fichier("l'id plateforme n'existe pas dans les clients \n")
+                msg += self._erreur_fichier("l'id plateforme n'existe pas dans les clients")
             elif donnees_csv['Id-Plateforme'][1] != edition.plateforme:
-                msg += self._erreur_fichier("l'id plateforme n'est pas celui de paramedit \n")
+                msg += self._erreur_fichier("l'id plateforme n'est pas celui de paramedit")
 
             self.donnee['code_p'], err = Format.est_un_alphanumerique(donnees_csv['Code_P'][1], "le code P")
             msg += self._erreur_fichier(err)
@@ -66,13 +66,13 @@ class Plateforme(object):
             msg += self._erreur_fichier(err)
 
             if donnees_csv['Grille-Plateforme'][1] != 'OUI' and donnees_csv['Grille-Plateforme'][1] != 'NON':
-                msg += self._erreur_fichier("grille-plateforme doit être OUI ou NON\n")
+                msg += self._erreur_fichier("grille-plateforme doit être OUI ou NON")
             else:
                 self.donnee['grille'] = donnees_csv['Grille-Plateforme'][1]
 
             if (donnees_csv['Grille-Plateforme'][1] == 'OUI' and
                     not Chemin.existe(Chemin.chemin([dossier_source.chemin, 'grille.pdf']))):
-                msg += self._erreur_fichier("la grille n'existe pas dans le dossier d'entrée \n")
+                msg += self._erreur_fichier("la grille n'existe pas dans le dossier d'entrée ")
 
         if msg != "":
             Interface.fatal(ErreurConsistance(), msg)

@@ -33,7 +33,7 @@ class Resultat(object):
         msg = ""
         for cle in self.cles:
             if cle not in donnees_csv:
-                msg += self._erreur_fichier("Clé manquante:" + cle + "\n")
+                msg += self._erreur_fichier("Clé manquante:" + cle)
         self.vlog, err = Format.est_un_nombre(donnees_csv['FactEl'][1], "la version logicielle")
         msg += self._erreur_fichier(err)
         self.plateforme, err = Format.est_un_alphanumerique(donnees_csv['Platform'][1], "l'id plateforme")
@@ -48,7 +48,7 @@ class Resultat(object):
         self.repertoire, err = Format.est_un_alphanumerique(donnees_csv['Folder'][1], "le répertoire")
         msg += self._erreur_fichier(err)
         if donnees_csv['Type'][1] != 'SAP' and donnees_csv['Type'][1] != 'PROFORMA' and donnees_csv['Type'][1] != 'SIMU':
-            msg += self._erreur_fichier("le type doit être SAP, PROFORMA ou SIMU\n")
+            msg += self._erreur_fichier("le type doit être SAP, PROFORMA ou SIMU")
         else:
             self.type = donnees_csv['Type'][1]
 

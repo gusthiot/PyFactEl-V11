@@ -71,18 +71,18 @@ class CategPrix(CsvImport):
         for id_classe in classes.donnees.keys():
             if id_classe not in clas:
                 msg += self._erreur_fichier("L'id de classe '" + id_classe +
-                                            "' dans les classes clients n'est pas présent dans les catégories prix\n")
+                                            "' dans les classes clients n'est pas présent dans les catégories prix")
 
         for id_cat in categories.donnees.keys():
             if id_cat not in ids:
                 msg += self._erreur_fichier("L'id catégorie '" + id_cat +
-                                            "' dans les catégories n'est pas présent dans les catégories prix\n")
+                                            "' dans les catégories n'est pas présent dans les catégories prix")
         for id_cat in ids:
             for classe in clas:
                 couple = [id_cat, classe]
                 if couple not in couples:
                     msg += self._erreur_fichier("Couple id catégorie '" + id_cat +
-                                                "' et id classe client '" + classe + "' n'existe pas\n")
+                                                "' et id classe client '" + classe + "' n'existe pas")
 
         if msg != "":
             Interface.fatal(ErreurConsistance(), msg)

@@ -15,6 +15,7 @@ from core import (Interface,
                   Latex)
 from module_d import (Articles,
                       Tarifs,
+                      Cae,
                       Transactions3)
 from module_c import (UserLaboNew,
                       BilanUsages,
@@ -116,9 +117,12 @@ try:
         # Module D
         articles = Articles(imports)
         tarifs = Tarifs(imports)
+        cae = Cae(imports)
         articles.csv(DossierDestination(imports.chemin_prix))
         tarifs.csv(DossierDestination(imports.chemin_prix))
-        transactions_3 = Transactions3(imports, articles, tarifs)
+        cae.csv(DossierDestination(imports.chemin_in))
+        cae.csv(DossierDestination(imports.chemin_out))
+        transactions_3 = Transactions3(imports, articles, tarifs, cae)
         transactions_3.csv(DossierDestination(imports.chemin_bilans))
 
         # Module C

@@ -30,7 +30,7 @@ class Edition(object):
         msg = ""
         for cle in self.cles:
             if cle not in donnees_csv:
-                msg += self._erreur_fichier("Clé manquante:" + cle + "\n")
+                msg += self._erreur_fichier("Clé manquante:" + cle)
 
         self.annee, err = Format.est_un_entier(donnees_csv['Year'], "l'année", mini=2000, maxi=2099)
         msg += self._erreur_fichier(err)
@@ -45,7 +45,7 @@ class Edition(object):
         msg += self._erreur_fichier(err)
 
         if donnees_csv['Type'] != 'SAP' and donnees_csv['Type'] != 'PROFORMA' and donnees_csv['Type'] != 'SIMU':
-            msg += self._erreur_fichier("le type doit être SAP, PROFORMA ou SIMU\n")
+            msg += self._erreur_fichier("le type doit être SAP, PROFORMA ou SIMU")
         else:
             self.type = donnees_csv['Type']
 

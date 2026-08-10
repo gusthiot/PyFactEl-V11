@@ -10,6 +10,7 @@ from imports.constants import (ArticleSap,
                                Plateforme,
                                ClassePrestation,
                                Overhead,
+                               Ciseau,
                                Partenaire)
 from imports.variables import (Acces,
                                CleSubside,
@@ -70,6 +71,7 @@ class Imports(object):
         self.resultats = Resultat(dossier_source, self.plateformes)
         self.categories = Categorie(dossier_source, self.classprests, self.plateformes)
         self.groupes = Groupe(dossier_source, self.categories)
+        self.ciseaux = Ciseau(dossier_source, self.groupes)
         self.machines = Machine(dossier_source, self.groupes, self.edition)
         self.subsides = Subside(dossier_source)
         self.plafonds = PlafSubside(dossier_source, self.subsides, self.classprests, self.plateformes)
@@ -169,15 +171,16 @@ class Imports(object):
         destination_in = DossierDestination(self.chemin_in)
         destination_out = DossierDestination(self.chemin_out)
         for fichier_in in [self.facturation, self.classes, self.plateformes, self.artsap,
-                           self.categories, self.groupes, self.machines, self.categprix, self.coefprests,
+                           self.categories, self.groupes, self.ciseaux, self.machines, self.categprix, self.coefprests,
                            self.prestations, self.classprests, self.overheads, self.clients, self.subsides,
                            self.plafonds, self.cles, self.comptes, self.users, self.acces, self.noshows,
                            self.livraisons, self.services, self.partenaires, self.resultats, self.grants, self.userlabs,
                            self.edition]:
             destination_in.ecrire(fichier_in.nom_fichier, self.dossier_source.lire(fichier_in.nom_fichier))
         for fichier_out in [self.facturation, self.classes, self.plateformes, self.artsap,
-                            self.categories, self.groupes, self.categprix, self.coefprests, self.classprests,
-                            self.overheads, self.partenaires, self.resultats, self.grants, self.userlabs]:
+                            self.categories, self.groupes, self.ciseaux, self.categprix, self.coefprests,
+                            self.classprests, self.overheads, self.partenaires, self.resultats, self.grants,
+                            self.userlabs]:
             destination_out.ecrire(fichier_out.nom_fichier, self.dossier_source.lire(fichier_out.nom_fichier))
 
             destination_out.ecrire("client_" + str(self.edition.annee) + "_" + Format.mois_string(self.edition.mois) +

@@ -10,4 +10,5 @@ from .plateforme import Plateforme
 from .classe_prestation import ClassePrestation
 from .overhead import Overhead
 from .partenaire import Partenaire
+from .ciseau import Ciseau
 

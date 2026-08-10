@@ -32,12 +32,13 @@ class Transactions3(CsvDict):
         'deduct-CHF', 'subsid-deduct', 'total-fact', 'discount-bonus', 'subsid-bonus'
     ]
 
-    def __init__(self, imports, articles, tarifs):
+    def __init__(self, imports, articles, tarifs, cae):
         """
         initialisation des données
         :param imports: données importées
         :param articles: articles générés
         :param tarifs: tarifs générés
+        :param cae: cae généré
         """
         super().__init__(imports)
         self.nom = ("Transaction3_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_" +
@@ -48,25 +49,25 @@ class Transactions3(CsvDict):
         pt = imports.paramtexte.donnees
         transacts = {}
 
-        for entree in imports.acces.donnees:
-            if entree['validation'] == '0':
+        for entree in cae.valeurs.values():
+            if entree['cae-validation'] == '0':
                 continue
-            compte = imports.comptes.donnees[entree['id_compte']]
+            compte = imports.comptes.donnees[entree['cae-id-compte']]
             client = imports.clients.donnees[compte['code_client']]
             id_classe = imports.id_classe(client)
-            id_machine = entree['id_machine']
+            id_machine = entree['cae-id-machine']
             machine = imports.machines.donnees[id_machine]
             id_groupe = machine['id_groupe']
             groupe = imports.groupes.donnees[id_groupe]
-            operateur = imports.users.donnees[entree['id_op']]
-            ope = [entree['id_op'], operateur['prenom'] + " " + operateur['nom'], entree['remarque_op'],
-                   entree['remarque_staff'], id_machine, machine['nom'], ""]
-            util_proj = self.__util_proj(entree['id_user'], compte, pt['flow-cae'])
+            operateur = imports.users.donnees[entree['cae-id-operator']]
+            ope = [entree['cae-id-operator'], operateur['prenom'] + " " + operateur['nom'], entree['cae-rem-operator'],
+                   entree['cae-rem-staff'], id_machine, machine['nom'], ""]
+            util_proj = self.__util_proj(entree['cae-id-user'], compte, pt['flow-cae'])
             counted = False
-            duree_hp = round(entree['duree_machine_hp']/60, 3)
-            duree_hc = round(entree['duree_machine_hc']/60, 3)
-            duree_op = round(entree['duree_operateur']/60, 3)
-            rc_map = {'annee': entree['annee'], 'mois': entree['mois'], 'classe': imports.classes.donnees[id_classe],
+            duree_hp = round(entree['cae-HP']/60, 3)
+            duree_hc = round(entree['cae-HC']/60, 3)
+            duree_op = round(entree['cae-DOP']/60, 3)
+            rc_map = {'annee': entree['cae-annee-fact'], 'mois': entree['cae-mois-fact'], 'classe': imports.classes.donnees[id_classe],
                       'client': client, 'compte': compte}
 
             if duree_hp > 0 or duree_hc > 0:
@@ -75,21 +76,23 @@ class Transactions3(CsvDict):
                 if id_categorie != '0' and duree_op == 0:
                     article = articles.valeurs[id_categorie]
                     if imports.edition.plateforme == article['platf-code']:
-                        ref_client = self.__ref_client(rc_map, article, entree['date_login'])
+                        ref_client = self.__ref_client(rc_map, article, entree['cae-login'])
                         tarif = tarifs.valeurs[id_classe + id_categorie]
                         art = self.__art_plate(article, "K3", pt['item-K3'], pt['item-K3a'], id_groupe)
-                        if article['platf-code'] == compte['code_client'] or entree['validation'] == "2":
+                        if article['platf-code'] == compte['code_client'] or entree['cae-validation'] == "2":
                             usage = 0
                         else:
                             usage = 1
 
                         if ((article['platf-code'] == compte['code_client'] and compte['exploitation'] == "TRUE")
-                                or entree['validation'] == "2"):
+                                or entree['cae-validation'] == "2"):
                             runcae = ""
                         else:
                             runcae = 1
                             counted = True
-                        trans = [entree['date_login'], 1] + self.__staff(entree, 1) + [usage, "", runcae]
+                        trans = ([entree['cae-login'], 1] +
+                                 self.__staff(entree['cae-id-validator'], entree['cae-validation'], 1) +
+                                 [usage, "", runcae])
                         prix = round(tarif['valuation-price'], 2)
                         val = [tarif['valuation-price'], prix, "", 0, prix]
                         self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
@@ -99,11 +102,11 @@ class Transactions3(CsvDict):
                 if id_categorie != '0':
                     article = articles.valeurs[id_categorie]
                     if imports.edition.plateforme == article['platf-code']:
-                        ref_client = self.__ref_client(rc_map, article, entree['date_login'])
+                        ref_client = self.__ref_client(rc_map, article, entree['cae-login'])
                         tarif = tarifs.valeurs[id_classe + id_categorie]
                         art = self.__art_plate(article, "K7", pt['item-K7'], pt['item-K7a'], id_groupe)
                         if ((article['platf-code'] == compte['code_client'] and compte['exploitation'] == "TRUE")
-                                or entree['validation'] == "2"):
+                                or entree['cae-validation'] == "2"):
                             usage = 0
                             runcae = ""
                         else:
@@ -113,7 +116,9 @@ class Transactions3(CsvDict):
                             else:
                                 runcae = 1
                                 counted = True
-                        trans = [entree['date_login'], 1] + self.__staff(entree, 1) + [usage, "", runcae]
+                        trans = ([entree['cae-login'], 1] +
+                                 self.__staff(entree['cae-id-validator'], entree['cae-validation'], 1) +
+                                 [usage, "", runcae])
                         prix = round(tarif['valuation-price'], 2)
                         val = [tarif['valuation-price'], prix, "", 0, prix]
                         self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
@@ -125,11 +130,11 @@ class Transactions3(CsvDict):
                     if prix_extra > 0:
                         article = articles.valeurs[id_categorie]
                         if imports.edition.plateforme == article['platf-code']:
-                            ref_client = self.__ref_client(rc_map, article, entree['date_login'])
+                            ref_client = self.__ref_client(rc_map, article, entree['cae-login'])
                             tarif = tarifs.valeurs[id_classe + id_categorie]
                             duree = duree_hp + duree_hc
                             if ((article['platf-code'] == compte['code_client'] and compte['exploitation'] == "TRUE")
-                                    or entree['validation'] == "2"):
+                                    or entree['cae-validation'] == "2"):
                                 usage = 0
                                 runcae = ""
                             else:
@@ -139,7 +144,9 @@ class Transactions3(CsvDict):
                                 else:
                                     runcae = 1
                                     counted = True
-                            trans = [entree['date_login'], duree] + self.__staff(entree, duree) + [usage, "", runcae]
+                            trans = ([entree['cae-login'], duree] +
+                                     self.__staff(entree['cae-id-validator'], entree['cae-validation'], duree) +
+                                     [usage, "", runcae])
                             art = self.__art_plate(article, "K4", pt['item-K4'], pt['item-K4a'], id_groupe)
                             prix = round(duree * tarif['valuation-price'], 2)
                             val = [tarif['valuation-price'], prix, "", 0, prix]
@@ -150,27 +157,28 @@ class Transactions3(CsvDict):
             if id_categorie != '0':
                 article = articles.valeurs[id_categorie]
                 if imports.edition.plateforme == article['platf-code']:
-                    ref_client = self.__ref_client(rc_map, article, entree['date_login'])
+                    ref_client = self.__ref_client(rc_map, article, entree['cae-login'])
                     tarif = tarifs.valeurs[id_classe + id_categorie]
 
                     # K1 CAE-HP #
                     if duree_hp > 0:
                         if ((article['platf-code'] == compte['code_client'] and compte['exploitation'] == "TRUE")
-                                or entree['validation'] == "2"):
+                                or entree['cae-validation'] == "2"):
                             usage = 0
                             runtime = ""
                             runcae = ""
                         else:
                             usage = duree_hp
-                            runtime = round(entree['duree_run']/60, 3)
+                            runtime = round(entree['cae-DRUN']/60, 3)
                             if counted:
                                 runcae = ""
                             else:
                                 runcae = 1
                                 counted = True
                         art = self.__art_plate(article, "K1", pt['item-K1'], pt['item-K1a'], id_groupe)
-                        trans = [entree['date_login'], duree_hp] + self.__staff(entree, duree_hp) + [usage, runtime,
-                                                                                                     runcae]
+                        trans = ([entree['cae-login'], duree_hp] +
+                                 self.__staff(entree['cae-id-validator'], entree['cae-validation'], duree_hp) +
+                                 [usage, runtime, runcae])
                         prix = round(duree_hp * tarif['valuation-price'], 2)
                         val = [tarif['valuation-price'], prix, "", 0, prix]
                         self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
@@ -178,7 +186,7 @@ class Transactions3(CsvDict):
                     # K1 CAE-HC #
                     if duree_hc > 0:
                         if ((article['platf-code'] == compte['code_client'] and compte['exploitation'] == "TRUE")
-                                or entree['validation'] == "2"):
+                                or entree['cae-validation'] == "2"):
                             usage = 0
                             runtime = ""
                             runcae = ""
@@ -187,15 +195,16 @@ class Transactions3(CsvDict):
                             if duree_hp > 0:
                                 runtime = ""
                             else:
-                                runtime = round(entree['duree_run']/60, 3)
+                                runtime = round(entree['cae-DRUN']/60, 3)
                             if counted:
                                 runcae = ""
                             else:
                                 runcae = 1
                                 counted = True
                         art = self.__art_plate(article, "K1", pt['item-K1'], pt['item-K1b'], id_groupe)
-                        trans = [entree['date_login'], duree_hc] + self.__staff(entree, duree_hc) + [usage, runtime,
-                                                                                                     runcae]
+                        trans = ([entree['cae-login'], duree_hc] +
+                                 self.__staff(entree['cae-id-validator'], entree['cae-validation'], duree_hc) +
+                                 [usage, runtime, runcae])
                         prix = round(duree_hc * tarif['valuation-price'], 2)
                         reduc = round(tarif['valuation-price'] * machine['tx_rabais_hc']/100 * duree_hc, 2)
                         val = [tarif['valuation-price'], prix, pt['discount-HC'] + " -" +
@@ -207,11 +216,11 @@ class Transactions3(CsvDict):
             if id_categorie != '0' and duree_op > 0:
                 article = articles.valeurs[id_categorie]
                 if imports.edition.plateforme == article['platf-code']:
-                    ref_client = self.__ref_client(rc_map, article, entree['date_login'])
+                    ref_client = self.__ref_client(rc_map, article, entree['cae-login'])
                     tarif = tarifs.valeurs[id_classe + id_categorie]
                     art = self.__art_plate(article, "K2", pt['item-K2'], pt['item-K2a'], id_groupe)
                     if ((article['platf-code'] == compte['code_client'] and compte['exploitation'] == "TRUE")
-                            or entree['validation'] == "2"):
+                            or entree['cae-validation'] == "2"):
                         usage = 0
                         runcae = ""
                     else:
@@ -220,7 +229,9 @@ class Transactions3(CsvDict):
                             runcae = ""
                         else:
                             runcae = 1
-                    trans = [entree['date_login'], duree_op] + self.__staff(entree, duree_op) + [usage, "", runcae]
+                    trans = ([entree['cae-login'], duree_op] +
+                             self.__staff(entree['cae-id-validator'], entree['cae-validation'], duree_op) +
+                             [usage, "", runcae])
                     prix = round(duree_op * tarif['valuation-price'], 2)
                     val = [tarif['valuation-price'], prix, "", 0, prix]
                     self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
@@ -257,8 +268,8 @@ class Transactions3(CsvDict):
                     ope = ["", "", "", "", id_machine, machine['nom'], ""]
                     util_proj = self.__util_proj(entree['id_user'], compte, pt['flow-noshow'])
                     art = self.__art_plate(article, code, texte, texte2, machine['id_groupe'])
-                    trans = ([entree['date_debut'], entree['penalite']] + self.__staff(entree, entree['penalite']) +
-                             [0, "", ""])
+                    trans = ([entree['date_debut'], entree['penalite']] +
+                             self.__staff(entree['id_staff'], entree['validation'], entree['penalite']) + [0, "", ""])
                     prix = round(entree['penalite'] * tarif['valuation-price'], 2)
                     val = [tarif['valuation-price'], prix, "", 0, prix]
                     self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
@@ -298,8 +309,8 @@ class Transactions3(CsvDict):
                 usage = entree['quantite']
                 if entree['id_user'] == "0" or entree['validation'] == "2":
                     usage = 0
-                trans = ([entree['date_livraison'], entree['quantite']] + self.__staff(entree, entree['quantite']) +
-                         [usage, "", ""])
+                trans = ([entree['date_livraison'], entree['quantite']] +
+                         self.__staff(entree['id_staff'], entree['validation'], entree['quantite']) + [usage, "", ""])
                 prix = round(entree['quantite'] * tarif['valuation-price'], 2)
                 val = [tarif['valuation-price'], prix, "", 0, prix]
                 self.__put_in_transacts(transacts, ref_client, ope, util_proj, art, trans, val)
@@ -336,7 +347,8 @@ class Transactions3(CsvDict):
                             usage = 0
                         else:
                             usage = raws[i]
-                        trans = [entree['date'], raws[i]] + self.__staff(entree, raws[i]) + [usage, "", ""]
+                        trans = ([entree['date'], raws[i]] +
+                                 self.__staff(entree['id_staff'], entree['validation'], raws[i]) + [usage, "", ""])
                         tarif = tarifs.valeurs[id_classe + categories[i]]
 
                         prix = round(raws[i] * tarif['valuation-price'], 2)
@@ -372,24 +384,24 @@ class Transactions3(CsvDict):
                     self._ajouter_valeur(donnee, i)
                     i = i + 1
 
-    def __staff(self, entree, raw):
+    def __staff(self, id_staff, validation, raw):
         """
         détermine les paramètres lié au staff de validation
-        :param entree: ligne d'entrée
+        :param id_staff id opérateur
+        :param validation: validation
         :param raw: quantité non validée
         :return: id du staff (vide si "0"), et nom du staff (vide si "0")
         """
         quantite = 0
-        if entree['id_staff'] == "0":
+        if id_staff == "0":
             id_staff = ""
             staff = ""
         else:
-            id_staff = entree['id_staff']
             validateur = self.imports.users.donnees[id_staff]
             staff = validateur['nom'] + " " + validateur['prenom'][0] + "."
-        if entree['validation'] != "2" and entree['validation'] != "3":
+        if validation != "2" and validation != "3":
             quantite = raw
-        return [entree['validation'], id_staff, staff, quantite]
+        return [validation, id_staff, staff, quantite]
 
     def __ref_client(self, data, article, date):
         """
