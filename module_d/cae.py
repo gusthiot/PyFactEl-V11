@@ -48,7 +48,7 @@ class Cae(CsvDict):
                                 d1 = ciseau['S2'] - ciseau['S1']
                                 d2 = drun - ciseau['S2']
                     else:
-                        nn = round(drun/ciseau['S3'],0)
+                        nn = int(drun/ciseau['S3'])
                         rr = drun - (nn * ciseau['S3'])
                         if rr < ciseau['S1']:
                             d0 = (nn * ciseau['S1']) + rr
