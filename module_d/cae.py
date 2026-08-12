@@ -63,13 +63,13 @@ class Cae(CsvDict):
                                 d0 = (nn + 1) * ciseau['S1']
                                 d1 = (nn + 1) * (ciseau['S2'] - ciseau['S1'])
                                 d2 = nn * (ciseau['S3'] - ciseau['S2']) + rr - ciseau['S2']
-                    te = d0 + (ciseau['alpha1'] * d1) + (ciseau['alpha2'] * d2)
+                    te = d0 + (ciseau['alpha1'] * d1 / 100) + (ciseau['alpha2'] * d2 / 100)
                     if te < dhp:
-                        hp = te
+                        hp = int(te)
                         hc = 0
                     else:
                         hp = dhp
-                        hc = te - dhp
+                        hc = int(te - dhp)
             else:
                 hp = dhp
                 hc = dhc
