@@ -33,36 +33,39 @@ class Cae(CsvDict):
                     hp = dhp
                     hc = dhc
                 else:
+                    s1 = ciseau['S1'] * 60
+                    s2 = ciseau['S2'] * 60
+                    s3 = ciseau['S3'] * 60
                     if entree['disable'] > 0:
-                        if drun < ciseau['S1']:
+                        if drun < s1:
                             d0 = drun
                             d1 = 0
                             d2 = 0
                         else:
-                            if drun < ciseau['S2']:
-                                d0 = ciseau['S1']
-                                d1 = drun - ciseau['S1']
+                            if drun < s2:
+                                d0 = s1
+                                d1 = drun - s1
                                 d2 = 0
                             else:
-                                d0 = ciseau['S1']
-                                d1 = ciseau['S2'] - ciseau['S1']
-                                d2 = drun - ciseau['S2']
+                                d0 = s1
+                                d1 = s2 - s1
+                                d2 = drun - s2
                     else:
-                        nn = int(drun/ciseau['S3'])
-                        rr = drun - (nn * ciseau['S3'])
-                        if rr < ciseau['S1']:
-                            d0 = (nn * ciseau['S1']) + rr
-                            d1 = nn * (ciseau['S2'] - ciseau['S1'])
-                            d2 = nn * (ciseau['S3'] - ciseau['S2'])
+                        nn = int(drun/s3)
+                        rr = drun - (nn * s3)
+                        if rr < s1:
+                            d0 = (nn * s1) + rr
+                            d1 = nn * (s2 - s1)
+                            d2 = nn * (s3 - s2)
                         else:
-                            if rr < ciseau['S2']:
-                                d0 = (nn + 1) * ciseau['S1']
-                                d1 = nn * (ciseau['S2'] - ciseau['S1']) + rr - ciseau['S1']
-                                d2 = nn * (ciseau['S3'] - ciseau['S2'])
+                            if rr < s2:
+                                d0 = (nn + 1) * s1
+                                d1 = nn * (s2 - s1) + rr - s1
+                                d2 = nn * (s3 - s2)
                             else:
-                                d0 = (nn + 1) * ciseau['S1']
-                                d1 = (nn + 1) * (ciseau['S2'] - ciseau['S1'])
-                                d2 = nn * (ciseau['S3'] - ciseau['S2']) + rr - ciseau['S2']
+                                d0 = (nn + 1) * s1
+                                d1 = (nn + 1) * (s2 - s1)
+                                d2 = nn * (s3 - s2) + rr - s2
                     te = d0 + (ciseau['alpha1'] * d1 / 100) + (ciseau['alpha2'] * d2 / 100)
                     if te < dhp:
                         hp = int(te)
