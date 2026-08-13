@@ -25,7 +25,7 @@ class Articles(CsvDict):
             donnee = [self.imports.edition.annee, self.imports.edition.mois, cat['id_categorie'], cat['no_categorie'],
                       cat['intitule'], cat['unite'], cat['nb_dec'], cat['id_classe_prest'], classprest['id_article'],
                       art['code_d'], classprest['flag_usage'], classprest['flag_conso'], classprest['eligible'],
-                      art['ordre'], art['intitule'], imports.plateforme, "FALSE"]
+                      art['ordre'], art['intitule'], imports.edition.plateforme, "FALSE"]
             self._ajouter_valeur(donnee, cat['id_categorie'])
 
         for prest in imports.prestations.donnees.values():
