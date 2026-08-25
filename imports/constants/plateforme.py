@@ -39,38 +39,38 @@ class Plateforme(object):
             if cle not in donnees_csv:
                 msg += self._erreur_fichier("Clé manquante dans: " + cle)
 
-            self.donnee['id_plateforme'], err = Format.est_un_alphanumerique(donnees_csv['Id-Plateforme'][1],
+            self.donnee['id_plateforme'], err = Format.est_un_alphanumerique(donnees_csv['Id-Plateforme'][0],
                                                                              "l'id plateforme")
             msg += self._erreur_fichier(err)
 
-            if donnees_csv['Id-Plateforme'][1] == "":
+            if donnees_csv['Id-Plateforme'][0] == "":
                 msg += self._erreur_fichier("l'id plateforme ne peut être vide")
-            elif donnees_csv['Id-Plateforme'][1] not in clients.donnees.keys():
+            elif donnees_csv['Id-Plateforme'][0] not in clients.donnees.keys():
                 msg += self._erreur_fichier("l'id plateforme n'existe pas dans les clients")
-            elif donnees_csv['Id-Plateforme'][1] != edition.plateforme:
+            elif donnees_csv['Id-Plateforme'][0] != edition.plateforme:
                 msg += self._erreur_fichier("l'id plateforme n'est pas celui de paramedit")
 
-            self.donnee['code_p'], err = Format.est_un_alphanumerique(donnees_csv['Code_P'][1], "le code P")
+            self.donnee['code_p'], err = Format.est_un_alphanumerique(donnees_csv['Code_P'][0], "le code P")
             msg += self._erreur_fichier(err)
-            self.donnee['centre'], err = Format.est_un_alphanumerique(donnees_csv['CF'][1], "le centre financier")
+            self.donnee['centre'], err = Format.est_un_alphanumerique(donnees_csv['CF'][0], "le centre financier")
             msg += self._erreur_fichier(err)
-            self.donnee['fonds'], err = Format.est_un_alphanumerique(donnees_csv['Fonds'][1], "les fonds à créditer")
+            self.donnee['fonds'], err = Format.est_un_alphanumerique(donnees_csv['Fonds'][0], "les fonds à créditer")
             msg += self._erreur_fichier(err)
-            self.donnee['admin'], err = Format.est_un_entier(donnees_csv['Admin'][1], "le sciper admin à créditer", 0)
+            self.donnee['admin'], err = Format.est_un_entier(donnees_csv['Admin'][0], "le sciper admin à créditer", 0)
             msg += self._erreur_fichier(err)
-            self.donnee['abrev_plat'], err = Format.est_un_alphanumerique(donnees_csv['Abrev-Plateforme'][1],
+            self.donnee['abrev_plat'], err = Format.est_un_alphanumerique(donnees_csv['Abrev-Plateforme'][0],
                                                                           "l'abréviation")
             msg += self._erreur_fichier(err)
-            self.donnee['intitule'], err = Format.est_un_texte(donnees_csv['Intitulé-Plateforme'][1],
+            self.donnee['intitule'], err = Format.est_un_texte(donnees_csv['Intitulé-Plateforme'][0],
                                                                "l'intitulé")
             msg += self._erreur_fichier(err)
 
-            if donnees_csv['Grille-Plateforme'][1] != 'OUI' and donnees_csv['Grille-Plateforme'][1] != 'NON':
+            if donnees_csv['Grille-Plateforme'][0] != 'OUI' and donnees_csv['Grille-Plateforme'][0] != 'NON':
                 msg += self._erreur_fichier("grille-plateforme doit être OUI ou NON")
             else:
-                self.donnee['grille'] = donnees_csv['Grille-Plateforme'][1]
+                self.donnee['grille'] = donnees_csv['Grille-Plateforme'][0]
 
-            if (donnees_csv['Grille-Plateforme'][1] == 'OUI' and
+            if (donnees_csv['Grille-Plateforme'][0] == 'OUI' and
                     not Chemin.existe(Chemin.chemin([dossier_source.chemin, 'grille.pdf']))):
                 msg += self._erreur_fichier("la grille n'existe pas dans le dossier d'entrée ")
 

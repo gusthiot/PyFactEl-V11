@@ -34,15 +34,15 @@ class Facturation(object):
             if cle not in donnees_csv:
                 msg += self._erreur_fichier("Clé manquante:" + cle)
 
-        self.code_int, err = Format.est_un_alphanumerique(donnees_csv['code_int'][1], "le code INT")
+        self.code_int, err = Format.est_un_alphanumerique(donnees_csv['code_int'][0], "le code INT")
         msg += self._erreur_fichier(err)
-        self.code_ext, err = Format.est_un_alphanumerique(donnees_csv['code_ext'][1], "le code EXT")
+        self.code_ext, err = Format.est_un_alphanumerique(donnees_csv['code_ext'][0], "le code EXT")
         msg += self._erreur_fichier(err)
-        self.devise, err = Format.est_un_alphanumerique(donnees_csv['devise'][1], "la devise")
+        self.devise, err = Format.est_un_alphanumerique(donnees_csv['devise'][0], "la devise")
         msg += self._erreur_fichier(err)
 
         self.modes = []
-        for mode in donnees_csv['modes'][1:]:
+        for mode in donnees_csv['modes']:
             mode, err = Format.est_un_alphanumerique(mode, "le mode d'envoi", vide=True)
             self.modes.append(mode)
             msg += self._erreur_fichier(err)
