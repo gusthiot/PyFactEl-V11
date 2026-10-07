@@ -29,7 +29,7 @@ class User(CsvImport):
 
         for donnee in self.donnees:
             donnee['id_user'], info = Format.est_un_alphanumerique(donnee['id_user'], "l'id user", ligne)
-            msg += info
+            msg += self._erreur_ligne(ligne, info)
             if donnee['id_user'] == "":
                 msg += "l'id user de la ligne " + str(ligne) + " ne peut être vide\n"
             elif donnee['id_user'] not in ids:
@@ -39,7 +39,7 @@ class User(CsvImport):
                        " n'est pas unique\n"
 
             donnee['sciper'], info = Format.est_un_alphanumerique(donnee['sciper'], "le sciper", ligne)
-            msg += info
+            msg += self._erreur_ligne(ligne, info)
             if donnee['sciper'] == "":
                 msg += "le sciper de la ligne " + str(ligne) + " ne peut être vide\n"
             elif donnee['sciper'] not in scipers:
@@ -54,9 +54,9 @@ class User(CsvImport):
 
 
             donnee['nom'], info = Format.est_un_texte(donnee['nom'], "le nom", ligne)
-            msg += info
+            msg += self._erreur_ligne(ligne, info)
             donnee['prenom'], info = Format.est_un_texte(donnee['prenom'], "le prénom", ligne)
-            msg += info
+            msg += self._erreur_ligne(ligne, info)
 
             donnees_dict[donnee['id_user']] = donnee
             ligne += 1

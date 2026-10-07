@@ -50,7 +50,7 @@ class Acces(CsvImport):
             msg += self.test_id_coherence(donnee['id_staff'], "l'id staff", ligne, users, True)
 
             donnee['dlog'], info = Format.est_un_entier(donnee['dlog'], "le DLOG", 0)
-            msg += info
+            msg += self._erreur_ligne(ligne, info)
             donnee['dlog_hp'], info = Format.est_un_entier(donnee['dlog_hp'], "le DLOG.HP", 0)
             msg += self._erreur_ligne(ligne, info)
             donnee['disable'], info = Format.est_un_entier(donnee['disable'], "le disable S3 ", 0, 1)
