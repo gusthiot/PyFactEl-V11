@@ -43,6 +43,7 @@ from module_a import (VersionNew,
                       Annexe,
                       AnnexeAll,
                       Transactions1,
+                      Transactions0,
                       BilanFactures,
                       Pdfs,
                       Journal,
@@ -71,7 +72,7 @@ args = parser.parse_args()
 if args.sansgraphiques > 0:
     Interface.interface_graphique(False)
 
-version_logiciel = "11.04"
+version_logiciel = "11.05"
 if args.version:
     if args.version != version_logiciel:
         Interface.fatal("Version logiciel trouvée : " + version_logiciel + ", version logiciel attendue : " +
@@ -178,6 +179,8 @@ try:
         transactions_1 = Transactions1(imports, new_transactions_2, sommes_2.par_fact, new_versions)
         transactions_1.csv(DossierDestination(imports.chemin_bilans))
         sommes_1 = Sommes1(transactions_1)
+        transactions_0 = Transactions0(imports, transactions_1, sommes_1.par_fact, new_versions)
+        transactions_0.csv(DossierDestination(imports.chemin_bilans))
         bil_facts = BilanFactures(imports, transactions_1, sommes_1.par_fact)
         bil_facts.csv(DossierDestination(imports.chemin_bilans))
         total = Total(imports, transactions_1, sommes_1.par_client, annexes_all.csv_fichiers, new_versions)

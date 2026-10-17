@@ -19,3 +19,4 @@ from .details_all import DetailsAll
 from .annexe_all import AnnexeAll
 from .clients_modifs import ClientsModifs
 from .montants import Montants
+from .transactions_0 import Transactions0
