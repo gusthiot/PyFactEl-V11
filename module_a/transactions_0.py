@@ -27,7 +27,7 @@ class Transactions0(CsvDict):
         i = 0
         for id_fact, par_fact in par_fact.items():
             version = versions.valeurs[id_fact]['version-last']
-            for par_article in par_fact['articles'].values():
+            for order, par_article in sorted(par_fact['articles'].items()):
                 total = par_article['total']
                 if total != 0:
                     base = transactions_1.valeurs[par_article['base']]

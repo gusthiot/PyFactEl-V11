@@ -22,7 +22,7 @@ class Sommes1(object):
 
             articles = self.par_fact[trans['invoice-id']]['articles']
             if trans['item-order'] not in articles:
-                articles[trans['item-order']] = {'total': 0, 'base': key}
+                articles[trans['item-order']] = {'total': 0, 'id': trans['item-idsap'], 'base': key}
             articles[trans['item-order']]['total'] += trans['total-fact']
             # => transactions 0
 
@@ -36,7 +36,7 @@ class Sommes1(object):
                 tpi[trans['item-order']] = {'keys': [], 'id': trans['item-idsap'], 'total': 0}
             tpi[trans['item-order']]['keys'].append(key)
             tpi[trans['item-order']]['total'] += trans['total-fact']
-            # => factures
+            # => factures->tickets
 
 
 

@@ -32,7 +32,6 @@ class Facture(object):
                 code_sap = client['code_sap']
 
                 if donnee['version-change'] != 'IDEM':
-                    dict_fact = {'execmode': ""}
 
                     if classe['ref_fact'] == "INT":
                         genre = imports.facturation.code_int
@@ -47,11 +46,21 @@ class Facture(object):
                     ref = (classe['ref_fact'] + "_" + str(imports.edition.annee) + "_" +
                            Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" + str(id_fact))
 
-                    dict_fact['header'] = {'ordertype': genre, 'ordernr': ref, 'currency': imports.facturation.devise,
-                                           'clientnr': code_sap, 'distribution': client['mode'],
-                                           'description': your_ref}
-                    dict_fact['shipper'] = {'sciper': imports.plateforme['admin'], 'fund': imports.plateforme['fonds']}
+                    dict_fact = {'SalesOrderType': genre, 'SalesOrganization': 1028, 'DistributionChannel': 20,
+                                 'OrganizationDivision': 10, 'TransactionCurrency': imports.facturation.devise,
+                                 'SoldToParty': code_sap, 'PurchaseOrderByCustomer': ref, 'SDDocumentReason': "TBD",
+                                 'HeaderBillingBlockReason': "TBD"}
 
+                    dict_fact['to_Partner'] = [
+                        {'PartnerFunction': "ZM", 'Personnel': imports.plateforme['admin']},
+                        {'PartnerFunction': "RE", 'Customer': code_sap, 'to_Address': [
+                            {'EmailAddress': client['email'],'OrganizationName3': client['nom3']}
+                        ]}
+                    ]
+
+                    dict_fact['to_Text'] = [{'LongTextID': "TX06", 'LongText': your_ref}]
+
+                    """
                     nom = ("Annexe_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_"
                            + Format.mois_string(imports.edition.mois) + "_" + str(donnee['version-last']) + "_"
                            + str(id_fact) + ".pdf")
@@ -62,11 +71,28 @@ class Facture(object):
                     if classe['grille'] == "OUI" and imports.plateforme['grille'] == "OUI":
                         dict_fact['attachment'].append({'filename': "grille.pdf", 'filetype': "application/pdf",
                                                         'filedescription': "Grille tarifaire PDF", 'filecontent': ""})
+                    """
 
-                    dict_fact['partners'] = [{'role': "AG", 'clientnr': code_sap, 'name2': client['nom2'], 'name3': client['nom3'],
-                                            'email': client['email']}]
+                    dict_fact['to_Item'] = []
 
-                    dict_fact['items'] = []
+                    for order, par_article in sorted(par_fact[id_fact]['articles'].items()):
+                        article = imports.artsap.donnees[par_article['id']]
+                        net = par_article['total']
+                        code_op = (imports.plateforme['code_p'] + classe['code_n'] + str(imports.edition.annee) +
+                                   Format.mois_string(imports.edition.mois) + article['code_d'])
+
+                        dict_fact['to_Item'].append(
+                            {'Material': article['code_sap'], 'SalesOrderItemText': article['intitule'],
+                             'RequestedQuantity': article['quantite'], 'WBSElement': imports.plateforme['fonds'],
+                             'ZZ1_CODEOP_SDI': code_op, 'to_PricingElement': [
+                                {'ConditionType': "PPR0", 'ConditionRateValue': net}
+                            ], 'to_Text': [
+                                {'LongTextID': "TX02", 'LongText': article['texte_sap']}]
+                             })
+
+                    if imports.edition.filigrane == "":
+                        with open(Chemin.chemin([chemin_destination, "facture_"+str(id_fact)+".json"]), 'w') as outfile:
+                            json.dump(dict_fact, outfile, indent=4)
 
                 inc = 1
                 for id_compte, par_compte in par_fact[id_fact]['projets'].items():
@@ -75,16 +101,6 @@ class Facture(object):
                     for ordre, par_article in sorted(par_compte['items'].items()):
                         article = imports.artsap.donnees[par_article['id']]
                         net = par_article['total']
-                        code_op = (imports.plateforme['code_p'] + classe['code_n'] + str(imports.edition.annee) +
-                                   Format.mois_string(imports.edition.mois) + article['code_d'])
-
-                        if donnee['version-change'] != 'IDEM':
-                            dict_fact['items'].append({'number': article['code_sap'], 'qty': article['quantite'],
-                                                       'price': net, 'unit': article['unite'],
-                                                       'text': article['texte_sap'],
-                                                       'shipper_imputation': {'opcode': code_op},
-                                                       'internalconsoname': nom})
-
                         description = article['code_d'] + " : " + str(article['code_sap'])
                         self.par_client[code][id_fact]['factures'].append({'poste': poste, 'nom': nom,
                                                                            'descr': description,
@@ -93,7 +109,3 @@ class Facture(object):
                         poste += 1
                     inc += 1
 
-                if donnee['version-change'] != 'IDEM':
-                    if imports.edition.filigrane == "":
-                        with open(Chemin.chemin([chemin_destination, "facture_"+str(id_fact)+".json"]), 'w') as outfile:
-                            json.dump(dict_fact, outfile, indent=4)
