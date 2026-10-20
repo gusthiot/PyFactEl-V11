@@ -46,13 +46,13 @@ class Facture(object):
                     ref = (classe['ref_fact'] + "_" + str(imports.edition.annee) + "_" +
                            Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" + str(id_fact))
 
-                    dict_fact = {'SalesOrderType': genre, 'SalesOrganization': 1028, 'DistributionChannel': 20,
-                                 'OrganizationDivision': 10, 'TransactionCurrency': imports.facturation.devise,
+                    dict_fact = {'SalesOrderType': genre, 'SalesOrganization': "1028", 'DistributionChannel': "20",
+                                 'OrganizationDivision': "10", 'TransactionCurrency': imports.facturation.devise,
                                  'SoldToParty': code_sap, 'PurchaseOrderByCustomer': ref, 'SDDocumentReason': "TBD",
                                  'HeaderBillingBlockReason': "TBD"}
 
                     dict_fact['to_Partner'] = [
-                        {'PartnerFunction': "ZM", 'Personnel': imports.plateforme['admin']},
+                        {'PartnerFunction': "ZM", 'SCIPER': imports.plateforme['admin']},
                         {'PartnerFunction': "RE", 'Customer': code_sap, 'to_Address': [
                             {'EmailAddress': client['email'],'OrganizationName3': client['nom3']}
                         ]}
