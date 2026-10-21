@@ -52,7 +52,7 @@ class Facture(object):
                                  'HeaderBillingBlockReason': "TBD"}
 
                     dict_fact['to_Partner'] = [
-                        {'PartnerFunction': "ZM", 'SCIPER': imports.plateforme['admin']},
+                        {'PartnerFunction': "ZM", 'SCIPER': str(imports.plateforme['admin'])},
                         {'PartnerFunction': "RE", 'Customer': code_sap, 'to_Address': [
                             {'EmailAddress': client['email'],'OrganizationName3': client['nom3']}
                         ]}
@@ -82,10 +82,10 @@ class Facture(object):
                                    Format.mois_string(imports.edition.mois) + article['code_d'])
 
                         dict_fact['to_Item'].append(
-                            {'Material': article['code_sap'], 'SalesOrderItemText': article['intitule'],
-                             'RequestedQuantity': article['quantite'], 'WBSElement': imports.plateforme['fonds'],
+                            {'Material': str(article['code_sap']), 'SalesOrderItemText': article['intitule'],
+                             'RequestedQuantity': str(article['quantite']), 'WBSElement': imports.plateforme['fonds'],
                              'ZZ1_CODEOP_SDI': code_op, 'to_PricingElement': [
-                                {'ConditionType': "PPR0", 'ConditionRateValue': net}
+                                {'ConditionType': "PPR0", 'ConditionRateValue': str(net)}
                             ], 'to_Text': [
                                 {'LongTextID': "TX02", 'LongText': article['texte_sap']}]
                              })
