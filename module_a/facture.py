@@ -60,18 +60,14 @@ class Facture(object):
 
                     dict_fact['to_Text'] = [{'LongTextID': "TX06", 'LongText': your_ref}]
 
-                    """
                     nom = ("Annexe_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_"
                            + Format.mois_string(imports.edition.mois) + "_" + str(donnee['version-last']) + "_"
                            + str(id_fact) + ".pdf")
 
-                    dict_fact['attachment'] = [{'filename': nom, 'filetype': "application/pdf",
-                                                'filedescription': "Annexe PDF", 'filecontent': ""}]
+                    dict_fact['files'] = [nom]
 
                     if classe['grille'] == "OUI" and imports.plateforme['grille'] == "OUI":
-                        dict_fact['attachment'].append({'filename': "grille.pdf", 'filetype': "application/pdf",
-                                                        'filedescription': "Grille tarifaire PDF", 'filecontent': ""})
-                    """
+                        dict_fact['files'].append("grille.pdf")
 
                     dict_fact['to_Item'] = []
 
