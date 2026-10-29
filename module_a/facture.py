@@ -48,8 +48,13 @@ class Facture(object):
 
                     dict_fact = {'SalesOrderType': genre, 'SalesOrganization': "1028", 'DistributionChannel': "20",
                                  'OrganizationDivision': "10", 'TransactionCurrency': imports.facturation.devise,
-                                 'SoldToParty': code_sap, 'PurchaseOrderByCustomer': ref, 'SDDocumentReason': "TBD",
-                                 'HeaderBillingBlockReason': "TBD"}
+                                 'SoldToParty': code_sap, 'PurchaseOrderByCustomer': ref}
+
+                    if genre == "ZINT":
+                        dict_fact['SDDocumentReason'] = "TBD"
+
+                    if genre == "ZPLT":
+                        dict_fact['HeaderBillingBlockReason'] = "TBD"
 
                     dict_fact['to_Partner'] = [
                         {'PartnerFunction': "ZM", 'SCIPER': str(imports.plateforme['admin'])},
