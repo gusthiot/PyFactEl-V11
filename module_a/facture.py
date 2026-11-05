@@ -47,8 +47,7 @@ class Facture(object):
                            Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" + str(id_fact))
 
                     dict_fact = {'SalesOrderType': genre, 'SalesOrganization': "1028", 'DistributionChannel': "20",
-                                 'OrganizationDivision': "10", 'TransactionCurrency': imports.facturation.devise,
-                                 'SoldToParty': code_sap, 'PurchaseOrderByCustomer': ref}
+                                 'OrganizationDivision': "10", 'SoldToParty': code_sap, 'PurchaseOrderByCustomer': ref}
 
                     if genre == "ZINT":
                         dict_fact['SDDocumentReason'] = "TBD"
@@ -57,22 +56,19 @@ class Facture(object):
                         dict_fact['HeaderBillingBlockReason'] = "TBD"
 
                     dict_fact['to_Partner'] = [
-                        {'PartnerFunction': "ZM", 'SCIPER': str(imports.plateforme['admin'])},
-                        {'PartnerFunction': "RE", 'Customer': code_sap, 'to_Address': [
-                            {'EmailAddress': client['email'],'OrganizationName3': client['nom3']}
-                        ]}
+                        {'PartnerFunction': "ZM", 'SCIPER': str(imports.plateforme['admin'])}
                     ]
+
+                    if client['email'] != "" or client['nom3'] != "":
+                            dict_fact['to_Partner'].append(
+                                {'PartnerFunction': "RE", 'Customer': code_sap, 'to_Address': [
+                                    {'EmailAddress': client['email'],'OrganizationName3': client['nom3']}
+                                ]}
+                            )
+
 
                     dict_fact['to_Text'] = [{'LongTextID': "TX06", 'LongText': your_ref}]
 
-                    nom = ("Annexe_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_"
-                           + Format.mois_string(imports.edition.mois) + "_" + str(donnee['version-last']) + "_"
-                           + str(id_fact) + ".pdf")
-
-                    dict_fact['files'] = [nom]
-
-                    if classe['grille'] == "OUI" and imports.plateforme['grille'] == "OUI":
-                        dict_fact['files'].append("grille.pdf")
 
                     dict_fact['to_Item'] = []
 
@@ -90,6 +86,14 @@ class Facture(object):
                             ], 'to_Text': [
                                 {'LongTextID': "TX02", 'LongText': article['texte_sap']}]
                              })
+
+                    nom = ("Annexe_" + imports.plateforme['abrev_plat'] + "_" + str(imports.edition.annee) + "_"
+                           + Format.mois_string(imports.edition.mois) + "_" + str(donnee['version-last']) + "_"
+                           + str(id_fact) + ".pdf")
+                    dict_fact['files'] = [nom]
+
+                    if classe['grille'] == "OUI" and imports.plateforme['grille'] == "OUI":
+                        dict_fact['files'].append("grille.pdf")
 
                     if imports.edition.filigrane == "":
                         with open(Chemin.chemin([chemin_destination, "facture_"+str(id_fact)+".json"]), 'w') as outfile:

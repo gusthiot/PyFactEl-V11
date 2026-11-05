@@ -6,7 +6,7 @@ class Sap(CsvImport):
     Classe pour l'importation des données du précédent fichier SAP
     """
 
-    cles = ['client-name', 'invoice-id', 'total-fact', 'track-status', 'track-doc-nr', 'track-err-msg']
+    cles = ['track-client-name', 'track-invoice-id', 'track-total-fact', 'track-status', 'track-doc-nr', 'track-err-msg']
     nom_fichier = "sap.csv"
 
     def __init__(self, dossier_source):
