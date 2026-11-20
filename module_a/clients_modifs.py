@@ -8,7 +8,7 @@ class ClientsModifs(CsvDict):
     """
 
     cles = ['invoice-year', 'invoice-month', 'invoice-version', 'client-code', 'client-sap', 'client-name',
-            'client-name2', 'client-name3', 'client-ref', 'client-email', 'client-deliv', 'client-idclass']
+            'client-name3', 'client-ref', 'client-email', 'client-idclass']
 
     def __init__(self, imports, versions):
         """
@@ -41,8 +41,8 @@ class ClientsModifs(CsvDict):
         :param version: version de facturation
         """
         self._ajouter_valeur([self.imports.edition.annee, self.imports.edition.mois, version,
-                              client['code'], client['code_sap'], client['abrev_labo'], client['nom2'], client['nom3'],
-                              client['ref'], client['email'], client['mode'], client['id_classe']], unique)
+                              client['code'], client['code_sap'], client['abrev_labo'], client['nom3'],
+                              client['ref'], client['email'], client['id_classe']], unique)
 
     def _ajout_nul(self, code, unique, version):
         """

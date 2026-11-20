@@ -46,10 +46,12 @@ class Facture(object):
                     ref = (classe['ref_fact'] + "_" + str(imports.edition.annee) + "_" +
                            Format.mois_string(imports.edition.mois) + "_" + str(imports.version) + "_" + str(id_fact))
 
-                    dict_fact = {'SalesOrderType': genre, 'SalesOrganization': "1028", 'DistributionChannel': "20",
+                    canal = imports.facturation.canal
+
+                    dict_fact = {'SalesOrderType': genre, 'SalesOrganization': "1028", 'DistributionChannel': canal,
                                  'OrganizationDivision': "10", 'SoldToParty': code_sap, 'PurchaseOrderByCustomer': ref}
 
-                    if genre == "ZINT":
+                    if genre in ["ZINT", "ZEXT"]:
                         dict_fact['SDDocumentReason'] = "TBD"
 
                     if genre == "ZPLT":

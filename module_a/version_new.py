@@ -108,11 +108,9 @@ class VersionNew(CsvDict):
                 prec = self.imports.clients_prev.donnees[code]
                 if (act['code_sap'] != prec['code_sap']
                         or act['abrev_labo'] != prec['abrev_labo']
-                        or act['nom2'] != prec['nom2']
                         or act['nom3'] != prec['nom3']
                         or act['ref'] != prec['ref']
                         or act['email'] != prec['email']
-                        or act['mode'] != prec['mode']
                         or act['id_classe'] != prec['id_classe']):
                     self.clients_changes.append(code)
                     self.clients.append(code)

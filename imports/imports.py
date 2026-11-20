@@ -64,7 +64,7 @@ class Imports(object):
         self.artsap = ArticleSap(dossier_source)
         self.overheads = Overhead(dossier_source, self.artsap)
         self.classes = ClasseClient(dossier_source, self.overheads)
-        self.clients = Client(dossier_source, self.facturation, self.classes)
+        self.clients = Client(dossier_source, self.classes)
         self.plateformes = Plateforme(dossier_source, self.clients, self.edition)
         self.partenaires = Partenaire(dossier_source, self.clients, self.classes)
         self.classprests = ClassePrestation(dossier_source, self.artsap)

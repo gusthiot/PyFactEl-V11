@@ -10,15 +10,14 @@ class Client(CsvImport):
     Classe pour l'importation des données de Clients Cmi
     """
 
-    cles = ['code', 'code_sap', 'abrev_labo', 'nom2', 'nom3', 'ref', 'email', 'mode', 'id_classe']
+    cles = ['code', 'code_sap', 'abrev_labo', 'nom2', 'nom3', 'ref', 'email', 'id_classe']
     nom_fichier = "client.csv"
     libelle = "Clients"
 
-    def __init__(self, dossier_source, facturation, classes):
+    def __init__(self, dossier_source, classes):
         """
         initialisation et importation des données
         :param dossier_source: Une instance de la classe dossier.DossierSource
-        :param facturation: paramètres de facturation
         :param classes: classes clients importées
         """
         super().__init__(dossier_source)
@@ -63,11 +62,7 @@ class Client(CsvImport):
                         donnee['bh'] = 1
                         donnee['rh'] = 0
 
-            if (donnee['mode'] != "") and (donnee['mode'] not in facturation.modes):
-                msg += self._erreur_ligne(ligne, "le mode d'envoi '" + donnee['mode'] +
-                                          "' n'existe pas dans les modes d'envoi généraux\n")
-
-            if (donnee['mode'] == "MAIL") and (not re.match("[^@]+@[^@]+\.[^@]+", donnee['email'])):
+            if (donnee['email'] != "") and (not re.match("[^@]+@[^@]+\.[^@]+", donnee['email'])):
                 msg += self._erreur_ligne(ligne, "le format de l'e-mail '" + donnee['email'] + "' n'est pas correct\n")
 
             donnees_dict[donnee['code']] = donnee
