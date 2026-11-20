@@ -48,7 +48,7 @@ class Facture(object):
 
                     canal = imports.facturation.canal
 
-                    dict_fact = {'SalesOrderType': genre, 'SalesOrganization': "1028", 'DistributionChannel': canal,
+                    dict_fact = {'SalesOrderType': genre, 'SalesOrganization': "1028", 'DistributionChannel': str(canal),
                                  'OrganizationDivision': "10", 'SoldToParty': code_sap, 'PurchaseOrderByCustomer': ref}
 
                     if genre in ["ZINT", "ZEXT"]:
