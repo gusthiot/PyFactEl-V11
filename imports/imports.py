@@ -137,8 +137,7 @@ class Imports(object):
             self.versions = Version(dossier_source, self.edition, self.resultats.vfact)
             self.transactions_2 = Transactions2(dossier_source, self.edition, self.plateforme, self.clients, self.comptes,
                                                 self.users, self.artsap, self.resultats.vfact)
-            self.clients_prev = ClientPrev(dossier_source, self.edition, self.facturation, self.classes,
-                                           self.resultats.vfact)
+            self.clients_prev = ClientPrev(dossier_source, self.edition, self.classes, self.resultats.vfact)
             self.sap = Sap(dossier_source)
 
         # vérification terminée, création des dossiers de sauvegarde
